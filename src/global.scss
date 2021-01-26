@@ -1,0 +1,40 @@
+// http://ionicframework.com/docs/theming/
+@import '~@ionic/angular/css/core.css';
+@import '~@ionic/angular/css/normalize.css';
+@import '~@ionic/angular/css/structure.css';
+@import '~@ionic/angular/css/typography.css';
+@import '~@ionic/angular/css/display.css';
+@import '~@ionic/angular/css/padding.css';
+@import '~@ionic/angular/css/float-elements.css';
+@import '~@ionic/angular/css/text-alignment.css';
+@import '~@ionic/angular/css/text-transformation.css';
+@import '~@ionic/angular/css/flex-utils.css';
+
+
+/*@media (min-width: 768px) and (max-width: 1023px) {
+    .split-pane-visible >.split-pane-side {
+        min-width: 200px!important;
+        max-width: 200px!important;
+    }
+  }*/
+  
+  @media (min-width: 1024px) {
+    .split-pane-visible >.split-pane-side {
+        min-width: 300px!important;
+        max-width: 300px!important;
+    }
+  }
+
+
+ion-menu {
+    --ion-background-color: var(--ion-color-primary);
+    --ion-text-color: var(--ion-color-primary-contrast);
+  
+    ion-toolbar {
+      --background: var(--ion-color-primary);
+    }
+  
+    ion-list {/* optional, but it needs when you use gradient as a background color.*/
+      background: transparent;
+    }
+  }
