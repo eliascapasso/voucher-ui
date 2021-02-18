@@ -14,7 +14,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "www",
+            "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -32,20 +32,20 @@
               }
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               {
                 "input": "src/theme/variables.scss"
               },
               {
                 "input": "src/global.scss"
               },
-              "src/assets/mytheme/theme.scss",
-              "src/assets/layout/style/layout.scss",
+              "src/assets/theme/theme-dark-blue.scss",
+              "src/assets/layout/css/layout-dark-blue.scss",
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeicons/primeicons.css",
               "node_modules/@fullcalendar/core/main.min.css",
               "node_modules/quill/dist/quill.snow.css",
-              "node_modules/font-awesome/css/font-awesome.min.css",
-              "src/assets/layout/style/codehighlight.css"
+              "node_modules/font-awesome/css/font-awesome.min.css"
             ],
             "scripts": [
               "node_modules/moment/moment.js",
@@ -82,6 +82,54 @@
                 }
               ]
             },
+            "musi-qa": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.musi-qa.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            },
+            "repo-qa": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.repo-qa.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            },
             "ci": {
               "progress": false
             }
@@ -90,11 +138,23 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "app:build"
+            "browserTarget": "app:build",
+            "proxyConfig": "proxy.conf.json",
+            "port": 8220
           },
           "configurations": {
             "production": {
               "browserTarget": "app:build:production"
+            },
+            "musi-qa": {
+              "browserTarget": "app:build:musi-qa",
+              "proxyConfig": "proxy.conf.musi.json",
+              "port": 8214
+            },
+            "repo-qa": {
+              "browserTarget": "app:build:repo-qa",
+              "proxyConfig": "proxy.conf.repo.json",
+              "port": 9214
             },
             "ci": {
               "progress": false
@@ -114,7 +174,9 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
-            "styles": [],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
+            ],
             "scripts": [],
             "assets": [
               {
@@ -139,8 +201,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "ionic-cordova-build": {
@@ -189,7 +256,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }

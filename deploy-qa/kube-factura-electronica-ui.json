@@ -1,0 +1,52 @@
+{
+	"kind": "Pod",
+	"apiVersion": "v1",
+	"metadata": {
+		"name": "{__IMAGE__}-{__ENV__}",
+		"labels": {
+			"name": "{__IMAGE__}-{__ENV__}"
+		}
+	},
+	"spec": {
+	"hostNetwork": false,
+		"containers": [{
+			"name": "{__IMAGE__}",
+			"image": "{__DOCKER_REGISTRY__}/{__IMAGE__}-{__ENV__}:{__BUILD_RELEASE_VERSION__}",
+			"resources": {
+				"requests": {
+					"memory": "1024M"
+				},
+				"limits": {
+					"memory": "2048M"
+				}
+			},
+			"env": [],
+			"ports": [{
+				"name": "local",
+				"hostPort": {__PORT_APP__},
+				"containerPort": {__PORT_APP2__}
+			}],
+			"volumeMounts": [
+			{
+				"mountPath": "/logs",
+				"name": "{__IMAGE__}-{__ENV__}-logs"
+			},
+			{
+			"mountPath": "/etc/localtime",
+			"name": "tz-config"
+			}]
+		}],
+		"volumes": [{
+			"name": "{__IMAGE__}-{__ENV__}-logs",
+			"hostPath": {
+				"path": "/home/dockeruser/kubernetes/logs"
+			}
+		},
+		{
+			"name": "tz-config",
+			"hostPath": {
+			"path": "/usr/share/zoneinfo/America/Argentina/Buenos_Aires"
+		}
+		}]
+	}
+}

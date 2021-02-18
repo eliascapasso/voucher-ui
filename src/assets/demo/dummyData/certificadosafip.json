@@ -1,0 +1,116 @@
+[
+        {
+            "id": "1",
+            "nombreArchivo": "archivo1.cer",
+            "keystorePass": "keystorePass",
+            "keystoreSigner": "keystoreSigner",
+            "alta": "10-01-2019 10:00:00",
+            "baja": null,
+            "enUso": false
+        },
+        {
+            "id": "2",
+            "nombreArchivo": "archivo2.cer",
+            "keystorePass": "keystorePass",
+            "keystoreSigner": "keystoreSigner",
+            "alta": "10-01-2019 10:00:00",
+            "baja": null,
+            "enUso": false
+        },
+        {
+            "id": "3",
+            "nombreArchivo": "archivo3.cer",
+            "keystorePass": "keystorePass",
+            "keystoreSigner": "keystoreSigner",
+            "alta": "10-01-2019 10:00:00",
+            "baja": null,
+            "enUso": false
+        },
+        {
+            "id": "4",
+            "nombreArchivo": "archivo4.cer",
+            "keystorePass": "keystorePass",
+            "keystoreSigner": "keystoreSigner",
+            "alta": "10-01-2019 10:00:00",
+            "baja": null,
+            "enUso": false
+        },
+        {
+            "id": "5",
+            "nombreArchivo": "archivo5.cer",
+            "keystorePass": "keystorePass",
+            "keystoreSigner": "keystoreSigner",
+            "alta": "10-01-2019 10:00:00",
+            "baja": null,
+            "enUso": true
+        },
+        {
+            "id": "6",
+            "nombreArchivo": "archivo6.cer",
+            "keystorePass": "keystorePass",
+            "keystoreSigner": "keystoreSigner",
+            "alta": "10-01-2019 10:00:00",
+            "baja": null,
+            "enUso": false
+        },
+        {
+            "id": "7",
+            "nombreArchivo": "archivo7.cer",
+            "keystorePass": "keystorePass",
+            "keystoreSigner": "keystoreSigner",
+            "alta": "10-01-2019 10:00:00",
+            "baja": null,
+            "enUso": false
+        }
+        ,
+        {
+            "id": "8",
+            "nombreArchivo": "archivo8.cer",
+            "keystorePass": "keystorePass",
+            "keystoreSigner": "keystoreSigner",
+            "alta": "10-01-2019 10:00:00",
+            "baja": null,
+            "enUso": false
+        }
+        ,
+        {
+            "id": "9",
+            "nombreArchivo": "archivo9.cer",
+            "keystorePass": "keystorePass",
+            "keystoreSigner": "keystoreSigner",
+            "alta": "10-01-2019 10:00:00",
+            "baja": null,
+            "enUso": false
+        }
+        ,
+        {
+            "id": "10",
+            "nombreArchivo": "archivo10.cer",
+            "keystorePass": "keystorePass",
+            "keystoreSigner": "keystoreSigner",
+            "alta": "10-01-2019 10:00:00",
+            "baja": null,
+            "enUso": false
+        }
+        ,
+        {
+            "id": "11",
+            "nombreArchivo": "archivo11.cer",
+            "keystorePass": "keystorePass",
+            "keystoreSigner": "keystoreSigner",
+            "alta": "10-01-2019 10:00:00",
+            "baja": null,
+            "enUso": false
+        }
+        ,
+        {
+            "id": "12",
+            "nombreArchivo": "archivo12.cer",
+            "keystorePass": "keystorePass",
+            "keystoreSigner": "keystoreSigner",
+            "alta": "10-01-2019 10:00:00",
+            "baja": null,
+            "enUso": false
+        }
+    ]
+

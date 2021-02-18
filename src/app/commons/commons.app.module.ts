@@ -69,7 +69,8 @@ import { CardModule } from 'primeng/card';
 import { BlockUIModule } from 'primeng/blockui';
 import { ToastModule } from 'primeng/toast';
 import { IonicModule } from '@ionic/angular';
-
+import { FullCalendarModule } from 'primeng/fullcalendar';
+import { MessageModule } from 'primeng/primeng';
 
 @NgModule({
   imports: [
@@ -120,6 +121,7 @@ import { IonicModule } from '@ionic/angular';
     MenuModule,
     MenubarModule,
     MessagesModule,
+    MessageModule,
     MultiSelectModule,
     OrderListModule,
     OrganizationChartModule,
@@ -149,7 +151,8 @@ import { IonicModule } from '@ionic/angular';
     TooltipModule,
     TreeModule,
     TreeTableModule,
-    ToastModule
+    ToastModule,
+    FullCalendarModule
   ],
   entryComponents: [],
   providers: [

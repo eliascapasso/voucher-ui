@@ -1,0 +1,17 @@
+<ion-content text-center>
+	<ion-icon name="contact"></ion-icon>
+	<br/>
+	<label>{{userLogin?.lastName}} {{userLogin?.firstName}}</label>
+</ion-content>
+<ion-content class="item">
+	<ion-list> 
+		<ion-item [routerDirection]="'root'" [routerLink]="'/cambio-password'" (click)="close()" >
+			<i class="pi pi-fw pi-key"></i>
+			<ion-label class="labelPanel">Cambiar Password</ion-label>
+		</ion-item>
+		<ion-item (click)="logout()" button>
+			<i class="pi pi-sign-out"></i>
+			<ion-label class="labelPanel">Salir</ion-label>
+		</ion-item>
+	</ion-list>
+</ion-content>

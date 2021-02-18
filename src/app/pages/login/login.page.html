@@ -1,43 +1,57 @@
 <ion-content>
-  <ion-grid class="login">
-    <ion-row class="header ion-text-center">
-      <ion-col size="12" size-sm="12" size-md="12" size-lg="12">
-        <h1>Bienvenido a...!!!</h1>
-        <h3>Log in to continue to ...</h3>
-      </ion-col>
-    </ion-row>
-    <ion-row class="section ion-text-center">
-      <ion-col size="12" size-sm="12" size-md="12" size-lg="12">
+  <p-growl [(value)]="msgs"></p-growl>
+  <div class="login-body">
+    <div class="card login-panel ui-fluid rectangleLogin">
+      <div class="ui-g">
 
-        <ion-card>
-          <ion-grid>
-            <ion-row class="ion-text-center">
-              <ion-col size="12">
-                <input type="text" placeholder="UserName" pInputText />
-              </ion-col>
-              <ion-col size="12">
-                <input type="password" placeholder="Password" pInputText />
-              </ion-col>
-              <ion-col size="12">
-                <button pButton type="button" label="Ingresar"></button>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-card>
+        <img src="assets/icon/favicon.png" class="logo-musimundo-1" />
 
-      </ion-col>
-    </ion-row>
-    <ion-row class="footer ion-text-center">
-      <ion-col size="12" size-sm="12" size-md="12" size-lg="12">
-        <a id="signup" class="primary-action" href="">
-          <span>Can't log in?</span>
-        </a>
-      </ion-col>
-      <ion-col size="12" size-sm="12" size-md="12" size-lg="12">
-        <a id="signup" class="primary-action" href="">
-          <span>Sign up for an account</span>
-        </a>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+        <span class="gestion-voucher">Gesti&oacute;n de vouchers</span>
+
+        <span class="bienvenido-inicie">Bienvenido! Inicie sesi&oacute;n con su cuenta</span>
+
+        <span class="bienvenido-inicie"></span>
+
+
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+          <div class="ui-g-12">
+            <span class="md-inputfield">
+              <input type="email" id="email" formControlName="email" pInputText autofocus placeholder="Email" />
+            </span>
+            <ng-container *ngFor="let validation of validationMessages.email">
+              <p-message *ngIf="form?.email.hasError(validation.type) && (form?.email.dirty || form?.email.touched)"
+                [severity]="validation.severity" [text]="validation.message"></p-message>
+            </ng-container>
+          </div>
+          <div class="ui-g-12">
+            <span class="md-inputfield">
+              <input type="password" id="password" pInputText formControlName="password" placeholder="Password" />
+            </span>
+            <ng-container *ngFor="let validation of validationMessages.email">
+              <p-message
+                *ngIf="form?.password.hasError(validation.type) && (form?.password.dirty || form?.password.touched)"
+                [severity]="validation.severity" [text]="validation.message"></p-message>
+            </ng-container>
+          </div>
+
+          <div class="ui-g-15">
+            <div class="ui-g-6 left">
+              <p-checkbox class="labelInput" labelStyleClass="labelInput" name="recordar" value="Recordar"
+                label="Recordar" inputId="recordar"></p-checkbox>
+            </div>
+
+            <div class="ui-g-6">
+              <span class="olvide-mi-contrasena" [routerLink]="['/recuperar-password']"
+                routerLinkActive="router-link-active">Olvidé mi contraseña</span>
+            </div>
+          </div>
+
+          <div class="ui-g-8 margenLeftBIng">
+            <button pButton type="submit" label="Ingresar" class="buttonLogin" icon="ui-icon-person"></button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
 </ion-content>

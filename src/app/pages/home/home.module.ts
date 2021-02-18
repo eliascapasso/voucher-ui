@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 
 import { HomePage } from './home.page';
 import { CommonsAppModule } from 'src/app/commons/commons.app.module';
+import { ComponentsModule } from '../../components/components.module';
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import { CommonsAppModule } from 'src/app/commons/commons.app.module';
     FormsModule,
     IonicModule,
     CommonsAppModule,
+    ComponentsModule,
     RouterModule.forChild([
       {
         path: '',

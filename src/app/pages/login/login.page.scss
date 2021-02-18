@@ -21,6 +21,7 @@ ion-content{
     width: 400px;  
 
     ion-card{
+        border: 200px;
         background-color:white;
         padding: 50px;
         input, button{
@@ -31,4 +32,75 @@ ion-content{
 
 h1,h3,span {
     color: white;
+}
+
+ion-content .buttonLogin{
+    background-color: #EC3026;
+    width: 100%
+}
+
+ion-content .rectangleLogin{
+    border-radius: 10px;
+}
+
+
+ion-content .gestion-voucher{	
+	height: 43px;	
+	width: 391px;	
+	color: #000000;	
+	font-family: 
+	"Google Sans";	
+	font-size: 25px;	
+	font-weight: bold;	
+	line-height: 43px;	
+	text-align: center;
+}
+
+ion-content .logo-musimundo-1 {	
+	height: 69px;	
+	width: 69px;
+ 	margin-left: 40%;	
+}
+
+ion-content .bienvenido-inicie {
+	height: 23px;
+	width: 318px;
+	color: #919191;
+	font-family: "Google Sans";
+	font-size: 18px;
+	line-height: 23px;
+	text-align: center;
+	padding-top:10px;
+}
+
+ion-content .borderInput {
+	height: 2px;
+	width: 318px;
+	background-color: rgba(0,0,0,0.54);
+}
+
+ion-content .labelInput, p-checkbox {
+	color: rgba(0,0,0,0.54);
+	font-family:  "Google Sans"; 
+	font-size: 13px;
+	line-height: 14px;
+}
+ 
+ion-content .olvide-mi-contrasena {	
+	height: 18px;	
+	width: 134px;	
+	color: #1B7CFF;	
+	font-family: "Google Sans";	
+	font-size: 14px;	
+	line-height: 18px;	
+	text-align: center;
+	cursor: pointer;
+}
+
+ion-content .margenLeftBIng {
+	margin-left: 20%;	
+}
+
+io-content .olvide-mi-contrasena{
+	font-family: "Google Sans";	 
 }

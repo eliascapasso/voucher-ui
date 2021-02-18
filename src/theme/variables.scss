@@ -75,7 +75,14 @@
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
 
-
+/**
   --ion-toolbar-background: var(--ion-color-primary);
+**/
+  
+    /** primary New style for application**/
+  --ion-color-primary-new: #ffffff;
+  --ion-color-primary-contrast-new: #919191;
 
+  --ion-toolbar-background: var(--ion-color-primary-new) !important;
+  
 }

@@ -1,0 +1,30 @@
+{
+  "data":[
+    {
+      "id":1,
+      "tipo": "EMAIL",
+      "nombre": "Notificacion Compra",
+      "estado": "ACTIVA",
+      "version": 1,
+      "archivoJasper": "notificacionCompra.jasper",
+      "jsonEjemplo": "{dato:'valor'}",
+      "fechaAlta": "2016-01-09T16:00:00",
+      "fechaBaja": "2016-01-09T16:00:00",
+      "ultimaEjecucionExitosa": "2016-01-09T16:00:00",
+      "ultimaEjecucionFallida": "2016-01-09T16:00:00"
+    },
+    {
+      "id":2,
+      "tipo": "COMPROBANTE",
+      "nombre": "Comprobante Compra",
+      "estado": "ACTIVA",
+      "version": 1,
+      "archivoJasper": "comprobanteCompra.jasper",
+      "jsonEjemplo": "{dato:'valor'}",
+      "fechaAlta": "2016-01-09T16:00:00",
+      "fechaBaja": "2016-01-09T16:00:00",
+      "ultimaEjecucionExitosa": "2016-01-09T16:00:00",
+      "ultimaEjecucionFallida": "2016-01-09T16:00:00"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+pipeline {
+  agent any
+    environment {
+	PACKAGE_JSON = readJSON file: 'package.json'
+	BUILD_RELEASE_VERSION = "${PACKAGE_JSON.version}"
+	IMAGE= 'factura-electronica-ui'
+    ENV = 'prd'
+    PORT_APP = '8220'
+	PORT_APP2 = '80'
+    DOCKER_REGISTRY = '10.4.101.158:5000'
+    KUBERNETES_HOST = '10.4.101.105'
+    KUBERNETES_USER = 'dockeruser'
+  }
+  stages {
+    stage('checkout') {
+      steps {
+        echo 'Descargando codigo de SCM'
+        sh 'rm -rf *'
+		checkout scm
+      }
+    }
+	stage('check tools') {
+	  steps { 
+				echo("workspace directorio: ${WORKSPACE}")
+				echo 'Voy hacer la siguiente imagen'
+				echo("docker build -t ${IMAGE}:v${BUILD_RELEASE_VERSION}")
+				sh "node -v"
+				sh "npm -v"
+				sh "bower -v"
+				echo "version del Package Json:${BUILD_RELEASE_VERSION}"
+			}
+		}
+		stage('Compilando Angular') {
+			steps {
+				echo 'Compilando Angular'
+				sh 'npm install'
+				sh 'npm run build -- --prod'
+			}
+		}
+		stage('Build docker') {
+			steps {
+				echo("Hago un build de docker imagen ${IMAGE}:v${BUILD_RELEASE_VERSION}")
+				sh("docker build . -t ${IMAGE}:v${BUILD_RELEASE_VERSION} -f deploy-prd/Dockerfile")
+				sh("docker tag ${IMAGE}:v${BUILD_RELEASE_VERSION} ${DOCKER_REGISTRY}/${IMAGE}:v${BUILD_RELEASE_VERSION}")
+				sh("docker push ${DOCKER_REGISTRY}/${IMAGE}")
+				echo("Borro la imagen ${IMAGE}:v${BUILD_RELEASE_VERSION}")
+				sh("docker rmi ${IMAGE}:v${BUILD_RELEASE_VERSION}")
+			}
+		}
+		stage('Deploy en kubenetes') {		
+			steps {
+				echo("Reemplazo la version en kubernetes file")
+				dir("deploy-prd"){
+					sh("cp kube-${IMAGE}.json kube-${IMAGE}-${ENV}.json")
+					
+					sh("sed -i  's/{__BUILD_RELEASE_VERSION__}/v${BUILD_RELEASE_VERSION}/g' kube-${IMAGE}-${ENV}.json")
+					sh("sed -i  's/{__IMAGE__}/${IMAGE}/g' kube-${IMAGE}-${ENV}.json")
+					sh("sed -i  's/{__ENV__}/${ENV}/g' kube-${IMAGE}-${ENV}.json")
+					sh("sed -i  's/{__DOCKER_REGISTRY__}/${DOCKER_REGISTRY}/g' kube-${IMAGE}-${ENV}.json")	
+					sh("sed -i  's/{__PORT_APP__}/${PORT_APP}/g' kube-${IMAGE}-${ENV}.json")
+					sh("sed -i  's/{__PORT_APP2__}/${PORT_APP2}/g' kube-${IMAGE}-${ENV}.json")
+					
+					echo("Conectando al servidor Docker PRD")
+					sshagent(['fa047b67-ff36-4eeb-b22f-524b8de9ffbf']) {
+						sh ("scp kube-${IMAGE}-${ENV}.json ${KUBERNETES_USER}@${KUBERNETES_HOST}:/home/dockeruser/kubernetes/kfiles/")
+						sh ("ssh ${KUBERNETES_USER}@${KUBERNETES_HOST} kubectl apply -f kubernetes/kfiles/kube-${IMAGE}-${ENV}.json")
+					}
+				}
+				
+			}
+		} 
+  }
+
+}

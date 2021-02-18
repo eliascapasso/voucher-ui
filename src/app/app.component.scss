@@ -1,0 +1,15 @@
+ion-split-pane .labelPanel{
+	font-family: "Product Sans Regular";
+	font-size: 16px;
+	line-height: 20px;
+	color: #757575;
+ 	padding-left: 10px;
+}
+ 
+ion-split-pane .item{
+	--ion-background-color:white;
+}
+
+ion-router-outlet{
+	margin-top: 45px;
+}

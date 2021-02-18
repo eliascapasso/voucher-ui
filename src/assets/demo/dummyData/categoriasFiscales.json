@@ -1,0 +1,45 @@
+{
+    "content": [
+        {
+            "id": 1,
+            "nombre": "Responsable Inscripto"
+        },
+        {
+            "id": 2,
+            "nombre": "Sujeto Excento"
+        },
+        {
+            "id": 3,
+            "nombre": "Consumidor Final"
+        },
+        {
+            "id": 4,
+            "nombre": "Responsable Monotributo"
+        }
+    ],
+    "pageable": {
+        "sort": {
+            "sorted": true,
+            "unsorted": false,
+            "empty": false
+        },
+        "offset": 0,
+        "pageSize": 3,
+        "pageNumber": 0,
+        "unpaged": false,
+        "paged": true
+    },
+    "last": true,
+    "totalPages": 1,
+    "totalElements": 1,
+    "size": 3,
+    "number": 0,
+    "sort": {
+        "sorted": true,
+        "unsorted": false,
+        "empty": false
+    },
+    "numberOfElements": 4,
+    "first": true,
+    "empty": false
+}
