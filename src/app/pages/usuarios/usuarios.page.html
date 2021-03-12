@@ -3,20 +3,21 @@
 
 	<ion-header>
 		<ion-toolbar>
-		  <ion-buttons slot="start">
-			<ion-menu-button></ion-menu-button>
-		  </ion-buttons>
-		  <ion-title>
-			<div style="height: 40px">
-				<label class="configuracionLabel">Configuración  <label class="separacionEntre"> > </label>   Usuarios </label>
-			</div>
-		  </ion-title>
+			<ion-buttons slot="start">
+				<ion-menu-button></ion-menu-button>
+			</ion-buttons>
+			<ion-title>
+				<div style="height: 40px">
+					<label class="configuracionLabel">Configuración <label class="separacionEntre"> > </label> Usuarios
+					</label>
+				</div>
+			</ion-title>
 		</ion-toolbar>
-	  </ion-header>
-  
-	  <br/>
+	</ion-header>
 
-	<div class="container" >
+	<br />
+
+	<div class="container">
 		<p-card>
 			<p-growl [(value)]="msgs">
 			</p-growl>
@@ -27,30 +28,25 @@
 							<ion-row>
 								<ion-col>
 									<div class="ui-fluid">
-										<!-- <div class="ui-g-4 ui-md-4">
-			                                <span>
-													 
-			                                    <input type="text" (keyup)="changeFilterHandler($event)" placeholder="Nombre" [(ngModel)]="filter.name" pInputText/>
-			                                </span>
-										</div> -->
 										<div class="ui-g-4 ui-md-4" style="width: 50%;">
 											<span>
-												<ion-searchbar placeholder="Buscar" 
-																[(ngModel)]="busqueda"
-																(ionChange)="changeFilterHandler($event)">
+												<ion-searchbar placeholder="Buscar" [(ngModel)]="busqueda"
+													(ionChange)="changeFilterHandler($event)">
 												</ion-searchbar>
 											</span>
 										</div>
 										<div class="ui-g-4 ui-md-4" style="padding-top: 25px; width: 50%;">
-			                                <span>
-			                                    <p-dropdown (onChange)="changeFilterHandler($event)" [options]="estados" [(ngModel)]="filter.estado"
-			                                                [autoWidth]="false" [autoDisplayFirst]="false"></p-dropdown>
-			                                </span>
+											<span>
+												<p-dropdown (onChange)="changeFilterHandler($event)" [options]="estados"
+													[(ngModel)]="filter.estado" [autoWidth]="false"
+													[autoDisplayFirst]="false"></p-dropdown>
+											</span>
 										</div>
 									</div>
 								</ion-col>
 								<ion-col text-right>
-									<button pButton type="button" class="ui-button-success" icon="pi pi-plus" label="Crear Usuario" (click)="showNuevoUsuarioModal()"></button>
+									<button pButton type="button" class="ui-button-success" icon="pi pi-plus"
+										label="Crear Usuario" (click)="showNuevoUsuarioModal()"></button>
 								</ion-col>
 							</ion-row>
 							<ion-row>
@@ -60,11 +56,10 @@
 									</div>
 								</ion-col>
 								<ion-col *ngIf="showTabla">
-									<p-table [columns]="columnas" [value]="usuarios" dataKey="username"
-											 [style]="{'margin-bottom':'20px'}"
-											 [paginator]="true" [rows]="5" [totalRecords]="usuarios.length" 
-											 [rowsPerPageOptions]="[5,10,20,30]"
-											 [loading]="loading">
+									<p-table [columns]="columnas" [value]="usuarios" dataKey="email"
+										[style]="{'margin-bottom':'20px'}" [paginator]="true" [rows]="5"
+										[totalRecords]="usuarios.length" [rowsPerPageOptions]="[5,10,20,30]"
+										[loading]="loading">
 										<ng-template pTemplate="caption">
 											Usuarios
 										</ng-template>
@@ -82,19 +77,28 @@
 										<ng-template pTemplate="body" let-rowData let-columns="columns">
 											<tr [pSelectableRow]="rowData">
 												<td *ngFor="let col of columns">
-													{{rowData[col.field]}}
+													<div *ngIf="col.empresa">
+														{{ rowData[col.field].empresa }}
+													</div>
+													<div *ngIf="col.role">
+														{{ rowData[col.field].role }}
+													</div>
+													<div *ngIf="!col.empresa && !col.role">
+														{{ rowData[col.field] }}
+													</div>
 												</td>
 												<td>
 													<div style="text-align: center">
-														<i class="pi pi-pencil" style="font-size: 2em; cursor: pointer;" (click)="showEditarUsuarioModal(rowData)"></i>&nbsp;&nbsp;
- 
-														<p-inputSwitch (onChange)="handleChange($event, rowData)" [ngModel]="rowData.enabled" ></p-inputSwitch>
+														<i class="pi pi-pencil" style="font-size: 2em; cursor: pointer;"
+															(click)="showEditarUsuarioModal(rowData)"></i>&nbsp;&nbsp;
+
+														<p-inputSwitch (onChange)="handleChange($event, rowData)"
+															[ngModel]="rowData.estado"></p-inputSwitch>
 													</div>
 												</td>
 											</tr>
 										</ng-template>
 									</p-table>
-									<!-- <p-paginator [rows]="10" [totalRecords]="usuarios.totalElements" [rowsPerPageOptions]="[10,20,30]"></p-paginator> -->
 								</ion-col>
 							</ion-row>
 
@@ -106,12 +110,12 @@
 	</div>
 </ion-content>
 
-<p-dialog [(visible)]="displayUsuarioModal" [modal]="true" [responsive]="true" [style]="{width: '600px', minWidth: '600px'}"
-          [maximizable]="false" [baseZIndex]="10000" appendTo="body">
-	<p-header  *ngIf="isNew" >
+<!-- <p-dialog [(visible)]="displayUsuarioModal" [modal]="true" [responsive]="true"
+	[style]="{width: '600px', minWidth: '600px'}" [maximizable]="false" [baseZIndex]="10000" appendTo="body">
+	<p-header *ngIf="isNew">
 		Alta de nuevo usuario
 	</p-header>
-	<p-header  *ngIf="!isNew" >
+	<p-header *ngIf="!isNew">
 		Editar usuario
 	</p-header>
 	<form [formGroup]="usuarioForm" (ngSubmit)="guardarUsuario()">
@@ -124,49 +128,50 @@
 
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
-                                <span class="md-inputfield">
-                                    <input type="text" formControlName="nombre" [(ngModel)]="nuevoUsuario.firstName"  pInputText/>
-                                    <label>Nombre</label>
-                                </span>
+								<span class="md-inputfield">
+									<input type="text" formControlName="nombre" [(ngModel)]="nuevoUsuario.nombre"
+										pInputText />
+									<label>Nombre</label>
+								</span>
 							</div>
 						</div>
 
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
-                                <span class="md-inputfield">
-                                    <input type="text" formControlName="apellido" [(ngModel)]="nuevoUsuario.lastName"  pInputText/>
-                                    <label>Apellido</label>
-                                </span>
+								<span class="md-inputfield">
+									<input type="text" formControlName="apellido" [(ngModel)]="nuevoUsuario.apellido"
+										pInputText />
+									<label>Apellido</label>
+								</span>
 							</div>
 						</div>
 
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
-                                <span class="md-inputfield">
-                                    <input type="text" name="email" formControlName="email" [(ngModel)]="nuevoUsuario.email"  pInputText/>
-                                    <label>E-mail</label>
-                                </span>
+								<span class="md-inputfield">
+									<input type="text" name="email" formControlName="email"
+										[(ngModel)]="nuevoUsuario.email" pInputText />
+									<label>E-mail</label>
+								</span>
 							</div>
 						</div>
 
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
-                                <span class="ui-float-label" style="width: 100%;">
-                                    <p-dropdown [options]="roles"
-                                                formControlName="rol"
-                                                [(ngModel)]="rolSeleccionado"
-                                                [autoWidth]="false"
-                                                [autoDisplayFirst]="false"
-                                                [disabled]="nuevoUsuario.id"></p-dropdown>
-                                    <label>Rol</label>
-                                </span>
+								<span class="ui-float-label" style="width: 100%;">
+									<p-dropdown [options]="roles" formControlName="rol" [(ngModel)]="rolSeleccionado"
+										[autoWidth]="false" [autoDisplayFirst]="false" [disabled]="nuevoUsuario._id">
+									</p-dropdown>
+									<label>Rol</label>
+								</span>
 							</div>
 						</div>
 
 
 						<div>
 							<div class="ui-inputgroup">
-								<p-inputSwitch   formControlName="enabled" [(ngModel)]="nuevoUsuario.enabled" ></p-inputSwitch>
+								<p-inputSwitch formControlName="enabled" [(ngModel)]="nuevoUsuario.estado">
+								</p-inputSwitch>
 								<label>Habilitado</label>
 							</div>
 						</div>
@@ -176,13 +181,14 @@
 			</div>
 		</div>
 
-		<p-footer >
+		<p-footer>
 			<div class="ui-g-12 ui-md-12" style="text-align: right">
-				<button type="button" pButton icon="pi pi-times" (click)="displayUsuarioModal=false" label="Cancelar" class="ui-button-danger"></button>&nbsp;
-				<button type="button" pButton icon="pi pi-check" (click)="guardarUsuario()" label="Guardar" class="ui-button-success"></button>&nbsp;
+				<button type="button" pButton icon="pi pi-times" (click)="displayUsuarioModal=false" label="Cancelar"
+					class="ui-button-danger"></button>&nbsp;
+				<button type="button" pButton icon="pi pi-check" (click)="guardarUsuario()" label="Guardar"
+					class="ui-button-success"></button>&nbsp;
 			</div>
 		</p-footer>
 	</form>
-</p-dialog>
+</p-dialog> -->
 <app-footer></app-footer>
-

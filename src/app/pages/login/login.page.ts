@@ -67,19 +67,18 @@ export class LoginPage implements OnInit, AfterViewInit {
   }
 
   login() {
+    this.menuCtrl.enable(true);
     this.router.navigate(['/usuarios']);
 
-
     //DESCOMENTAR
-    // console.log(this.loginForm.value);
     // this.isSubmitted = true;
     // if (this.loginForm.invalid) {
     //   return;
     // }
 
     // const usuarioLogin: UsuarioLogin = {
-    //   username: this.formControls.email.value,  
-    //   password: this.formControls.password.value, 
+    //   username: this.formControls.email.value,
+    //   password: this.formControls.password.value,
     //   grant_type: 'password',
     //   client_id: 'web',
     //   client_secret: 'web'
@@ -118,9 +117,9 @@ export class LoginPage implements OnInit, AfterViewInit {
   }
 
   logout() {
-    this.usuarioService.logout();
     this.userLogin = null;
     this.menuCtrl.enable(false);
+    this.usuarioService.logout();
   }
 
   get formControls() {

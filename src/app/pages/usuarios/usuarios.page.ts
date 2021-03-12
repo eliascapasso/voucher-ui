@@ -12,6 +12,7 @@ import { ConfirmationService } from 'primeng/api';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Usuario } from '../../domain/usuario.model';
 import { EmailModel } from '../../domain/email.model';
+import { RowOutlet } from '@angular/cdk/table';
 
 @Component({
     selector: 'app-usuarios',
@@ -21,17 +22,15 @@ import { EmailModel } from '../../domain/email.model';
 })
 export class UsuariosPage implements OnInit {
     public columnas: any[];
-    public usuarios: Usuario[];
-    public usuariosOriginal: Usuario[];
+    public usuarios: Usuario[] = [];
+    public usuariosOriginal: Usuario[] = [];
     public nuevoUsuario: Usuario;
     public showTabla: boolean = false
     public usuarioForm: FormGroup;
     public msgs: Message[];
     public formMsgs: Message[];
     public displayUsuarioModal: boolean = false;
-    public roles: any[] = [];
     public rolSeleccionado: string;
-    public statusSeleccionado: string;
     public estados: any[] = [];
     public filter = { name: '', estado: '' };
     public busqueda: string = '';
@@ -51,42 +50,44 @@ export class UsuariosPage implements OnInit {
         this.filter = { name: '', estado: '' };
 
         this.columnas = [
-            { field: 'firstName', header: 'Nombre' },
-            { field: 'lastName', header: 'Apellido' },
+            { field: 'nombre', header: 'Nombre' },
+            { field: 'apellido', header: 'Apellido' },
             { field: 'email', header: 'Email' },
-            { field: 'roles', header: 'Rol' }
+            { field: 'empresa', header: 'Empresa', empresa: true },
+            { field: 'role', header: 'Rol', role: true }
         ];
 
         this.usuarioForm = this.formBuilder.group({
             nombre: ['', Validators.required],
             apellido: ['', Validators.required],
             email: ['', Validators.required],
-            rol: ['', Validators.required],
-            enabled: [''],
+            empresa: ['', Validators.required],
+            role: ['', Validators.required],
+            estado: [''],
         });
 
-        this.isNew = false;
-        this.nuevoUsuario = {};
-        //this.getUsuarios();
-        this.roles.push({ label: 'Rol Usuario', value: 'ROLE_USER' });
-        this.roles.push({ label: 'Rol Admin', value: 'ROLE_ADMIN' });
         this.estados.push({ label: 'Todos los Estados', value: '' });
         this.estados.push({ label: 'Activo', value: 'ACTIVO' });
         this.estados.push({ label: 'Inactivo', value: 'INACTIVO' });
+
+        this.isNew = false;
+
+        this.getUsuarios();
     }
 
     getUsuarios() {
         this.blockUI.start("Cargando Usuarios...");
         this.loading = true;
         this.usuarioService.getUsuarios().then(usuarios => {
+            console.log(usuarios);
             this.loading = false;
             this.blockUI.stop();
 
             if (usuarios.length < 1) {
                 this.showTabla = false;
             } else {
-                this.usuariosOriginal = usuarios;
-                this.usuarios = this.usuariosOriginal;
+                this.usuariosOriginal = usuarios;;
+                this.usuarios = usuarios;
                 this.showTabla = true;
             }
         })
@@ -138,7 +139,7 @@ export class UsuariosPage implements OnInit {
             acceptLabel: 'Confirmar',
             rejectLabel: 'Cancelar',
             accept: () => {
-                usuario.enabled = true;
+                usuario.estado = true;
                 this.usuarioService.update(usuario)
                     .subscribe((usuario: any) => {
                         console.log('usuario actualizado');
@@ -157,12 +158,11 @@ export class UsuariosPage implements OnInit {
 
     showNuevoUsuarioModal() {
         this.isNew = true;
-        this.nuevoUsuario = {};
         this.rolSeleccionado = '';
         this.usuarioForm.get('nombre').setValue('');
         this.usuarioForm.get('apellido').setValue('');
         this.usuarioForm.get('email').setValue('');
-        this.usuarioForm.get('rol').setValue('');
+        this.usuarioForm.get('role').setValue('');
         this.usuarioForm.get('enabled').setValue(false);
         this.usuarioForm.controls['email'].enable();
         this.displayUsuarioModal = true;
@@ -171,11 +171,11 @@ export class UsuariosPage implements OnInit {
     showEditarUsuarioModal(usuario) {
         this.isNew = false;
         this.nuevoUsuario = usuario;
-        this.usuarioForm.get('nombre').setValue(this.nuevoUsuario.firstName);
-        this.usuarioForm.get('apellido').setValue(this.nuevoUsuario.lastName);
+        this.usuarioForm.get('nombre').setValue(this.nuevoUsuario.nombre);
+        this.usuarioForm.get('apellido').setValue(this.nuevoUsuario.apellido);
         this.usuarioForm.get('email').setValue(this.nuevoUsuario.email);
-        this.usuarioForm.get('rol').setValue(this.nuevoUsuario.roles[0]);
-        this.usuarioForm.get('enabled').setValue(this.nuevoUsuario.enabled);
+        this.usuarioForm.get('role').setValue(this.nuevoUsuario.role.role);
+        this.usuarioForm.get('estado').setValue(this.nuevoUsuario.estado);
         this.usuarioForm.controls['usuario'].disable();
         this.usuarioForm.controls['email'].disable();
         this.displayUsuarioModal = true;
@@ -187,7 +187,7 @@ export class UsuariosPage implements OnInit {
         emailModel.subject = 'Activacion de Cuenta';
         emailModel.template = 'setear_password.jrxml';
         emailModel.data = JSON.stringify({
-            nombre: usuario.firstName + ' ' + usuario.lastName,
+            nombre: usuario.nombre + ' ' + usuario.apellido,
             email: usuario.email,
             pagina: 'Gestion Voucher',
             link: 'http://localhost:8100'
@@ -201,17 +201,23 @@ export class UsuariosPage implements OnInit {
     }
 
     guardarUsuario() {
-        this.nuevoUsuario.username = "";
+        this.nuevoUsuario.email = "";
 
         if (!this.usuarioForm.valid) {
             this.formMsgs = [];
             this.formMsgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
         } else {
             this.blockUI.start('Guardando Usuario...');
-            if (this.nuevoUsuario.id == null) {
-                this.nuevoUsuario.roles = [];
-                this.nuevoUsuario.roles.push(this.rolSeleccionado);
+
+            if (this.nuevoUsuario._id == null) {
+                this.nuevoUsuario.role = null;
+                let role = {
+                    _id: "",
+                    role: this.rolSeleccionado
+                };
+                this.nuevoUsuario.role = role;
                 this.nuevoUsuario.password = '123456';
+
                 this.usuarioService.save(this.nuevoUsuario)
                     .subscribe((usuario: any) => {
                         this.blockUI.stop();
@@ -242,7 +248,7 @@ export class UsuariosPage implements OnInit {
             .filter(user => {
                 if (this.filter['estado'] != '' && this.filter['estado'].toUpperCase() != 'TODOS LOS ESTADOS') {
                     let enabled = (this.filter['estado'].toUpperCase() == 'ACTIVO');
-                    if (user.enabled == enabled) {
+                    if (user.estado == enabled) {
                         return true;
                     } else {
                         return false;
@@ -253,9 +259,9 @@ export class UsuariosPage implements OnInit {
                 if (this.busqueda != '') {
                     if (user.email && user.email.toLowerCase().includes(this.busqueda.toLowerCase())) {
                         return true;
-                    } else if (user.firstName && user.firstName.toLowerCase().includes(this.busqueda.toLowerCase())) {
+                    } else if (user.nombre && user.nombre.toLowerCase().includes(this.busqueda.toLowerCase())) {
                         return true;
-                    } else if (user.lastName && user.lastName.toLowerCase().includes(this.busqueda.toLowerCase())) {
+                    } else if (user.apellido && user.apellido.toLowerCase().includes(this.busqueda.toLowerCase())) {
                         return true;
                     } else {
                         return false;

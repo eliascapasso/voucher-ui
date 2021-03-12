@@ -1,19 +1,22 @@
 export interface Usuario {
-  id?: string;
-  username?: string;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  dni?: number;
-  gender?: string;
-  status?: string;
-  phone?: number;
-  codigoVerificacionCliente?: string;
-  pedidoCodigoVerificacionCliente?: string;
-  enabled?: boolean;
-  roles?: string[];
-  accountNonExpired?: boolean;
-  accountNonLocked?: boolean;
-  credentialsNonExpired?: boolean;
+  _id?: string;
+  email: string;
+  nombre?: string;
+  apellido?: string;
+  empresa?: Empresa;
+  estado?: boolean;
   password?: string;
+  role?: Role;
+  telefono?: string;
+}
+
+class Empresa {
+  _id: string;
+  empresa: string;
+  estado: any;
+}
+
+class Role {
+  _id?: string;
+  role: string;
 }
