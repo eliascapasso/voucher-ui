@@ -159,8 +159,9 @@
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
 								<span class="ui-float-label" style="width: 100%;">
-									<p-dropdown [options]="empresasSelect" formControlName="empresa" [(ngModel)]="empresaSeleccionada"
-										[autoWidth]="false" [autoDisplayFirst]="false" [disabled]="nuevoUsuario._id">
+									<p-dropdown [options]="empresasSelect" formControlName="empresa"
+										[(ngModel)]="empresaSeleccionada" [autoWidth]="false"
+										[autoDisplayFirst]="false">
 									</p-dropdown>
 									<label>Empresa</label>
 								</span>
@@ -170,8 +171,8 @@
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
 								<span class="ui-float-label" style="width: 100%;">
-									<p-dropdown [options]="rolesSelect" formControlName="role" [(ngModel)]="rolSeleccionado"
-										[autoWidth]="false" [autoDisplayFirst]="false" [disabled]="nuevoUsuario._id">
+									<p-dropdown [options]="rolesSelect" formControlName="role"
+										[(ngModel)]="rolSeleccionado" [autoWidth]="false" [autoDisplayFirst]="false">
 									</p-dropdown>
 									<label>Rol</label>
 								</span>
@@ -197,7 +198,9 @@
 				<button type="button" pButton icon="pi pi-times" (click)="displayUsuarioModal=false" label="Cancelar"
 					class="ui-button-danger"></button>&nbsp;
 				<button type="button" pButton icon="pi pi-check" (click)="guardarUsuario()" label="Guardar"
-					class="ui-button-success"></button>&nbsp;
+					class="ui-button-success" *ngIf="isNew"></button>&nbsp;
+				<button type="button" pButton icon="pi pi-check" (click)="actualizarUsuario()" label="Modificar"
+					class="ui-button-success" *ngIf="!isNew"></button>&nbsp;
 			</div>
 		</p-footer>
 	</form>

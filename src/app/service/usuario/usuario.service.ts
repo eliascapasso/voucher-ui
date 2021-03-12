@@ -82,26 +82,23 @@ export class UsuarioService {
     /* UPDATE METHODS */
 
     public update(usuario: Usuario): Observable<any> {
-        const url = this.serviceBaseURL + '/user';
-        const httpOptions = {
-            headers: new HttpHeaders({ Authorization: 'Bearer ' + String(localStorage.getItem('token')) })
-        };
+        const url = this.serviceBaseURL + '/usuario/modificacion';
+        
+        const params = this.createHttpParams({});
 
-        return this.httpClient.put<any>(url, usuario, httpOptions)
+        return this.httpClient.put<any>(url, usuario, { params })
             .pipe(
                 catchError((error: HttpErrorResponse) => this.handleError(error))
             );
     }
 
+    /* OTHERS */
+
     logout() {
-
+        this.usuario = null;
+        localStorage.removeItem('token');
+        this.usuarioLoginNotification.next({email: 'SIN IDENTIFICAR'});
         this.router.navigate(['/login']);
-
-        //DESCOMENTAR
-        // this.usuario = null;
-        // localStorage.removeItem('token');
-        // this.usuarioLoginNotification.next({username: 'SIN IDENTIFICAR'});
-        // this.router.navigate(['/login']);
     }
 
     login(usuarioLogin: UsuarioLogin) {

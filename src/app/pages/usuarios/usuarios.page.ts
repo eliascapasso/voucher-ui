@@ -83,12 +83,12 @@ export class UsuariosPage implements OnInit {
         this.getEmpresas();
     }
 
-    getEmpresas(){
+    getEmpresas() {
         this.usuarioService.getEmpresas().then(empresas => {
 
             this.empresas = empresas;
-            
-            for(let i=0; i<empresas.length; i++){
+
+            for (let i = 0; i < empresas.length; i++) {
                 this.empresasSelect.push({ label: empresas[i].empresa, value: empresas[i]._id });
             }
         })
@@ -99,12 +99,12 @@ export class UsuariosPage implements OnInit {
             });
     }
 
-    getRoles(){
+    getRoles() {
         this.usuarioService.getRoles().then(roles => {
 
             this.roles = roles;
-            
-            for(let i=0; i<roles.length; i++){
+
+            for (let i = 0; i < roles.length; i++) {
                 this.rolesSelect.push({ label: roles[i].role, value: roles[i]._id });
             }
         })
@@ -170,19 +170,8 @@ export class UsuariosPage implements OnInit {
             acceptLabel: 'Confirmar',
             rejectLabel: 'Cancelar',
             accept: () => {
-                usuario.estado = true;
-                this.usuarioService.update(usuario)
-                    .subscribe((usuario: any) => {
-                        console.log('usuario actualizado');
-                        this.msgs = [];
-                        this.msgs.push({ severity: 'info', summary: `Usuario actualizado`, detail: `Usuario actualizado` });
-                        this.getUsuarios();
-                    },
-                        error => {
-                            console.log(`error al actualizar el usuario ${error}`);
-                            this.msgs = [];
-                            this.msgs.push({ severity: 'error', summary: `error al actualizar el usuario ${error}`, detail: error });
-                        });
+
+
             }
         });
     }
@@ -193,37 +182,60 @@ export class UsuariosPage implements OnInit {
             this.formMsgs = [];
             this.formMsgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
         } else {
+            this.nuevoUsuario.role = this.roles.find(x => x._id == this.rolSeleccionado);
+            this.nuevoUsuario.empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
+
+            this.nuevoUsuario.password = '123456';
+
             this.blockUI.start('Guardando Usuario...');
-
-            if (this.nuevoUsuario._id == null) {
-                
-                this.nuevoUsuario.role = this.roles.find(x => x._id == this.rolSeleccionado);
-                this.nuevoUsuario.empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
-
-                this.nuevoUsuario.password = '123456';
-
-                this.usuarioService.save(this.nuevoUsuario)
-                    .subscribe((usuario: any) => {
+            this.usuarioService.save(this.nuevoUsuario)
+                .subscribe((usuario: any) => {
+                    this.blockUI.stop();
+                    console.log('usuario guardado');
+                    this.msgs = [];
+                    this.msgs.push({ severity: 'info', summary: `Usuario guardado con exito`, detail: `Usuario guardado` });
+                    this.displayUsuarioModal = false;
+                    this.sendActivationEmail(this.nuevoUsuario);
+                    this.getUsuarios();
+                },
+                    error => {
+                        let msj = (error.message) ? error.message : '';
+                        let cause = (error.cause) ? error.cause : '';
                         this.blockUI.stop();
-                        console.log('usuario guardado');
-                        this.msgs = [];
-                        this.msgs.push({ severity: 'info', summary: `Usuario guardado con exito`, detail: `Usuario guardado` });
-                        this.displayUsuarioModal = false;
-                        this.sendActivationEmail(this.nuevoUsuario);
-                        this.getUsuarios();
-                    },
-                        error => {
-                            let msj = (error.message) ? error.message : '';
-                            let cause = (error.cause) ? error.cause : '';
-                            this.blockUI.stop();
-                            console.log(`error al guardar usuario ${error}`);
-                            this.formMsgs = [];
-                            this.formMsgs.push({ severity: 'error', summary: `Error al guardar el usuario ${msj}`, detail: cause });
-                        });
-            } else {
-                this.confirmUpdate('¿Está seguro que desea actualizar el usuario?', this.nuevoUsuario);
-            }
+                        console.log(`error al guardar usuario ${error}`);
+                        this.formMsgs = [];
+                        this.formMsgs.push({ severity: 'error', summary: `Error al guardar el usuario ${msj}`, detail: cause });
+                    });
+        }
+    }
 
+    actualizarUsuario() {
+        if (!this.usuarioForm.valid) {
+            this.formMsgs = [];
+            this.formMsgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
+        }
+        else {
+            this.nuevoUsuario.role = this.roles.find(x => x._id == this.rolSeleccionado);
+            this.nuevoUsuario.empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
+
+            this.blockUI.start('Guardando Usuario...');
+            this.usuarioService.update(this.nuevoUsuario)
+                .subscribe((usuario: any) => {
+                    this.blockUI.stop();
+                    console.log('usuario modificado');
+                    this.msgs = [];
+                    this.msgs.push({ severity: 'info', summary: `Usuario modificado con exito`, detail: `Usuario modificado` });
+                    this.displayUsuarioModal = false;
+                    this.getUsuarios();
+                },
+                    error => {
+                        let msj = (error.message) ? error.message : '';
+                        let cause = (error.cause) ? error.cause : '';
+                        this.blockUI.stop();
+                        console.log(`error al modificar usuario ${error}`);
+                        this.formMsgs = [];
+                        this.formMsgs.push({ severity: 'error', summary: `Error al modificar el usuario ${msj}`, detail: cause });
+                    });
         }
     }
 
@@ -241,12 +253,14 @@ export class UsuariosPage implements OnInit {
     }
 
     showEditarUsuarioModal(usuario) {
+        this.nuevoUsuario._id = null;
         this.isNew = false;
         this.nuevoUsuario = usuario;
         this.usuarioForm.get('nombre').setValue(this.nuevoUsuario.nombre);
         this.usuarioForm.get('apellido').setValue(this.nuevoUsuario.apellido);
         this.usuarioForm.get('email').setValue(this.nuevoUsuario.email);
-        this.usuarioForm.get('role').setValue(this.nuevoUsuario.role.role);
+        this.rolSeleccionado = this.nuevoUsuario.role._id;
+        this.empresaSeleccionada = this.nuevoUsuario.empresa._id;
         this.usuarioForm.get('estado').setValue(this.nuevoUsuario.estado);
         this.usuarioForm.controls['email'].disable();
         this.displayUsuarioModal = true;
