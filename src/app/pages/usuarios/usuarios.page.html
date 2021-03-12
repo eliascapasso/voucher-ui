@@ -110,7 +110,7 @@
 	</div>
 </ion-content>
 
-<!-- <p-dialog [(visible)]="displayUsuarioModal" [modal]="true" [responsive]="true"
+<p-dialog [(visible)]="displayUsuarioModal" [modal]="true" [responsive]="true"
 	[style]="{width: '600px', minWidth: '600px'}" [maximizable]="false" [baseZIndex]="10000" appendTo="body">
 	<p-header *ngIf="isNew">
 		Alta de nuevo usuario
@@ -159,7 +159,7 @@
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
 								<span class="ui-float-label" style="width: 100%;">
-									<p-dropdown [options]="roles" formControlName="rol" [(ngModel)]="rolSeleccionado"
+									<p-dropdown [options]="roles" formControlName="role" [(ngModel)]="rolSeleccionado"
 										[autoWidth]="false" [autoDisplayFirst]="false" [disabled]="nuevoUsuario._id">
 									</p-dropdown>
 									<label>Rol</label>
@@ -170,9 +170,9 @@
 
 						<div>
 							<div class="ui-inputgroup">
-								<p-inputSwitch formControlName="enabled" [(ngModel)]="nuevoUsuario.estado">
+								<label>Habilitado&nbsp;</label>
+								<p-inputSwitch formControlName="estado" [(ngModel)]="nuevoUsuario.estado">
 								</p-inputSwitch>
-								<label>Habilitado</label>
 							</div>
 						</div>
 
@@ -190,5 +190,5 @@
 			</div>
 		</p-footer>
 	</form>
-</p-dialog> -->
+</p-dialog>
 <app-footer></app-footer>

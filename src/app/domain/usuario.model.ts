@@ -1,6 +1,6 @@
 export interface Usuario {
   _id?: string;
-  email: string;
+  email?: string;
   nombre?: string;
   apellido?: string;
   empresa?: Empresa;

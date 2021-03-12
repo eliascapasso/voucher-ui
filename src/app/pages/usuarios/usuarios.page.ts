@@ -24,7 +24,7 @@ export class UsuariosPage implements OnInit {
     public columnas: any[];
     public usuarios: Usuario[] = [];
     public usuariosOriginal: Usuario[] = [];
-    public nuevoUsuario: Usuario;
+    public nuevoUsuario: Usuario = {};
     public showTabla: boolean = false
     public usuarioForm: FormGroup;
     public msgs: Message[];
@@ -35,6 +35,7 @@ export class UsuariosPage implements OnInit {
     public filter = { name: '', estado: '' };
     public busqueda: string = '';
     public isNew: boolean;
+    public roles: any[] = [];
 
     loading = false;
     @BlockUI() blockUI: NgBlockUI;
@@ -71,15 +72,30 @@ export class UsuariosPage implements OnInit {
         this.estados.push({ label: 'Inactivo', value: 'INACTIVO' });
 
         this.isNew = false;
+        this.nuevoUsuario = {};
 
         this.getUsuarios();
+        this.getRoles();
+    }
+
+    getRoles(){
+        this.usuarioService.getRoles().then(roles => {
+            
+            for(let i=0; i<roles.length; i++){
+                this.roles.push({ label: roles[i].role, value: roles[i].role });
+            }
+        })
+            .catch(function (error) {
+                console.log(`error al obtener los roles de usuario ${error}`);
+                this.formMsgs = [];
+                this.formMsgs.push({ severity: 'error', summary: `Error al obtener los roles de usuario ${error}`, detail: error });
+            });
     }
 
     getUsuarios() {
         this.blockUI.start("Cargando Usuarios...");
         this.loading = true;
         this.usuarioService.getUsuarios().then(usuarios => {
-            console.log(usuarios);
             this.loading = false;
             this.blockUI.stop();
 
@@ -94,18 +110,10 @@ export class UsuariosPage implements OnInit {
             .catch(function (error) {
                 this.loading = false;
                 this.blockUI.stop();
-                console.log(`error al obtener los puntos de venta ${error}`);
+                console.log(`error al obtener los usuarios ${error}`);
                 this.formMsgs = [];
-                this.formMsgs.push({ severity: 'error', summary: `Error al obtener los puntos de venta ${error}`, detail: error });
+                this.formMsgs.push({ severity: 'error', summary: `Error al obtener los usuarios ${error}`, detail: error });
             });
-    }
-
-    handleChange(event, usuario) {
-        if (usuario.enabled) {
-            this.confirmDelete(usuario);
-        } else {
-            this.confirmUpdate('¿Está seguro que desea habilitar el usuario?', usuario);
-        }
     }
 
     confirmDelete(usuario) {
@@ -156,50 +164,6 @@ export class UsuariosPage implements OnInit {
         });
     }
 
-    showNuevoUsuarioModal() {
-        this.isNew = true;
-        this.rolSeleccionado = '';
-        this.usuarioForm.get('nombre').setValue('');
-        this.usuarioForm.get('apellido').setValue('');
-        this.usuarioForm.get('email').setValue('');
-        this.usuarioForm.get('role').setValue('');
-        this.usuarioForm.get('enabled').setValue(false);
-        this.usuarioForm.controls['email'].enable();
-        this.displayUsuarioModal = true;
-    }
-
-    showEditarUsuarioModal(usuario) {
-        this.isNew = false;
-        this.nuevoUsuario = usuario;
-        this.usuarioForm.get('nombre').setValue(this.nuevoUsuario.nombre);
-        this.usuarioForm.get('apellido').setValue(this.nuevoUsuario.apellido);
-        this.usuarioForm.get('email').setValue(this.nuevoUsuario.email);
-        this.usuarioForm.get('role').setValue(this.nuevoUsuario.role.role);
-        this.usuarioForm.get('estado').setValue(this.nuevoUsuario.estado);
-        this.usuarioForm.controls['usuario'].disable();
-        this.usuarioForm.controls['email'].disable();
-        this.displayUsuarioModal = true;
-    }
-
-    sendActivationEmail(usuario: Usuario) {
-        const emailModel = new EmailModel();
-        emailModel.to = usuario.email;
-        emailModel.subject = 'Activacion de Cuenta';
-        emailModel.template = 'setear_password.jrxml';
-        emailModel.data = JSON.stringify({
-            nombre: usuario.nombre + ' ' + usuario.apellido,
-            email: usuario.email,
-            pagina: 'Gestion Voucher',
-            link: 'http://localhost:8100'
-        });
-        this.emailService.sendEmail(emailModel).subscribe((usuario: any) => {
-            console.log('usuario notificado');
-        },
-            error => {
-                console.log(`error al enviar email ${error}`);
-            });
-    }
-
     guardarUsuario() {
         this.nuevoUsuario.email = "";
 
@@ -243,6 +207,50 @@ export class UsuariosPage implements OnInit {
         }
     }
 
+    showNuevoUsuarioModal() {
+        this.nuevoUsuario = {};
+        this.isNew = true;
+        this.rolSeleccionado = '';
+        this.usuarioForm.get('nombre').setValue('');
+        this.usuarioForm.get('apellido').setValue('');
+        this.usuarioForm.get('email').setValue('');
+        this.usuarioForm.get('role').setValue('');
+        this.usuarioForm.get('estado').setValue(true);
+        this.usuarioForm.controls['email'].enable();
+        this.displayUsuarioModal = true;
+    }
+
+    showEditarUsuarioModal(usuario) {
+        this.isNew = false;
+        this.nuevoUsuario = usuario;
+        this.usuarioForm.get('nombre').setValue(this.nuevoUsuario.nombre);
+        this.usuarioForm.get('apellido').setValue(this.nuevoUsuario.apellido);
+        this.usuarioForm.get('email').setValue(this.nuevoUsuario.email);
+        this.usuarioForm.get('role').setValue(this.nuevoUsuario.role.role);
+        this.usuarioForm.get('estado').setValue(this.nuevoUsuario.estado);
+        this.usuarioForm.controls['email'].disable();
+        this.displayUsuarioModal = true;
+    }
+
+    sendActivationEmail(usuario: Usuario) {
+        const emailModel = new EmailModel();
+        emailModel.to = usuario.email;
+        emailModel.subject = 'Activacion de Cuenta';
+        emailModel.template = 'setear_password.jrxml';
+        emailModel.data = JSON.stringify({
+            nombre: usuario.nombre + ' ' + usuario.apellido,
+            email: usuario.email,
+            pagina: 'Gestion Voucher',
+            link: 'http://localhost:8100'
+        });
+        this.emailService.sendEmail(emailModel).subscribe((usuario: any) => {
+            console.log('usuario notificado');
+        },
+            error => {
+                console.log(`error al enviar email ${error}`);
+            });
+    }
+
     changeFilterHandler(event) {
         this.usuarios = this.usuariosOriginal
             .filter(user => {
@@ -274,6 +282,14 @@ export class UsuariosPage implements OnInit {
             this.showTabla = false;
         } else {
             this.showTabla = true;
+        }
+    }
+
+    handleChange(event, usuario) {
+        if (usuario.enabled) {
+            this.confirmDelete(usuario);
+        } else {
+            this.confirmUpdate('¿Está seguro que desea habilitar el usuario?', usuario);
         }
     }
 }

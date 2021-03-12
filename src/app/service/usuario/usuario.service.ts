@@ -71,6 +71,13 @@ export class UsuarioService {
         return this.httpClient.get<any>(url, { params }).toPromise();
     }
 
+    public getRoles(){
+        const url = 'http://localhost:8090/api/role/todos';
+        const params = this.createHttpParams({});
+
+        return this.httpClient.get<any>(url, {params}).toPromise();
+    }
+
     /* DELETE METHODS */
 
     public delete(usuario: Usuario): Observable<void> {
