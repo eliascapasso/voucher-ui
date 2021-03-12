@@ -139,43 +139,6 @@ export class UsuariosPage implements OnInit {
             });
     }
 
-    confirmDelete(usuario) {
-        this.confirmationService.confirm({
-            message: '¿Está seguro que desea deshabilitar el usuario?',
-            acceptLabel: 'Confirmar',
-            rejectLabel: 'Cancelar',
-            accept: () => {
-                this.usuarioService.delete(usuario)
-                    .subscribe((usuario: any) => {
-                        console.log('usuario deshabilitado');
-                        this.msgs = [];
-                        this.msgs.push({ severity: 'info', summary: `Usuario deshabilitado`, detail: `Usuario deshabilitado` });
-                        this.getUsuarios();
-                    },
-                        error => {
-                            console.log(`error al deshabilitar el usuario ${error}`);
-                            this.msgs = [];
-                            this.msgs.push({ severity: 'error', summary: `error al deshabilitar el usuario ${error}`, detail: error });
-                        });
-            },
-            reject: () => {
-                usuario.enabled = true;
-            }
-        });
-    }
-
-    confirmUpdate(mensaje: string, usuario: Usuario) {
-        this.confirmationService.confirm({
-            message: mensaje,
-            acceptLabel: 'Confirmar',
-            rejectLabel: 'Cancelar',
-            accept: () => {
-
-
-            }
-        });
-    }
-
     guardarUsuario() {
 
         if (!this.usuarioForm.valid) {
@@ -209,15 +172,19 @@ export class UsuariosPage implements OnInit {
         }
     }
 
-    actualizarUsuario() {
-        if (!this.usuarioForm.valid) {
+    actualizarUsuario(elimina) {
+        
+        if (!this.usuarioForm.valid && !elimina) {
             this.formMsgs = [];
             this.formMsgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
         }
         else {
-            this.nuevoUsuario.role = this.roles.find(x => x._id == this.rolSeleccionado);
-            this.nuevoUsuario.empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
+            if(!elimina){
+                this.nuevoUsuario.role = this.roles.find(x => x._id == this.rolSeleccionado);
+                this.nuevoUsuario.empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
+            }
 
+            console.log(this.nuevoUsuario);
             this.blockUI.start('Guardando Usuario...');
             this.usuarioService.update(this.nuevoUsuario)
                 .subscribe((usuario: any) => {
@@ -237,6 +204,20 @@ export class UsuariosPage implements OnInit {
                         this.formMsgs.push({ severity: 'error', summary: `Error al modificar el usuario ${msj}`, detail: cause });
                     });
         }
+    }
+
+    confirmEstado(mensaje) {
+        this.confirmationService.confirm({
+            message: mensaje,
+            acceptLabel: 'Confirmar',
+            rejectLabel: 'Cancelar',
+            accept: () => {
+                this.actualizarUsuario(true);
+            },
+            reject: () => {
+                
+            }
+        });
     }
 
     showNuevoUsuarioModal() {
@@ -320,10 +301,12 @@ export class UsuariosPage implements OnInit {
     }
 
     handleChange(event, usuario) {
-        if (usuario.enabled) {
-            this.confirmDelete(usuario);
+        this.nuevoUsuario = usuario;
+        this.nuevoUsuario.estado = event.checked;
+        if (!event.checked) {
+            this.confirmEstado("¿Seguro que desea deshabilitar el usuario?");
         } else {
-            this.confirmUpdate('¿Está seguro que desea habilitar el usuario?', usuario);
+            this.confirmEstado("¿Seguro que desea habilitar el usuario?");
         }
     }
 }

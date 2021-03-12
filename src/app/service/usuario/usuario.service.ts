@@ -42,6 +42,20 @@ export class UsuarioService {
         return this.httpClient.get<any>(url, {params}).toPromise();
     }
 
+    public getUserMe(): Observable<Usuario> {
+        const url = this.serviceBaseURL +  '/userDetails';
+        const params = this.createHttpParams({});
+
+        return this.httpClient.get<Usuario>(url, { params })
+            .pipe(
+                map((data: Usuario) => {
+                    this.usuarioLoginNotification.next(data);
+                    return this.usuario = data;
+                } ),
+                catchError((error: HttpErrorResponse) => this.handleError(error))
+            );
+    }
+
     public getRoles(){
         const url = this.serviceBaseURL + '/role/todos';
         const params = this.createHttpParams({});

@@ -199,7 +199,7 @@
 					class="ui-button-danger"></button>&nbsp;
 				<button type="button" pButton icon="pi pi-check" (click)="guardarUsuario()" label="Guardar"
 					class="ui-button-success" *ngIf="isNew"></button>&nbsp;
-				<button type="button" pButton icon="pi pi-check" (click)="actualizarUsuario()" label="Modificar"
+				<button type="button" pButton icon="pi pi-check" (click)="actualizarUsuario(false)" label="Modificar"
 					class="ui-button-success" *ngIf="!isNew"></button>&nbsp;
 			</div>
 		</p-footer>
