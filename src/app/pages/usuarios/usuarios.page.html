@@ -159,7 +159,18 @@
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
 								<span class="ui-float-label" style="width: 100%;">
-									<p-dropdown [options]="roles" formControlName="role" [(ngModel)]="rolSeleccionado"
+									<p-dropdown [options]="empresasSelect" formControlName="empresa" [(ngModel)]="empresaSeleccionada"
+										[autoWidth]="false" [autoDisplayFirst]="false" [disabled]="nuevoUsuario._id">
+									</p-dropdown>
+									<label>Empresa</label>
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-12 ui-md-12">
+							<div class="ui-inputgroup">
+								<span class="ui-float-label" style="width: 100%;">
+									<p-dropdown [options]="rolesSelect" formControlName="role" [(ngModel)]="rolSeleccionado"
 										[autoWidth]="false" [autoDisplayFirst]="false" [disabled]="nuevoUsuario._id">
 									</p-dropdown>
 									<label>Rol</label>

@@ -13,7 +13,7 @@ export interface Usuario {
 class Empresa {
   _id: string;
   empresa: string;
-  estado: any;
+  estado: boolean;
 }
 
 class Role {

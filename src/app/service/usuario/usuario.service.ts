@@ -20,7 +20,8 @@ export class UsuarioService {
     public dataAuth: string;
 
     private get serviceBaseURL(): string {
-        return environment.ssoUrl;
+        return 'http://localhost:8090/api';
+        //return environment.ssoUrl;
     }
 
     private get serviceOauthURL(): string {
@@ -35,44 +36,21 @@ export class UsuarioService {
     /* GET METHODS */
 
     public getUsuarios(){
-        const url = 'http://localhost:8090/api/usuario/todos';
+        const url = this.serviceBaseURL + '/usuario/todos';
         const params = this.createHttpParams({});
 
         return this.httpClient.get<any>(url, {params}).toPromise();
     }
 
-    public getUserMe(): Observable<Usuario> {
-        const url = this.serviceBaseURL + '/userDetails';
-        const params = this.createHttpParams({});
-
-        return this.httpClient.get<Usuario>(url, { params })
-            .pipe(
-                map((data: Usuario) => {
-                    this.usuarioLoginNotification.next(data);
-                    return this.usuario = data;
-                }),
-                catchError((error: HttpErrorResponse) => this.handleError(error))
-            );
-    }
-
-    public getUsuarioById(id: string): Observable<Usuario> {
-        const url = this.serviceBaseURL + '/users/' + id + '';
-        const params = this.createHttpParams({});
-
-        return this.httpClient.get<Usuario>(url, { params })
-            .pipe(
-                catchError((error: HttpErrorResponse) => this.handleError(error))
-            );
-    }
-
-    public getUsuarioByDni(dni) {
-        const url = this.serviceBaseURL + '/user/dni/' + dni;
-        const params = this.createHttpParams({});
-        return this.httpClient.get<any>(url, { params }).toPromise();
-    }
-
     public getRoles(){
-        const url = 'http://localhost:8090/api/role/todos';
+        const url = this.serviceBaseURL + '/role/todos';
+        const params = this.createHttpParams({});
+
+        return this.httpClient.get<any>(url, {params}).toPromise();
+    }
+
+    public getEmpresas(){
+        const url = this.serviceBaseURL + '/empresa/todas';
         const params = this.createHttpParams({});
 
         return this.httpClient.get<any>(url, {params}).toPromise();
@@ -91,12 +69,11 @@ export class UsuarioService {
     /* SAVE METHODS */
 
     public save(usuario: Usuario): Observable<any> {
-        const url = this.serviceBaseURL + '/user/register';
-        const httpOptions = {
-            headers: new HttpHeaders({ Authorization: 'Bearer ' + String(localStorage.getItem('token')) })
-        };
+        const url = this.serviceBaseURL + '/usuario/alta';
 
-        return this.httpClient.post<any>(url, usuario, httpOptions)
+        const params = this.createHttpParams({});
+
+        return this.httpClient.post<any>(url, usuario, { params })
             .pipe(
                 catchError((error: HttpErrorResponse) => this.handleError(error))
             );

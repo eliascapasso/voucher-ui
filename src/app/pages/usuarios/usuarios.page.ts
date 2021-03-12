@@ -30,12 +30,16 @@ export class UsuariosPage implements OnInit {
     public msgs: Message[];
     public formMsgs: Message[];
     public displayUsuarioModal: boolean = false;
-    public rolSeleccionado: string;
     public estados: any[] = [];
     public filter = { name: '', estado: '' };
     public busqueda: string = '';
     public isNew: boolean;
     public roles: any[] = [];
+    public rolesSelect: any[] = [];
+    public rolSeleccionado: string;
+    public empresas: any[] = [];
+    public empresasSelect: any[] = [];
+    public empresaSeleccionada: string;
 
     loading = false;
     @BlockUI() blockUI: NgBlockUI;
@@ -76,13 +80,32 @@ export class UsuariosPage implements OnInit {
 
         this.getUsuarios();
         this.getRoles();
+        this.getEmpresas();
+    }
+
+    getEmpresas(){
+        this.usuarioService.getEmpresas().then(empresas => {
+
+            this.empresas = empresas;
+            
+            for(let i=0; i<empresas.length; i++){
+                this.empresasSelect.push({ label: empresas[i].empresa, value: empresas[i]._id });
+            }
+        })
+            .catch(function (error) {
+                console.log(`error al obtener las empresas ${error}`);
+                this.formMsgs = [];
+                this.formMsgs.push({ severity: 'error', summary: `Error al obtener las empresas ${error}`, detail: error });
+            });
     }
 
     getRoles(){
         this.usuarioService.getRoles().then(roles => {
+
+            this.roles = roles;
             
             for(let i=0; i<roles.length; i++){
-                this.roles.push({ label: roles[i].role, value: roles[i].role });
+                this.rolesSelect.push({ label: roles[i].role, value: roles[i]._id });
             }
         })
             .catch(function (error) {
@@ -165,7 +188,6 @@ export class UsuariosPage implements OnInit {
     }
 
     guardarUsuario() {
-        this.nuevoUsuario.email = "";
 
         if (!this.usuarioForm.valid) {
             this.formMsgs = [];
@@ -174,12 +196,10 @@ export class UsuariosPage implements OnInit {
             this.blockUI.start('Guardando Usuario...');
 
             if (this.nuevoUsuario._id == null) {
-                this.nuevoUsuario.role = null;
-                let role = {
-                    _id: "",
-                    role: this.rolSeleccionado
-                };
-                this.nuevoUsuario.role = role;
+                
+                this.nuevoUsuario.role = this.roles.find(x => x._id == this.rolSeleccionado);
+                this.nuevoUsuario.empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
+
                 this.nuevoUsuario.password = '123456';
 
                 this.usuarioService.save(this.nuevoUsuario)
@@ -233,22 +253,22 @@ export class UsuariosPage implements OnInit {
     }
 
     sendActivationEmail(usuario: Usuario) {
-        const emailModel = new EmailModel();
-        emailModel.to = usuario.email;
-        emailModel.subject = 'Activacion de Cuenta';
-        emailModel.template = 'setear_password.jrxml';
-        emailModel.data = JSON.stringify({
-            nombre: usuario.nombre + ' ' + usuario.apellido,
-            email: usuario.email,
-            pagina: 'Gestion Voucher',
-            link: 'http://localhost:8100'
-        });
-        this.emailService.sendEmail(emailModel).subscribe((usuario: any) => {
-            console.log('usuario notificado');
-        },
-            error => {
-                console.log(`error al enviar email ${error}`);
-            });
+        // const emailModel = new EmailModel();
+        // emailModel.to = usuario.email;
+        // emailModel.subject = 'Activacion de Cuenta';
+        // emailModel.template = 'setear_password.jrxml';
+        // emailModel.data = JSON.stringify({
+        //     nombre: usuario.nombre + ' ' + usuario.apellido,
+        //     email: usuario.email,
+        //     pagina: 'Gestion Voucher',
+        //     link: 'http://localhost:8100'
+        // });
+        // this.emailService.sendEmail(emailModel).subscribe((usuario: any) => {
+        //     console.log('usuario notificado');
+        // },
+        //     error => {
+        //         console.log(`error al enviar email ${error}`);
+        //     });
     }
 
     changeFilterHandler(event) {
