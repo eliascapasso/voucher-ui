@@ -16,9 +16,6 @@ import { environment } from 'src/environments/environment';
 export class AppComponent implements OnInit {
   profile: MenuItem[];
   configuracion: MenuItem[];
-  isMonitoreo: number = 0;
-
-  isLoggedIn: boolean = true;
 
   userLogin: Usuario;
 

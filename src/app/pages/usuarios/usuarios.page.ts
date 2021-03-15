@@ -13,6 +13,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Usuario } from '../../domain/usuario.model';
 import { EmailModel } from '../../domain/email.model';
 import { RowOutlet } from '@angular/cdk/table';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-usuarios',
@@ -42,6 +43,7 @@ export class UsuariosPage implements OnInit {
     public empresas: any[] = [];
     public empresasSelect: any[] = [];
     public empresaSeleccionada: string;
+    private suscriptionUser: Subscription;
 
     loading = false;
     @BlockUI() blockUI: NgBlockUI;
@@ -83,12 +85,16 @@ export class UsuariosPage implements OnInit {
         this.getUsuarioActual();
     }
 
+    ngOnDestroy () { 
+        this.suscriptionUser.unsubscribe();
+    }
+
     setPermisos() {
         this.permisosAlta = this.usuarioActual.role.role == "ROOT" || this.usuarioActual.role.role == "ADMIN";
     }
 
     getUsuarioActual() {
-        this.usuarioService.getUserMe().subscribe(usuario => {
+        this.suscriptionUser = this.usuarioService.getUserMe().subscribe(usuario => {
             this.usuarioActual = usuario;
             this.setPermisos();
             this.getUsuarios();
