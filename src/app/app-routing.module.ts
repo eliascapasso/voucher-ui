@@ -29,7 +29,7 @@ const routes: Routes = [
   {
       path: 'usuarios',
       loadChildren: './pages/usuarios/usuarios.module#UsuariosPageModule',
-      //canActivate: [LoginGuardGuard]
+      canActivate: [LoginGuardGuard]
   }
 ];
 

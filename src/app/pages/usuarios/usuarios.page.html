@@ -44,7 +44,7 @@
 										</div>
 									</div>
 								</ion-col>
-								<ion-col text-right>
+								<ion-col text-right *ngIf="permisosAlta">
 									<button pButton type="button" class="ui-button-success" icon="pi pi-plus"
 										label="Crear Usuario" (click)="showNuevoUsuarioModal()"></button>
 								</ion-col>

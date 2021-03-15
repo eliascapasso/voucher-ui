@@ -59,7 +59,7 @@ export class LoginPage implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.usuarioService.usuario) {
+    if (localStorage.getItem('email') != null) {
       this.menuCtrl.enable(true);
     } else {
       this.menuCtrl.enable(false);
@@ -67,7 +67,9 @@ export class LoginPage implements OnInit, AfterViewInit {
   }
 
   login() {
+    //TEMPORAL
     this.menuCtrl.enable(true);
+    localStorage.setItem('email', this.formControls.email.value);
     this.router.navigate(['/usuarios']);
 
     //DESCOMENTAR

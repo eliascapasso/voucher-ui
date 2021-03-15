@@ -24,7 +24,10 @@ export class PopoverMenuComponent {
 
     logout() {
         this.usuarioService.logout();
-        //window.location.reload();
+    }
+
+    isLogedIn() {
+        return localStorage.getItem('email') != null;
     }
 
 }

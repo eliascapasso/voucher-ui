@@ -21,7 +21,9 @@ import { RowOutlet } from '@angular/cdk/table';
 
 })
 export class UsuariosPage implements OnInit {
+    public permisosAlta: boolean = false;
     public columnas: any[];
+    public usuarioActual: Usuario;
     public usuarios: Usuario[] = [];
     public usuariosOriginal: Usuario[] = [];
     public nuevoUsuario: Usuario = {};
@@ -78,9 +80,23 @@ export class UsuariosPage implements OnInit {
         this.isNew = false;
         this.nuevoUsuario = {};
 
-        this.getUsuarios();
-        this.getRoles();
-        this.getEmpresas();
+        this.getUsuarioActual();
+    }
+
+    setPermisos() {
+        this.permisosAlta = this.usuarioActual.role.role == "ROOT" || this.usuarioActual.role.role == "ADMIN";
+    }
+
+    getUsuarioActual() {
+        this.usuarioService.getUserMe().subscribe(usuario => {
+            this.usuarioActual = usuario;
+            this.setPermisos();
+            this.getUsuarios();
+            this.getRoles();
+            this.getEmpresas();
+            console.log(this.usuarioActual);
+            console.log(this.permisosAlta);
+        });
     }
 
     getEmpresas() {
@@ -102,11 +118,12 @@ export class UsuariosPage implements OnInit {
     getRoles() {
         this.usuarioService.getRoles().then(roles => {
 
-            this.roles = roles;
-
             for (let i = 0; i < roles.length; i++) {
                 this.rolesSelect.push({ label: roles[i].role, value: roles[i]._id });
             }
+
+            this.roles = roles;
+
         })
             .catch(function (error) {
                 console.log(`error al obtener los roles de usuario ${error}`);
@@ -173,13 +190,13 @@ export class UsuariosPage implements OnInit {
     }
 
     actualizarUsuario(elimina) {
-        
+
         if (!this.usuarioForm.valid && !elimina) {
             this.formMsgs = [];
             this.formMsgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
         }
         else {
-            if(!elimina){
+            if (!elimina) {
                 this.nuevoUsuario.role = this.roles.find(x => x._id == this.rolSeleccionado);
                 this.nuevoUsuario.empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
             }
@@ -215,7 +232,7 @@ export class UsuariosPage implements OnInit {
                 this.actualizarUsuario(true);
             },
             reject: () => {
-                
+
             }
         });
     }

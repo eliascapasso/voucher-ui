@@ -62,4 +62,8 @@ export class AppComponent implements OnInit {
       }
     ];
   }
+
+  isLogedIn() {
+    return localStorage.getItem('email') != null;
+  }
 }

@@ -3,7 +3,7 @@
 <ion-app>
     <app-header></app-header>
     <ion-split-pane style="margin-top:45px">
-        <ion-menu menu-id="menuContent">
+        <ion-menu menu-id="menuContent" *ngIf="isLogedIn()">
             <ion-content class="item">
                 <ion-list>
                     <ion-menu-toggle auto-hide="false">

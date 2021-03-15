@@ -25,9 +25,6 @@ export class HeaderComponent implements OnInit {
     }
 
     isLogedIn() {
-        //DESCOMENTAR
-        //return localStorage.getItem('token') != null;
-
-        return true;
+        return localStorage.getItem('email') != null;
     }
 }

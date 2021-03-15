@@ -43,7 +43,7 @@ export class UsuarioService {
     }
 
     public getUserMe(): Observable<Usuario> {
-        const url = this.serviceBaseURL +  '/userDetails';
+        const url = this.serviceBaseURL +  '/usuario/' + localStorage.getItem('email');
         const params = this.createHttpParams({});
 
         return this.httpClient.get<Usuario>(url, { params })
@@ -111,6 +111,7 @@ export class UsuarioService {
     logout() {
         this.usuario = null;
         localStorage.removeItem('token');
+        localStorage.removeItem('email');
         this.usuarioLoginNotification.next({email: 'SIN IDENTIFICAR'});
         this.router.navigate(['/login']);
     }
@@ -118,7 +119,7 @@ export class UsuarioService {
     login(usuarioLogin: UsuarioLogin) {
         var url = "localhost:8090/api/auth/login";
         
-        this.dataAuth = "username=" + usuarioLogin.username 
+        this.dataAuth = "username=" + usuarioLogin.email 
                         + "&password=" + usuarioLogin.password;
 
         const httpOptions = {
@@ -132,6 +133,8 @@ export class UsuarioService {
                 map((data: any) => {
                     console.log('login with ' + data.access_token);
                     localStorage.setItem('token', data.access_token);
+                    localStorage.setItem('email', usuarioLogin.email);
+                    this.getUserMe();
                 }),
                 catchError((error: HttpErrorResponse) => this.handleError(error))
             );

@@ -1,5 +1,5 @@
 export interface UsuarioLogin {
-    username?: string;
+    email?: string;
     password?: string;
     grant_type?: string;
     client_id?: string;
