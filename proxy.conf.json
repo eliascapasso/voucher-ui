@@ -1,18 +1,18 @@
 {
   "/api": {
-    "target": "http://10.4.101.107:8014/", 
+    "target": "http://localhost:8090/", 
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/oauth": {
-    "target": "http://10.4.101.107:8014/",
+    "target": "http://localhost:8090/",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/sso": {
-    "target": "http://10.4.101.107:8014/",
+    "target": "http://localhost:8090/",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"

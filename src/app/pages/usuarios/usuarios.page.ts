@@ -22,7 +22,7 @@ import { Subscription } from 'rxjs';
 
 })
 export class UsuariosPage implements OnInit {
-    public permisosAlta: boolean = false;
+    public permisosABM: boolean = false;
     public columnas: any[];
     public usuarioActual: Usuario;
     public usuarios: Usuario[] = [];
@@ -90,7 +90,7 @@ export class UsuariosPage implements OnInit {
     }
 
     setPermisos() {
-        this.permisosAlta = this.usuarioActual.role.role == "ROOT" || this.usuarioActual.role.role == "ADMIN";
+        this.permisosABM = this.usuarioActual.role.role == "ROOT" || this.usuarioActual.role.role == "ADMIN";
     }
 
     getUsuarioActual() {
@@ -100,8 +100,6 @@ export class UsuariosPage implements OnInit {
             this.getUsuarios();
             this.getRoles();
             this.getEmpresas();
-            console.log(this.usuarioActual);
-            console.log(this.permisosAlta);
         });
     }
 

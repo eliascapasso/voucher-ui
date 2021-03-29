@@ -20,12 +20,8 @@ export class UsuarioService {
     public dataAuth: string;
 
     private get serviceBaseURL(): string {
-        return 'http://localhost:8090/api';
-        //return environment.ssoUrl;
-    }
-
-    private get serviceOauthURL(): string {
-        return environment.oauthUrl;
+        //return 'http://localhost:8090/api';
+        return environment.apiUrl;
     }
 
     constructor(private httpClient: HttpClient, public router: Router,

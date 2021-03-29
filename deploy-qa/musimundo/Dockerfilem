@@ -1,8 +1,0 @@
-FROM nginx
-
-# Copio los archivos de la aplicación factura
-COPY nginx-musi-qa.conf /etc/nginx/nginx.conf
-COPY dist /etc/nginx/html
-
-# Expongo el puerto por defecto
-EXPOSE 80

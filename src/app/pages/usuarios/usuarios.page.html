@@ -44,7 +44,7 @@
 										</div>
 									</div>
 								</ion-col>
-								<ion-col text-right *ngIf="permisosAlta">
+								<ion-col text-right *ngIf="permisosABM">
 									<button pButton type="button" class="ui-button-success" icon="pi pi-plus"
 										label="Crear Usuario" (click)="showNuevoUsuarioModal()"></button>
 								</ion-col>
@@ -69,7 +69,7 @@
 													{{col.header}}
 													<p-sortIcon [field]="col.field"></p-sortIcon>
 												</th>
-												<th style="text-align: center;">
+												<th style="text-align: center;" *ngIf="permisosABM">
 													<span>Opciones</span>
 												</th>
 											</tr>
@@ -87,7 +87,7 @@
 														{{ rowData[col.field] }}
 													</div>
 												</td>
-												<td>
+												<td *ngIf="permisosABM">
 													<div style="text-align: center">
 														<i class="pi pi-pencil" style="font-size: 2em; cursor: pointer;"
 															(click)="showEditarUsuarioModal(rowData)"></i>&nbsp;&nbsp;

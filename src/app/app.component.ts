@@ -16,7 +16,7 @@ import { environment } from 'src/environments/environment';
 export class AppComponent implements OnInit {
   profile: MenuItem[];
   configuracion: MenuItem[];
-
+  verUsuarios:boolean = false;
   userLogin: Usuario;
 
   empresa: string;
@@ -37,7 +37,9 @@ export class AppComponent implements OnInit {
       this.splashScreen.hide();
 
       this.empresa = environment.empresa;
-      this.usuarioService.usuarioLoginNotification.subscribe(user => {
+
+      this.menuCtrl.enable(true);
+      this.usuarioService.getUserMe().subscribe(user => {
         this.userLogin = user;
       });
     });
