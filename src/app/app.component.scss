@@ -1,15 +1,23 @@
-ion-split-pane .labelPanel{
+ion-split-pane .labelPanel {
 	font-family: "Product Sans Regular";
 	font-size: 16px;
 	line-height: 20px;
-	color: #757575;
- 	padding-left: 10px;
-}
- 
-ion-split-pane .item{
-	--ion-background-color:white;
+	color: #fdf2f2;
+	padding-left: 10px;
 }
 
-ion-router-outlet{
-	margin-top: 45px;
+ion-split-pane .item {
+	--ion-background-color: #757575;
+}
+
+ion-router-outlet {
+	margin-top: 0px;
+}
+
+ion-menu {
+	margin-top: 0px;
+}
+
+app-header {
+	background-image: "../assets/layout/images/logo-musimundo.png";
 }

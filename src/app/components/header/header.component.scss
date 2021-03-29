@@ -1,4 +1,4 @@
-.classUser{
+.classUser {
   width: 100%;
   height: 60px;
   text-align: right;
@@ -38,6 +38,6 @@
   font-feature-settings: "liga";
 }
 
-app-header {
-  --ion-background-color:  #EDEDED;
+ion-toolbar {
+  --background: #757575;
 }

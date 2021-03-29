@@ -1,24 +1,8 @@
 <p-toast></p-toast>
 <ion-content padding>
-
-	<ion-header>
-		<ion-toolbar>
-			<ion-buttons slot="start">
-				<ion-menu-button></ion-menu-button>
-			</ion-buttons>
-			<ion-title>
-				<div style="height: 40px">
-					<label class="configuracionLabel">Configuración <label class="separacionEntre"> > </label> Usuarios
-					</label>
-				</div>
-			</ion-title>
-		</ion-toolbar>
-	</ion-header>
-
-	<br />
-
 	<div class="container">
 		<p-card>
+			<label class="configuracionLabel">Usuarios</label>
 			<p-growl [(value)]="msgs">
 			</p-growl>
 			<ion-row class="section">
