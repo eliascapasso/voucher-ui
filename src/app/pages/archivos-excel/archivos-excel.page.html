@@ -1,0 +1,148 @@
+<p-toast></p-toast>
+<ion-content padding>
+	<div class="container">
+		<p-card>
+			<label class="configuracionLabel">Archivos excel</label>
+			<p-growl [(value)]="msgs">
+			</p-growl>
+			<ion-row class="section">
+				<ion-col size="12" size-sm="12" size-md="12" size-lg="12">
+					<ion-card>
+						<ion-grid>
+							<ion-row>
+								<ion-col>
+									<div class="ui-fluid">
+										<div class="ui-g-4 ui-md-4" style="width: 50%;">
+											<span>
+												<ion-searchbar placeholder="Buscar" [(ngModel)]="busqueda"
+													(ionChange)="changeFilterHandler($event)">
+												</ion-searchbar>
+											</span>
+										</div>
+										<div class="ui-g-4 ui-md-4" style="padding-top: 25px; width: 50%;">
+											<span>
+												<p-dropdown (onChange)="changeFilterHandler($event)" [options]="estados"
+													[(ngModel)]="filter.estado" [autoWidth]="false"
+													[autoDisplayFirst]="false"></p-dropdown>
+											</span>
+										</div>
+									</div>
+								</ion-col>
+								<ion-col text-right *ngIf="permisosABM">
+									<button pButton type="button" class="ui-button-success" icon="pi pi-plus"
+										label="Crear archivo excel" (click)="showNuevoArchivoExcelModal()"></button>
+								</ion-col>
+							</ion-row>
+							<ion-row>
+								<ion-col *ngIf="!showTabla">
+									<div class="ui-table-caption ui-widget-header ng-star-inserted">
+										No se encontraron archivos excel
+									</div>
+								</ion-col>
+								<ion-col *ngIf="showTabla">
+									<p-table [columns]="columnas" [value]="archivosExcel" dataKey="email"
+										[style]="{'margin-bottom':'20px'}" [paginator]="true" [rows]="5"
+										[totalRecords]="archivosExcel.length" [rowsPerPageOptions]="[5,10,20,30]"
+										[loading]="loading">
+										<ng-template pTemplate="caption">
+											Archivos Excel
+										</ng-template>
+										<ng-template pTemplate="header" let-columns>
+											<tr>
+												<th *ngFor="let col of columns" [pSortableColumn]="col.field">
+													{{col.header}}
+													<p-sortIcon [field]="col.field"></p-sortIcon>
+												</th>
+												<th style="text-align: center;" *ngIf="permisosABM">
+													<span>Opciones</span>
+												</th>
+											</tr>
+										</ng-template>
+										<ng-template pTemplate="body" let-rowData let-columns="columns">
+											<tr [pSelectableRow]="rowData">
+												<td *ngFor="let col of columns">
+													<div *ngIf="col.empresa">
+														{{ rowData[col.field].empresa }}
+													</div>
+													<div *ngIf="col.role">
+														{{ rowData[col.field].role }}
+													</div>
+													<div *ngIf="!col.empresa && !col.role">
+														{{ rowData[col.field] }}
+													</div>
+												</td>
+												<td *ngIf="permisosABM">
+													<div style="text-align: center">
+														<i class="pi pi-pencil" style="font-size: 2em; cursor: pointer;"
+															(click)="showEditarArchivoExcelModal(rowData)"></i>&nbsp;&nbsp;
+
+														<p-inputSwitch (onChange)="handleChange($event, rowData)"
+															[ngModel]="rowData.estado"></p-inputSwitch>
+													</div>
+												</td>
+											</tr>
+										</ng-template>
+									</p-table>
+								</ion-col>
+							</ion-row>
+
+						</ion-grid>
+					</ion-card>
+				</ion-col>
+			</ion-row>
+		</p-card>
+	</div>
+</ion-content>
+
+<p-dialog [(visible)]="displayArchivoExcelModal" [modal]="true" [responsive]="true"
+	[style]="{width: '600px', minWidth: '600px'}" [maximizable]="false" [baseZIndex]="10000" appendTo="body">
+	<p-header *ngIf="isNew">
+		Alta de nuevo archivo excel
+	</p-header>
+	<p-header *ngIf="!isNew">
+		Editar archivo excel
+	</p-header>
+	<form [formGroup]="archivoExcelForm" (ngSubmit)="guardarArchivoExcel()">
+		<p-growl [(value)]="formMsgs">
+		</p-growl>
+		<div class="ui-fluid">
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<div class="ui-g form-group">
+
+						<div class="ui-g-12 ui-md-12">
+							<div class="ui-inputgroup">
+								<span class="md-inputfield">
+									<input type="text" formControlName="nombre" [(ngModel)]="nuevoArchivoExcel.nombre"
+										pInputText />
+									<label>Nombre</label>
+								</span>
+							</div>
+						</div>
+
+						<div>
+							<div class="ui-inputgroup">
+								<label>Habilitado&nbsp;</label>
+								<p-inputSwitch formControlName="estado" [(ngModel)]="nuevoArchivoExcel.estado">
+								</p-inputSwitch>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<p-footer>
+			<div class="ui-g-12 ui-md-12" style="text-align: right">
+				<button type="button" pButton icon="pi pi-times" (click)="displayArchivoExcelModal=false" label="Cancelar"
+					class="ui-button-danger"></button>&nbsp;
+				<button type="button" pButton icon="pi pi-check" (click)="guardarArchivoExcel()" label="Guardar"
+					class="ui-button-success" *ngIf="isNew"></button>&nbsp;
+				<button type="button" pButton icon="pi pi-check" (click)="actualizarArchivoExcel(false)" label="Modificar"
+					class="ui-button-success" *ngIf="!isNew"></button>&nbsp;
+			</div>
+		</p-footer>
+	</form>
+</p-dialog>
+<app-footer></app-footer>

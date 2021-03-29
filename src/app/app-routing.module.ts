@@ -30,7 +30,12 @@ const routes: Routes = [
       path: 'usuarios',
       loadChildren: './pages/usuarios/usuarios.module#UsuariosPageModule',
       canActivate: [LoginGuardGuard]
-  }
+  },
+  {
+    path: 'archivos-excel',
+    loadChildren: './pages/archivos-excel/archivos-excel.module#ArchivosExcelPageModule',
+    canActivate: [LoginGuardGuard]
+}
 ];
 
 @NgModule({

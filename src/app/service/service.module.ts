@@ -7,6 +7,7 @@ import {
 
 import { ServiceConfig } from './serviceconfig';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { ArchivoExcelService } from './archivo-excel/archivo-excel.service';
 
 
 @NgModule({})
@@ -17,6 +18,7 @@ export class ServiceModule {
             providers: [
                 {provide: ServiceConfig, useValue: serviceConfig},
                 UsuarioService,
+                ArchivoExcelService,
                 ConfirmationService,
                 LoginGuardGuard,
                 MessageService

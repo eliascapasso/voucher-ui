@@ -5,14 +5,11 @@ import {
     Validators
 } from '@angular/forms';
 import { UsuarioService } from '../../service/usuario/usuario.service';
-import { EmailoService } from '../../service/email/email.service';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Usuario } from '../../domain/usuario.model';
-import { EmailModel } from '../../domain/email.model';
-import { RowOutlet } from '@angular/cdk/table';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -49,7 +46,6 @@ export class UsuariosPage implements OnInit {
     @BlockUI() blockUI: NgBlockUI;
     constructor(
         private usuarioService: UsuarioService,
-        private emailService: EmailoService,
         private formBuilder: FormBuilder,
         public router: Router,
         private confirmationService: ConfirmationService
