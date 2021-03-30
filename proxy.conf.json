@@ -5,6 +5,12 @@
     "changeOrigin": true,
     "logLevel": "debug"
   },
+  "/apiExcel": {
+    "target": "http://localhost:8094/", 
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
   "/oauth": {
     "target": "http://localhost:8090/",
     "secure": false,

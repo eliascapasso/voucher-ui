@@ -4,7 +4,6 @@ import {
     FormBuilder,
     Validators
 } from '@angular/forms';
-import { EmailoService } from '../../service/email/email.service';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
@@ -12,6 +11,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Subscription } from 'rxjs';
 import { ArchivoExcel } from 'src/app/domain/archivo-excel.model';
 import { ArchivoExcelService } from 'src/app/service/archivo-excel/archivo-excel.service';
+import { ToastController } from '@ionic/angular';
 
 @Component({
     selector: 'app-archivos-excel',
@@ -20,7 +20,6 @@ import { ArchivoExcelService } from 'src/app/service/archivo-excel/archivo-excel
 
 })
 export class ArchivosExcelPage implements OnInit {
-    public permisosABM: boolean = false;
     public columnas: any[];
     public archivosExcel: ArchivoExcel[] = [];
     public archivosExcelOriginal: ArchivoExcel[] = [];
@@ -35,34 +34,52 @@ export class ArchivosExcelPage implements OnInit {
     public busqueda: string = '';
     public isNew: boolean;
     private suscriptionUser: Subscription;
-
-    loading = false;
+    public es: any;
+    
     @BlockUI() blockUI: NgBlockUI;
     constructor(
         private archivoExcelService: ArchivoExcelService,
         private formBuilder: FormBuilder,
         public router: Router,
-        private confirmationService: ConfirmationService
+        private confirmationService: ConfirmationService,
+        public toastController: ToastController
     ) { }
 
     ngOnInit() {
+        this.es = {
+            firstDayOfWeek: 1,
+            dayNames: ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
+            dayNamesShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
+            dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+            monthNames: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+            monthNamesShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
+            today: 'Hoy',
+            clear: 'Borrar'
+        };
+
         this.filter = { name: '', estado: '' };
 
         this.columnas = [
-            { field: 'nombre', header: 'Nombre' }
+            { field: 'nombreExcel', header: 'Nombre' },
+            { field: 'fecha', header: 'Fecha', fecha: true },
+            { field: 'cantidadRegistros', header: 'Registros' },
+            { field: 'estado', header: 'Estado' },
         ];
 
         this.archivoExcelForm = this.formBuilder.group({
-            nombre: ['', Validators.required],
-            estado: [''],
+            nombreExcel: ['', Validators.required],
+            archivo: ['', Validators.required]
         });
 
-        this.estados.push({ label: 'Todos los Estados', value: '' });
-        this.estados.push({ label: 'Activo', value: 'ACTIVO' });
-        this.estados.push({ label: 'Inactivo', value: 'INACTIVO' });
+        this.estados.push({ label: 'TODOS', value: '' });
+        this.estados.push({ label: 'DISPONIBLE', value: 'DISPONIBLE' });
+        this.estados.push({ label: 'IMPORTANDO', value: 'IMPORTANDO' });
+        this.estados.push({ label: 'CANCELADO', value: 'CANCELADO' });
 
         this.isNew = false;
         this.nuevoArchivoExcel = {};
+
+        this.getArchivosExcel();
     }
 
     ngOnDestroy () { 
@@ -70,26 +87,24 @@ export class ArchivosExcelPage implements OnInit {
     }
 
     getArchivosExcel() {
-        this.blockUI.start("Cargando archivos excel...");
-        this.loading = true;
-        this.archivoExcelService.getArchivosExcel().then(archExcel => {
-            this.loading = false;
-            this.blockUI.stop();
+        var $this = this;
+
+        $this.archivoExcelService.getArchivosExcel().then(archExcel => {
+            $this.blockUI.stop();
 
             if (archExcel.length < 1) {
-                this.showTabla = false;
+                $this.showTabla = false;
             } else {
-                this.archivosExcelOriginal = archExcel;;
-                this.archivosExcel = archExcel;
-                this.showTabla = true;
+                $this.archivosExcelOriginal = archExcel;;
+                $this.archivosExcel = archExcel;
+                $this.showTabla = true;
             }
         })
             .catch(function (error) {
-                this.loading = false;
-                this.blockUI.stop();
-                console.log(`error al obtener los archivos excel ${error}`);
-                this.formMsgs = [];
-                this.formMsgs.push({ severity: 'error', summary: `Error al obtener los archivos excel ${error}`, detail: error });
+                $this.blockUI.stop();
+                console.error(`error al obtener los archivos excel ${error}`);
+                $this.formMsgs = [];
+                $this.formMsgs.push({ severity: 'error', summary: `Error al obtener los archivos excel ${error}`, detail: error });
             });
     }
 
@@ -114,7 +129,7 @@ export class ArchivosExcelPage implements OnInit {
                         let msj = (error.message) ? error.message : '';
                         let cause = (error.cause) ? error.cause : '';
                         this.blockUI.stop();
-                        console.log(`error al guardar archivo excel ${error}`);
+                        console.error(`error al guardar archivo excel ${error}`);
                         this.formMsgs = [];
                         this.formMsgs.push({ severity: 'error', summary: `Error al guardar el archivo excel ${msj}`, detail: cause });
                     });
@@ -128,7 +143,7 @@ export class ArchivosExcelPage implements OnInit {
             this.formMsgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
         }
         else {
-            console.log(this.nuevoArchivoExcel);
+
             this.blockUI.start('Guardando Archivo excel...');
             this.archivoExcelService.update(this.nuevoArchivoExcel)
                 .subscribe((ArchExcel: any) => {
@@ -143,7 +158,7 @@ export class ArchivosExcelPage implements OnInit {
                         let msj = (error.message) ? error.message : '';
                         let cause = (error.cause) ? error.cause : '';
                         this.blockUI.stop();
-                        console.log(`error al modificar archivo excel ${error}`);
+                        console.error(`error al modificar archivo excel ${error}`);
                         this.formMsgs = [];
                         this.formMsgs.push({ severity: 'error', summary: `Error al modificar el archivo excel ${msj}`, detail: cause });
                     });
@@ -167,7 +182,7 @@ export class ArchivosExcelPage implements OnInit {
     showNuevoArchivoExcelModal() {
         this.nuevoArchivoExcel = {};
         this.isNew = true;
-        this.archivoExcelForm.get('nombre').setValue('');
+        this.archivoExcelForm.get('nombreExcel').setValue('');
         this.displayArchivoExcelModal = true;
     }
 
@@ -175,16 +190,43 @@ export class ArchivosExcelPage implements OnInit {
         this.nuevoArchivoExcel._id = null;
         this.isNew = false;
         this.nuevoArchivoExcel = archivoExcel;
-        this.archivoExcelForm.get('nombre').setValue(this.nuevoArchivoExcel.nombre);
+        this.archivoExcelForm.get('nombreExcel').setValue(this.nuevoArchivoExcel.nombreExcel);
         this.displayArchivoExcelModal = true;
     }
+
+    public validar(){
+        let ext = this.nuevoArchivoExcel.archivo.toString().split('.').pop();
+        
+        if(ext != "xlsx" && ext != "xls"){
+            console.error("Archivo invalido");
+            this.nuevoArchivoExcel.archivo = null;
+            this.presentToast("Archivo inválido");
+        }
+    }
+
+    public formatearFecha(d): string {
+        let date = new Date(d)
+        
+        let year = date.getFullYear();
+        let month = date.getMonth();
+        let day = date.getDay();
+
+        return day + "-" + month + "-" + year;
+    }
+
+    async presentToast(msj: string) {
+        const toast = await this.toastController.create({
+          message: msj,
+          duration: 2000
+        });
+        toast.present();
+      }
 
     changeFilterHandler(event) {
         this.archivosExcel = this.archivosExcelOriginal
             .filter(archivoExcel => {
-                if (this.filter['estado'] != '' && this.filter['estado'].toUpperCase() != 'TODOS LOS ESTADOS') {
-                    let enabled = (this.filter['estado'].toUpperCase() == 'ACTIVO');
-                    if (archivoExcel.estado == enabled) {
+                if (this.filter['estado'] != '' && this.filter['estado'].toUpperCase() != 'TODOS') {
+                    if (archivoExcel.estado == this.filter['estado'].toUpperCase()) {
                         return true;
                     } else {
                         return false;

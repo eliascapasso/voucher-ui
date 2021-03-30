@@ -1,5 +1,8 @@
 export interface ArchivoExcel {
   _id?: string;
-  nombre?: string;
-  estado?: boolean;
+  nombreExcel?: string;
+  fecha?: any;
+  cantidadRegistros?: number;
+  estado?: string;
+  archivo?: any;
 }

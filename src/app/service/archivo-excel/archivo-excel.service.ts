@@ -17,7 +17,8 @@ export class ArchivoExcelService {
     public dataAuth: string;
 
     private get serviceBaseURL(): string {
-        return environment.apiUrl;
+        //return environment.apiExcelUrl;
+        return 'http://localhost:8094/apiExcel';
     }
 
     constructor(private httpClient: HttpClient, public router: Router,
@@ -28,7 +29,7 @@ export class ArchivoExcelService {
     /* GET METHODS */
 
     public getArchivosExcel(){
-        const url = this.serviceBaseURL + '/archivo-excel/todos';
+        const url = this.serviceBaseURL + '/excel/todos';
         const params = this.createHttpParams({});
 
         return this.httpClient.get<any>(url, {params}).toPromise();
@@ -37,17 +38,17 @@ export class ArchivoExcelService {
     /* DELETE METHODS */
 
     public delete(archivoExcel: ArchivoExcel): Observable<void> {
-        const url = this.serviceBaseURL + '/archivo-excel/';
+        const url = this.serviceBaseURL + '/excel/';
         const params = this.createHttpParams({});
 
-        return this.httpClient.delete<void>(url + archivoExcel.nombre, { params })
+        return this.httpClient.delete<void>(url + archivoExcel.nombreExcel, { params })
             .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
     /* SAVE METHODS */
 
     public save(archivoExcel: ArchivoExcel): Observable<any> {
-        const url = this.serviceBaseURL + '/archivo-excel/alta';
+        const url = this.serviceBaseURL + '/excel/alta';
 
         const params = this.createHttpParams({});
 
@@ -60,7 +61,7 @@ export class ArchivoExcelService {
     /* UPDATE METHODS */
 
     public update(archivoExcel: ArchivoExcel): Observable<any> {
-        const url = this.serviceBaseURL + '/archivo-excel/modificacion';
+        const url = this.serviceBaseURL + '/excel/modificacion';
         
         const params = this.createHttpParams({});
 
