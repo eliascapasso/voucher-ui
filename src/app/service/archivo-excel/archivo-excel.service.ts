@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable, throwError } from 'rxjs';
@@ -28,11 +28,11 @@ export class ArchivoExcelService {
 
     /* GET METHODS */
 
-    public getArchivosExcel(){
+    public getArchivosExcel() {
         const url = this.serviceBaseURL + '/excel/todos';
         const params = this.createHttpParams({});
 
-        return this.httpClient.get<any>(url, {params}).toPromise();
+        return this.httpClient.get<any>(url, { params }).toPromise();
     }
 
     /* DELETE METHODS */
@@ -48,11 +48,13 @@ export class ArchivoExcelService {
     /* SAVE METHODS */
 
     public save(archivoExcel: ArchivoExcel): Observable<any> {
-        const url = this.serviceBaseURL + '/excel/alta';
+        const url = this.serviceBaseURL + '/excel/importar';
 
-        const params = this.createHttpParams({});
+        const data: FormData = new FormData();
+        data.append('file', archivoExcel.archivo);
 
-        return this.httpClient.post<any>(url, archivoExcel, { params })
+
+        return this.httpClient.post<any>(url, data)
             .pipe(
                 catchError((error: HttpErrorResponse) => this.handleError(error))
             );
@@ -62,7 +64,7 @@ export class ArchivoExcelService {
 
     public update(archivoExcel: ArchivoExcel): Observable<any> {
         const url = this.serviceBaseURL + '/excel/modificacion';
-        
+
         const params = this.createHttpParams({});
 
         return this.httpClient.put<any>(url, archivoExcel, { params })

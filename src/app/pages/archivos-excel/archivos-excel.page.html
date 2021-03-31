@@ -16,7 +16,7 @@
 										<div class="ui-g-4 ui-md-4" style="width: 100%;">
 											<span>
 												<button pButton type="button" class="ui-button-success"
-													icon="pi pi-plus" label="Crear archivo excel"
+													icon="pi pi-upload" label="Cargar archivo excel"
 													(click)="showNuevoArchivoExcelModal()"></button>
 											</span>
 										</div>
@@ -132,22 +132,12 @@
 			<div class="ui-g">
 				<div class="ui-g-12">
 					<div class="ui-g form-group">
-
+						
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
 								<span class="md-inputfield">
-									<input type="text" formControlName="nombreExcel"
-										[(ngModel)]="nuevoArchivoExcel.nombreExcel" pInputText />
-									<label>Nombre</label>
-								</span>
-							</div>
-						</div>
-
-						<div class="ui-g-12 ui-md-12">
-							<div class="ui-inputgroup">
-								<span class="md-inputfield">
-									<input type="file" formControlName="archivo" [(ngModel)]="nuevoArchivoExcel.archivo"
-										pInputText accept=".xlsx, .xls" (change)="validar()" />
+									<input type="file" formControlName="archivo"
+										pInputText accept=".xlsx, .xls" (change)="validar($event)" />
 								</span>
 							</div>
 						</div>

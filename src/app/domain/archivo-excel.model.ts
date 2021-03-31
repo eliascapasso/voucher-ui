@@ -4,5 +4,5 @@ export interface ArchivoExcel {
   fecha?: any;
   cantidadRegistros?: number;
   estado?: string;
-  archivo?: any;
+  archivo?: File;
 }

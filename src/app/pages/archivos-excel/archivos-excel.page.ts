@@ -67,7 +67,6 @@ export class ArchivosExcelPage implements OnInit {
         ];
 
         this.archivoExcelForm = this.formBuilder.group({
-            nombreExcel: ['', Validators.required],
             archivo: ['', Validators.required]
         });
 
@@ -88,6 +87,8 @@ export class ArchivosExcelPage implements OnInit {
 
     getArchivosExcel() {
         var $this = this;
+        this.nuevoArchivoExcel = {};
+        $this.archivosExcel = [];
 
         $this.archivoExcelService.getArchivosExcel().then(archExcel => {
             $this.blockUI.stop();
@@ -182,7 +183,6 @@ export class ArchivosExcelPage implements OnInit {
     showNuevoArchivoExcelModal() {
         this.nuevoArchivoExcel = {};
         this.isNew = true;
-        this.archivoExcelForm.get('nombreExcel').setValue('');
         this.displayArchivoExcelModal = true;
     }
 
@@ -190,12 +190,12 @@ export class ArchivosExcelPage implements OnInit {
         this.nuevoArchivoExcel._id = null;
         this.isNew = false;
         this.nuevoArchivoExcel = archivoExcel;
-        this.archivoExcelForm.get('nombreExcel').setValue(this.nuevoArchivoExcel.nombreExcel);
         this.displayArchivoExcelModal = true;
     }
 
-    public validar(){
-        let ext = this.nuevoArchivoExcel.archivo.toString().split('.').pop();
+    public validar(archivo){
+        this.nuevoArchivoExcel.archivo = archivo.srcElement.files[0];
+        let ext = this.nuevoArchivoExcel.archivo.name.toString().split('.').pop();
         
         if(ext != "xlsx" && ext != "xls"){
             console.error("Archivo invalido");
@@ -205,11 +205,11 @@ export class ArchivosExcelPage implements OnInit {
     }
 
     public formatearFecha(d): string {
-        let date = new Date(d)
+        let date = new Date(d);
         
         let year = date.getFullYear();
         let month = date.getMonth() + 1;
-        let day = date.getDay();
+        let day = date.getDate();
 
         return day + "-" + month + "-" + year;
     }
