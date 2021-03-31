@@ -12,6 +12,16 @@
 							<ion-row>
 								<ion-col>
 									<div class="ui-fluid">
+
+										<div class="ui-g-4 ui-md-4" style="width: 100%;">
+											<span>
+												<button pButton type="button" class="ui-button-success"
+													icon="pi pi-plus" label="Crear archivo excel"
+													(click)="showNuevoArchivoExcelModal()"></button>
+											</span>
+										</div>
+
+										<!-- BUSCAR -->
 										<div class="ui-g-4 ui-md-4" style="width: 50%;">
 											<span>
 												<ion-searchbar placeholder="Buscar" [(ngModel)]="busqueda"
@@ -19,19 +29,38 @@
 												</ion-searchbar>
 											</span>
 										</div>
-										<div class="ui-g-4 ui-md-4" style="padding-top: 25px; width: 50%;">
+
+										<!-- FECHA -->
+										<div class="ui-g-4 ui-md-4" style="padding-top: 25px; width: 20%;">
+											<span class="ui-float-label">
+												<p-calendar [locale]="es" [showIcon]="true" [(ngModel)]="fecha"
+													(onSelect)="changeFilterHandler($event)" [monthNavigator]="true"
+													[yearNavigator]="true" yearRange="1950:2100" showButtonBar="true"
+													dateFormat="dd-mm-yy" [readonlyInput]="true">
+												</p-calendar>
+												<label>Fecha </label>
+											</span>
+										</div>
+
+										<!-- ESTADO -->
+										<div class="ui-g-2 ui-md-4" style="padding-top: 25px; width: 20%;">
 											<span>
 												<p-dropdown (onChange)="changeFilterHandler($event)" [options]="estados"
 													[(ngModel)]="filter.estado" [autoWidth]="false"
 													[autoDisplayFirst]="false"></p-dropdown>
 											</span>
 										</div>
+
+										<div class="ui-g-2 ui-md-2" style="margin-top: 10px; width: 60px;">
+											<span class="ui-float-label">
+												<button pButton type="button" class="ui-button-success" (click)="limpiarFiltros()">
+													<img class="limpiarFiltro" src="https://icons.iconarchive.com/icons/icons8/windows-8/512/Data-Clear-Filters-icon.png" alt="Limpiar filtros" />
+												</button>
+											</span>
+										</div>
 									</div>
 								</ion-col>
-								<ion-col text-right>
-									<button pButton type="button" class="ui-button-success" icon="pi pi-plus"
-										label="Crear archivo excel" (click)="showNuevoArchivoExcelModal()"></button>
-								</ion-col>
+
 							</ion-row>
 							<ion-row>
 								<ion-col *ngIf="!showTabla" class="sin-archivos">
@@ -107,18 +136,18 @@
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
 								<span class="md-inputfield">
-									<input type="text" formControlName="nombreExcel" [(ngModel)]="nuevoArchivoExcel.nombreExcel"
-										pInputText />
+									<input type="text" formControlName="nombreExcel"
+										[(ngModel)]="nuevoArchivoExcel.nombreExcel" pInputText />
 									<label>Nombre</label>
 								</span>
 							</div>
 						</div>
-						
+
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
 								<span class="md-inputfield">
 									<input type="file" formControlName="archivo" [(ngModel)]="nuevoArchivoExcel.archivo"
-										pInputText accept=".xlsx, .xls" (change)="validar()"/>
+										pInputText accept=".xlsx, .xls" (change)="validar()" />
 								</span>
 							</div>
 						</div>
@@ -130,12 +159,12 @@
 
 		<p-footer>
 			<div class="ui-g-12 ui-md-12" style="text-align: right">
-				<button type="button" pButton icon="pi pi-times" (click)="displayArchivoExcelModal=false" label="Cancelar"
-					class="ui-button-danger"></button>&nbsp;
+				<button type="button" pButton icon="pi pi-times" (click)="displayArchivoExcelModal=false"
+					label="Cancelar" class="ui-button-danger"></button>&nbsp;
 				<button type="button" pButton icon="pi pi-check" (click)="guardarArchivoExcel()" label="Guardar"
 					class="ui-button-success" *ngIf="isNew"></button>&nbsp;
-				<button type="button" pButton icon="pi pi-check" (click)="actualizarArchivoExcel(false)" label="Modificar"
-					class="ui-button-success" *ngIf="!isNew"></button>&nbsp;
+				<button type="button" pButton icon="pi pi-check" (click)="actualizarArchivoExcel(false)"
+					label="Modificar" class="ui-button-success" *ngIf="!isNew"></button>&nbsp;
 			</div>
 		</p-footer>
 	</form>

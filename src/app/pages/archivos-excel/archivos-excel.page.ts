@@ -35,6 +35,7 @@ export class ArchivosExcelPage implements OnInit {
     public isNew: boolean;
     private suscriptionUser: Subscription;
     public es: any;
+    public fecha: Date;
     
     @BlockUI() blockUI: NgBlockUI;
     constructor(
@@ -54,7 +55,6 @@ export class ArchivosExcelPage implements OnInit {
             monthNames: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
             monthNamesShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
             today: 'Hoy',
-            clear: 'Borrar'
         };
 
         this.filter = { name: '', estado: '' };
@@ -208,10 +208,17 @@ export class ArchivosExcelPage implements OnInit {
         let date = new Date(d)
         
         let year = date.getFullYear();
-        let month = date.getMonth();
+        let month = date.getMonth() + 1;
         let day = date.getDay();
 
         return day + "-" + month + "-" + year;
+    }
+
+    public limpiarFiltros(){
+        this.fecha = null;
+        this.filter.estado = "";
+        this.busqueda = "";
+        this.getArchivosExcel();
     }
 
     async presentToast(msj: string) {
@@ -223,6 +230,7 @@ export class ArchivosExcelPage implements OnInit {
       }
 
     changeFilterHandler(event) {
+        
         this.archivosExcel = this.archivosExcelOriginal
             .filter(archivoExcel => {
                 if (this.filter['estado'] != '' && this.filter['estado'].toUpperCase() != 'TODOS') {
@@ -232,6 +240,17 @@ export class ArchivosExcelPage implements OnInit {
                         return false;
                     }
                 }
+                return true;
+            }).filter(archivoExcel => {
+                if (this.busqueda != '') {
+                    return archivoExcel.nombreExcel && archivoExcel.nombreExcel.toLowerCase().includes(this.busqueda.toLowerCase());
+                }
+                return true;
+            }).filter(archivoExcel => {
+                if(this.fecha){
+                    return archivoExcel.fecha && this.formatearFecha(archivoExcel.fecha).toLowerCase().includes(this.formatearFecha(this.fecha).toLowerCase());
+                }
+
                 return true;
             });
 
