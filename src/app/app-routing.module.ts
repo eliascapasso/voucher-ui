@@ -27,15 +27,20 @@ const routes: Routes = [
     loadChildren: './pages/recuperar-password/recuperar-password.module#RecuperarPasswordPageModule',
   },
   {
-      path: 'usuarios',
-      loadChildren: './pages/usuarios/usuarios.module#UsuariosPageModule',
-      canActivate: [LoginGuardGuard]
+    path: 'usuarios',
+    loadChildren: './pages/usuarios/usuarios.module#UsuariosPageModule',
+    canActivate: [LoginGuardGuard]
   },
   {
     path: 'archivos-excel',
     loadChildren: './pages/archivos-excel/archivos-excel.module#ArchivosExcelPageModule',
     canActivate: [LoginGuardGuard]
-}
+  },
+  {
+    path: 'voucher-emitido',
+    loadChildren: './pages/voucher-emitido/voucher-emitido.module#VoucherEmitidoPageModule',
+    canActivate: [LoginGuardGuard]
+  }
 ];
 
 @NgModule({
@@ -44,4 +49,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

@@ -20,7 +20,6 @@ export class UsuarioService {
     public dataAuth: string;
 
     private get serviceBaseURL(): string {
-        //return 'http://localhost:8090/api';
         return environment.apiUrl;
     }
 

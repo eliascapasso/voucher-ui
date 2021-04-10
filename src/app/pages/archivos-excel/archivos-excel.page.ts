@@ -32,7 +32,6 @@ export class ArchivosExcelPage implements OnInit {
     public estados: any[] = [];
     public filter = { name: '', estado: '' };
     public busqueda: string = '';
-    public isNew: boolean;
     private suscriptionUser: Subscription;
     public es: any;
     public fecha: Date;
@@ -75,7 +74,6 @@ export class ArchivosExcelPage implements OnInit {
         this.estados.push({ label: 'IMPORTANDO', value: 'IMPORTANDO' });
         this.estados.push({ label: 'CANCELADO', value: 'CANCELADO' });
 
-        this.isNew = false;
         this.nuevoArchivoExcel = {};
 
         this.getArchivosExcel();
@@ -137,35 +135,6 @@ export class ArchivosExcelPage implements OnInit {
         }
     }
 
-    actualizarArchivoExcel(elimina) {
-
-        if (!this.archivoExcelForm.valid && !elimina) {
-            this.formMsgs = [];
-            this.formMsgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
-        }
-        else {
-
-            this.blockUI.start('Guardando Archivo excel...');
-            this.archivoExcelService.update(this.nuevoArchivoExcel)
-                .subscribe((ArchExcel: any) => {
-                    this.blockUI.stop();
-                    console.log('Archivo excel modificado');
-                    this.msgs = [];
-                    this.msgs.push({ severity: 'info', summary: `Archivo excel modificado con exito`, detail: `Archivo excel modificado` });
-                    this.displayArchivoExcelModal = false;
-                    this.getArchivosExcel();
-                },
-                    error => {
-                        let msj = (error.message) ? error.message : '';
-                        let cause = (error.cause) ? error.cause : '';
-                        this.blockUI.stop();
-                        console.error(`error al modificar archivo excel ${error}`);
-                        this.formMsgs = [];
-                        this.formMsgs.push({ severity: 'error', summary: `Error al modificar el archivo excel ${msj}`, detail: cause });
-                    });
-        }
-    }
-
     confirmDelete(archivo) {
         this.confirmationService.confirm({
             message: '¿Esta seguro que desea eliminar el archivo?',
@@ -188,23 +157,8 @@ export class ArchivosExcelPage implements OnInit {
         });
     }
 
-    confirmEstado(mensaje) {
-        this.confirmationService.confirm({
-            message: mensaje,
-            acceptLabel: 'Confirmar',
-            rejectLabel: 'Cancelar',
-            accept: () => {
-                this.actualizarArchivoExcel(true);
-            },
-            reject: () => {
-
-            }
-        });
-    }
-
     showNuevoArchivoExcelModal() {
         this.nuevoArchivoExcel = {};
-        this.isNew = true;
         this.displayArchivoExcelModal = true;
     }
 
@@ -273,16 +227,6 @@ export class ArchivosExcelPage implements OnInit {
             this.showTabla = false;
         } else {
             this.showTabla = true;
-        }
-    }
-
-    handleChange(event, archivoExcel) {
-        this.nuevoArchivoExcel = archivoExcel;
-        this.nuevoArchivoExcel.estado = event.checked;
-        if (!event.checked) {
-            this.confirmEstado("¿Seguro que desea deshabilitar el archivo excel?");
-        } else {
-            this.confirmEstado("¿Seguro que desea habilitar el archivo excel?");
         }
     }
 }

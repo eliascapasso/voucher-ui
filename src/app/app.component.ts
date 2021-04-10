@@ -14,11 +14,10 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  profile: MenuItem[];
-  configuracion: MenuItem[];
-  verUsuarios:boolean = false;
+  verUsuarios: boolean = false;
   userLogin: Usuario;
   isConf: number = 0;
+  isVoucher: number = 0;
 
   empresa: string;
 
@@ -46,22 +45,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.configuracion = [
-      {
-        label: "Configuración",
-        icon: "pi pi-pw pi-user",
-        items: [
-          {
-            label: "Usuarios",
-            icon: "pi pi-fw pi-users",
-            routerLink: "/usuarios"
-          },
-
-        ]
-      }
-    ];
-  }
+  ngOnInit() { }
 
   isLogedIn() {
     return localStorage.getItem('email') != null;

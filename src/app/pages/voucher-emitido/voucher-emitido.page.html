@@ -2,7 +2,7 @@
 <ion-content padding>
 	<div class="container">
 		<p-card>
-			<label class="configuracionLabel">Archivos excel</label>
+			<label class="configuracionLabel">Vouchers emitidos</label>
 			<p-growl [(value)]="msgs">
 			</p-growl>
 			<ion-row class="section">
@@ -13,16 +13,8 @@
 								<ion-col>
 									<div class="ui-fluid">
 
-										<div class="ui-g-4 ui-md-4" style="width: 100%;">
-											<span>
-												<button pButton type="button" class="ui-button-success"
-													icon="pi pi-upload" label="Cargar archivo excel"
-													(click)="showNuevoArchivoExcelModal()"></button>
-											</span>
-										</div>
-
 										<!-- BUSCAR -->
-										<div class="ui-g-4 ui-md-4" style="width: 50%;">
+										<div class="ui-g-4 ui-md-4" style="width: 30%;">
 											<span>
 												<ion-searchbar placeholder="Buscar" [(ngModel)]="busqueda"
 													(ionChange)="changeFilterHandler($event)">
@@ -30,15 +22,37 @@
 											</span>
 										</div>
 
-										<!-- FECHA -->
-										<div class="ui-g-4 ui-md-4" style="padding-top: 25px; width: 20%;">
+										<!-- FECHA DESDE -->
+										<div class="ui-g-2 ui-md-2" style="padding-top: 25px; width: 20%;">
 											<span class="ui-float-label">
-												<p-calendar [locale]="es" [showIcon]="true" [(ngModel)]="fecha"
-													(onSelect)="changeFilterHandler($event)" [monthNavigator]="true"
-													[yearNavigator]="true" yearRange="1950:2100" showButtonBar="true"
-													dateFormat="dd-mm-yy" [readonlyInput]="true">
+												<p-calendar [locale]="es"
+															[showIcon]="true"  
+															[(ngModel)]="fechaDesde" 
+															[maxDate]="fechaHasta"
+															(onSelect)="selectFechaDesde()"                                              
+															[monthNavigator]="true" 
+															[yearNavigator]="true"
+															dateFormat="dd-mm-yy"
+															[readonlyInput]="true">
 												</p-calendar>
-												<label>Fecha </label>
+												<label>Fecha desde </label>
+											</span>
+										</div>
+				
+										<!-- FECHA HASTA -->
+										<div class="ui-g-2 ui-md-2" style="padding-top: 25px; width: 20%;">
+											<span class="ui-float-label">
+												<p-calendar [locale]="es"
+															[showIcon]="true" 
+															[(ngModel)]="fechaHasta" 
+															[minDate]="fechaDesde"
+															(onSelect)="selectFechaHasta()"                                          
+															[monthNavigator]="true" 
+															[yearNavigator]="true"
+															dateFormat="dd-mm-yy"
+															[readonlyInput]="true">
+												</p-calendar>
+												<label>Fecha hasta </label>
 											</span>
 										</div>
 
@@ -68,16 +82,16 @@
 							<ion-row>
 								<ion-col *ngIf="!showTabla" class="sin-archivos">
 									<div class="ui-table-caption ui-widget-header ng-star-inserted">
-										No se encontraron archivos excel
+										No se encontraron vouchers
 									</div>
 								</ion-col>
 								<ion-col *ngIf="showTabla">
-									<p-table [columns]="columnas" [value]="archivosExcel" dataKey="email"
+									<p-table [columns]="columnas" [value]="vouchers" dataKey="email"
 										[style]="{'margin-bottom':'20px'}" [paginator]="true" [rows]="5"
-										[totalRecords]="archivosExcel.length" [rowsPerPageOptions]="[5,10,20,30]"
+										[totalRecords]="vouchers.length" [rowsPerPageOptions]="[5,10,20,30]"
 										[loading]="loading">
 										<ng-template pTemplate="caption">
-											Archivos Excel
+											Vouchers
 										</ng-template>
 										<ng-template pTemplate="header" let-columns>
 											<tr>
@@ -93,15 +107,18 @@
 										<ng-template pTemplate="body" let-rowData let-columns="columns">
 											<tr [pSelectableRow]="rowData">
 												<td *ngFor="let col of columns">
-													<div *ngIf="col.fecha">
+													<div *ngIf="col.fechaDesde">
 														{{formatearFecha(rowData[col.field])}}
 													</div>
-													<div *ngIf="!col.fecha">
+													<div *ngIf="col.fechaHasta">
+														{{formatearFecha(rowData[col.field])}}
+													</div>
+													<div *ngIf="!col.fechaHasta && !col.fechaDesde">
 														{{ rowData[col.field] }}
 													</div>
 												</td>
 												<td>
-													<div style="text-align: center" *ngIf="rowData['estado']=='IMPORTANDO'">
+													<div style="text-align: center">
 														<i class="pi pi-trash" style="font-size: 2em; cursor: pointer;"
 															(click)="confirmDelete(rowData)"></i>
 													</div>
@@ -120,12 +137,12 @@
 	</div>
 </ion-content>
 
-<p-dialog [(visible)]="displayArchivoExcelModal" [modal]="true" [responsive]="true"
+<p-dialog [(visible)]="displayVoucherEmitidoModal" [modal]="true" [responsive]="true"
 	[style]="{width: '600px', minWidth: '600px'}" [maximizable]="false" [baseZIndex]="10000" appendTo="body">
 	<p-header>
-		Alta de nuevo archivo excel
+		Editar voucher
 	</p-header>
-	<form [formGroup]="archivoExcelForm" (ngSubmit)="guardarArchivoExcel()">
+	<form [formGroup]="voucherForm" (ngSubmit)="guardarVoucher()">
 		<p-growl [(value)]="formMsgs">
 		</p-growl>
 		<div class="ui-fluid">
@@ -133,14 +150,7 @@
 				<div class="ui-g-12">
 					<div class="ui-g form-group">
 
-						<div class="ui-g-12 ui-md-12">
-							<div class="ui-inputgroup">
-								<span class="md-inputfield">
-									<input type="file" formControlName="archivo" pInputText accept=".xlsx, .xls"
-										(change)="validar($event)" />
-								</span>
-							</div>
-						</div>
+						
 
 					</div>
 				</div>
@@ -149,10 +159,10 @@
 
 		<p-footer>
 			<div class="ui-g-12 ui-md-12" style="text-align: right">
-				<button type="button" pButton icon="pi pi-times" (click)="displayArchivoExcelModal=false"
+				<button type="button" pButton icon="pi pi-times" (click)="displayVoucherEmitidoModal=false"
 					label="Cancelar" class="ui-button-danger"></button>&nbsp;
-				<button type="button" pButton icon="pi pi-check" (click)="guardarArchivoExcel()" label="Guardar"
-					class="ui-button-success"></button>&nbsp;
+				<button type="button" pButton icon="pi pi-check" (click)="actualizarVoucher()"
+					label="Modificar" class="ui-button-success"></button>&nbsp;
 			</div>
 		</p-footer>
 	</form>

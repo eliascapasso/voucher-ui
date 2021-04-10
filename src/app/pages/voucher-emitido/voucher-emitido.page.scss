@@ -1,0 +1,29 @@
+p-dialog
+.rectanguloDialog{
+  border-radius: 80px;
+}
+.voucherLabel {
+  height: 30px;
+  width: 164px;
+  color: #757575;
+  font-family: "Google Sans";
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 30px;
+  padding-bottom: 38px;
+  padding-top: 38px;
+}
+
+.sin-archivos{
+  height: 350px;
+}
+
+.limpiarFiltro{
+  width: 20px;
+  height: 20px;
+  margin-top: 5px;
+}
+
+ion-content{
+  --ion-background-color:  #cacaca;
+}
