@@ -12,9 +12,8 @@ export class LoginGuardGuard implements CanActivate {
   ) {}
 
   canActivate(): boolean {
-    console.log(localStorage.getItem('email'))
     if (localStorage.getItem('email') != null) {
-      console.log('usuario autentificado');
+      console.info('usuario autentificado');
       return true;
     } else {
       console.log('Bloqueado por GUARD');

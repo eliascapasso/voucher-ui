@@ -53,8 +53,11 @@
 
 										<div class="ui-g-2 ui-md-2" style="margin-top: 10px; width: 60px;">
 											<span class="ui-float-label">
-												<button pButton type="button" class="ui-button-success" (click)="limpiarFiltros()">
-													<img class="limpiarFiltro" src="https://icons.iconarchive.com/icons/icons8/windows-8/512/Data-Clear-Filters-icon.png" alt="Limpiar filtros" />
+												<button pButton type="button" class="ui-button-success"
+													(click)="limpiarFiltros()">
+													<img class="limpiarFiltro"
+														src="https://icons.iconarchive.com/icons/icons8/windows-8/512/Data-Clear-Filters-icon.png"
+														alt="Limpiar filtros" />
 												</button>
 											</span>
 										</div>
@@ -83,7 +86,7 @@
 													<p-sortIcon [field]="col.field"></p-sortIcon>
 												</th>
 												<th style="text-align: center;">
-													<span>Opciones</span>
+													<span> </span>
 												</th>
 											</tr>
 										</ng-template>
@@ -98,9 +101,9 @@
 													</div>
 												</td>
 												<td>
-													<div style="text-align: center">
-														<i class="pi pi-pencil" style="font-size: 2em; cursor: pointer;"
-															(click)="showEditarArchivoExcelModal(rowData)"></i>
+													<div style="text-align: center" *ngIf="rowData['estado']=='IMPORTANDO'">
+														<i class="pi pi-trash" style="font-size: 2em; cursor: pointer;"
+															(click)="confirmDelete(rowData)"></i>
 													</div>
 												</td>
 											</tr>
@@ -132,12 +135,12 @@
 			<div class="ui-g">
 				<div class="ui-g-12">
 					<div class="ui-g form-group">
-						
+
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
 								<span class="md-inputfield">
-									<input type="file" formControlName="archivo"
-										pInputText accept=".xlsx, .xls" (change)="validar($event)" />
+									<input type="file" formControlName="archivo" pInputText accept=".xlsx, .xls"
+										(change)="validar($event)" />
 								</span>
 							</div>
 						</div>

@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
   configuracion: MenuItem[];
   verUsuarios:boolean = false;
   userLogin: Usuario;
+  isConf: number = 0;
 
   empresa: string;
 

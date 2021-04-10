@@ -166,6 +166,28 @@ export class ArchivosExcelPage implements OnInit {
         }
     }
 
+    confirmDelete(archivo) {
+        this.confirmationService.confirm({
+            message: '¿Esta seguro que desea eliminar el archivo?',
+            acceptLabel: 'Confirmar',
+            rejectLabel: 'Cancelar',
+            accept: () => {
+                this.archivoExcelService.delete(archivo)
+                    .subscribe( (archivoExcel: any) => {
+                            console.log('archivo excel eliminado');
+                            this.msgs = [];
+                            this.msgs.push({severity: 'info', summary: `Archivo excel eliminado`, detail: `Archivo excel eliminado`});
+                            this.getArchivosExcel();
+                        },
+                        error => {
+                            console.error(`error al eliminar el archivo excel ${error}`);
+                            this.msgs = [];
+                            this.msgs.push({severity: 'error', summary: `error al eliminar el archivo excel ${error}`, detail: error});
+                        });
+            }
+        });
+    }
+
     confirmEstado(mensaje) {
         this.confirmationService.confirm({
             message: mensaje,
@@ -183,13 +205,6 @@ export class ArchivosExcelPage implements OnInit {
     showNuevoArchivoExcelModal() {
         this.nuevoArchivoExcel = {};
         this.isNew = true;
-        this.displayArchivoExcelModal = true;
-    }
-
-    showEditarArchivoExcelModal(archivoExcel) {
-        this.nuevoArchivoExcel._id = null;
-        this.isNew = false;
-        this.nuevoArchivoExcel = archivoExcel;
         this.displayArchivoExcelModal = true;
     }
 
