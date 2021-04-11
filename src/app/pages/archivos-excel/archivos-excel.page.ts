@@ -82,6 +82,7 @@ export class ArchivosExcelPage implements OnInit {
         this.nuevoArchivoExcel = {};
         $this.archivosExcel = [];
 
+        $this.blockUI.start("Cargando archivos excel...");
         $this.archivoExcelService.getArchivosExcel().then(archExcel => {
             $this.blockUI.stop();
 

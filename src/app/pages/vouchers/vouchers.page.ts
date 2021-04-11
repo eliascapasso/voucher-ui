@@ -33,6 +33,7 @@ export class VouchersPage implements OnInit {
     public es: any;
     public fechaDesde: Date;
     public fechaHasta: Date;
+    public displayVoucherModal: boolean = false;
     
     @BlockUI() blockUI: NgBlockUI;
     constructor(
@@ -96,6 +97,7 @@ export class VouchersPage implements OnInit {
         this.nuevoVoucher = {};
         $this.vouchers = [];
 
+        $this.blockUI.start("Cargando vouchers...");
         $this.voucherService.getVouchers().then(vouchers => {
             $this.blockUI.stop();
 
@@ -222,5 +224,188 @@ export class VouchersPage implements OnInit {
         } else {
             this.showTabla = true;
         }
+    }
+
+    showVoucher(voucher) {
+        this.displayVoucherModal = true;
+        // this.blockUI.start("Cargando voucher...");
+
+        // this.usuarioService.getUsuarioByDni(voucher.feDetRequest.docNro).then(usuario => {
+        //     this.datosvoucher.razonSocial = usuario.firstName + usuario.lastName;
+        //     this.datosvoucher.email = usuario.email;
+        //     this.datosvoucher.telefono = usuario.phone;
+        //     this.datosvoucher.domicilio = ''; //Setear el domicilio
+
+        //     this.blockUI.stop();
+        // })
+        //     .catch(function (error) {
+        //         this.blockUI.stop();
+        //         console.error(`error al obtener los vouchers ${error}`);
+        //         this.formMsgs = [];
+        //         this.formMsgs.push({ severity: 'error', summary: `Error al obtener los vouchers ${error}`, detail: error });
+
+        //     });
+
+        // this.blockUI.stop();
+
+        // //Documento
+        // if (voucher.feDetRequest.docNro != null) {
+        //     this.datosvoucher.docCliente = voucher.feDetRequest.docNro;
+        // }
+        // else {
+        //     this.datosvoucher.docCliente = '';
+        // }
+
+        // //Tipo documento
+        // if (voucher.feDetRequest.docTipo != null) {
+        //     this.datosvoucher.docTipoCliente = this.obtenerTipoDoc(voucher.feDetRequest.docTipo);
+        // }
+        // else {
+        //     this.datosvoucher.docTipoCliente = '';
+        // }
+
+        // //Numero voucher
+        // if (voucher.feDetRequest.numeroInterno != null) {
+        //     this.datosvoucher.nrovoucher = voucher.feDetRequest.numeroInterno;
+        // }
+        // else {
+        //     this.datosvoucher.nrovoucher = '';
+        // }
+
+        // //CAE
+        // if (voucher.cae != null) {
+        //     this.datosvoucher.cae = voucher.cae;
+        // }
+        // else {
+        //     this.datosvoucher.cae = '';
+        // }
+
+        // //Vencimiento CAE
+        // if (voucher.fechaVencimientoCae != null) {
+        //     this.datosvoucher.vencimientoCAE = voucher.fechaVencimientoCae;
+        // }
+        // else {
+        //     this.datosvoucher.vencimientoCAE = '';
+        // }
+
+        // //ESTADO
+        // if (voucher.estado != null) {
+        //     this.datosvoucher.estado = voucher.estado;
+        // }
+        // else {
+        //     this.datosvoucher.estado = '';
+        // }
+
+        // //Tipo voucher
+        // if (voucher.feCabReq.cbteTipo != null) {
+        //     this.datosvoucher.tipo = this.obtenerTipovoucher(voucher.feCabReq.cbteTipo);
+        // }
+        // else {
+        //     this.datosvoucher.tipo = '';
+        // }
+
+        // //Punto de venta
+        // if (voucher.feCabReq.puntoVentaInterno != null) {
+        //     this.datosvoucher.puntoVenta = voucher.feCabReq.puntoVentaInterno;
+        // }
+        // else {
+        //     this.datosvoucher.puntoVenta = '';
+        // }
+
+        // //Fecha de emision
+        // if (voucher.feDetRequest.cbteFch != null) {
+        //     this.datosvoucher.fechaEmision = this.formatearFecha(voucher.feDetRequest.cbteFch);
+        // }
+        // else {
+        //     this.datosvoucher.fechaEmision = '';
+        // }
+
+        // //Fecha de vencimiento pago
+        // if (voucher.feDetRequest.fchVtoPago != null) {
+        //     this.datosvoucher.fechaVencimientoPago = this.formatearFecha(voucher.feDetRequest.fchVtoPago);
+        // }
+        // else {
+        //     this.datosvoucher.fechaVencimientoPago = '';
+        // }
+
+        // //Servicio desde
+        // if (voucher.feDetRequest.fchServDesde != null) {
+        //     this.datosvoucher.desde = this.formatearFecha(voucher.feDetRequest.fchServDesde);
+        // }
+        // else {
+        //     this.datosvoucher.desde = '';
+        // }
+
+        // //Servicio hasta
+        // if (voucher.feDetRequest.fchServHasta != null) {
+        //     this.datosvoucher.hasta = this.formatearFecha(voucher.feDetRequest.fchServHasta);
+        // }
+        // else {
+        //     this.datosvoucher.hasta = '';
+        // }
+
+        // //Concepto
+        // if (voucher.feDetRequest.concepto != null) {
+        //     this.datosvoucher.concepto = this.obtenerConcepto(voucher.feDetRequest.concepto);
+        // }
+        // else {
+        //     this.datosvoucher.concepto = '';
+        // }
+
+        // //Importe total
+        // if (voucher.feDetRequest.impTotal != null) {
+        //     this.datosvoucher.impTotal = this.obtenerMoneda(voucher.feDetRequest.monId) 
+        //                                     + voucher.feDetRequest.impTotal;
+        // }
+        // else {
+        //     this.datosvoucher.impTotal = '';
+        // }
+
+        // //Importe excento
+        // if (voucher.feDetRequest.ImpOpEx != null) {
+        //     this.datosvoucher.impExcento = this.obtenerMoneda(voucher.feDetRequest.monId) 
+        //                                     + voucher.feDetRequest.ImpOpEx;
+        // }
+        // else {
+        //     this.datosvoucher.impExcento = '';
+        // }
+
+        // //Importe tributos
+        // if (voucher.feDetRequest.impTrib != null) {
+        //     this.datosvoucher.impTrib = this.obtenerMoneda(voucher.feDetRequest.monId) 
+        //                                     + voucher.feDetRequest.impTrib;
+        // }
+        // else {
+        //     this.datosvoucher.impTrib = '';
+        // }
+
+        // //Importe IVA
+        // if (voucher.feDetRequest.impIVA != null) {
+        //     this.datosvoucher.iva = this.obtenerMoneda(voucher.feDetRequest.monId) 
+        //                                     + voucher.feDetRequest.impIVA;
+        // }
+        // else {
+        //     this.datosvoucher.iva = '';
+        // }
+
+        // //Importe neto gravado
+        // if (voucher.feDetRequest.impNeto != null) {
+        //     this.datosvoucher.impNetoGravado = this.obtenerMoneda(voucher.feDetRequest.monId) 
+        //                                         + voucher.feDetRequest.impNeto;
+        // }
+        // else {
+        //     this.datosvoucher.impNetoGravado = '';
+        // }
+
+        // //Importe neto no gravado
+        // if (voucher.feDetRequest.impTotConc != null) {
+        //     this.datosvoucher.impNetoNoGravado = this.obtenerMoneda(voucher.feDetRequest.monId) 
+        //                                             + voucher.feDetRequest.impTotConc;
+        // }
+        // else {
+        //     this.datosvoucher.impNetoNoGravado = '';
+        // }
+
+        // this.voucher = voucher;
     }
 }

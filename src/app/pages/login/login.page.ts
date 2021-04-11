@@ -70,7 +70,7 @@ export class LoginPage implements OnInit, AfterViewInit {
     //TEMPORAL
     this.menuCtrl.enable(true);
     localStorage.setItem('email', this.formControls.email.value);
-    this.router.navigate(['/usuarios']);
+    this.router.navigate(['/vouchers']);
 
     //DESCOMENTAR
     // this.isSubmitted = true;

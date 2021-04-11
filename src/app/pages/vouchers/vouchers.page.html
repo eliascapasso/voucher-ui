@@ -25,32 +25,22 @@
 										<!-- FECHA DESDE -->
 										<div class="ui-g-2 ui-md-2" style="padding-top: 25px; width: 20%;">
 											<span class="ui-float-label">
-												<p-calendar [locale]="es"
-															[showIcon]="true"  
-															[(ngModel)]="fechaDesde" 
-															[maxDate]="fechaHasta"
-															(onSelect)="selectFechaDesde()"                                              
-															[monthNavigator]="true" 
-															[yearNavigator]="true"
-															dateFormat="dd-mm-yy"
-															[readonlyInput]="true">
+												<p-calendar [locale]="es" [showIcon]="true" [(ngModel)]="fechaDesde"
+													[maxDate]="fechaHasta" (onSelect)="selectFechaDesde()"
+													[monthNavigator]="true" [yearNavigator]="true" dateFormat="dd-mm-yy"
+													[readonlyInput]="true">
 												</p-calendar>
 												<label>Fecha desde </label>
 											</span>
 										</div>
-				
+
 										<!-- FECHA HASTA -->
 										<div class="ui-g-2 ui-md-2" style="padding-top: 25px; width: 20%;">
 											<span class="ui-float-label">
-												<p-calendar [locale]="es"
-															[showIcon]="true" 
-															[(ngModel)]="fechaHasta" 
-															[minDate]="fechaDesde"
-															(onSelect)="selectFechaHasta()"                                          
-															[monthNavigator]="true" 
-															[yearNavigator]="true"
-															dateFormat="dd-mm-yy"
-															[readonlyInput]="true">
+												<p-calendar [locale]="es" [showIcon]="true" [(ngModel)]="fechaHasta"
+													[minDate]="fechaDesde" (onSelect)="selectFechaHasta()"
+													[monthNavigator]="true" [yearNavigator]="true" dateFormat="dd-mm-yy"
+													[readonlyInput]="true">
 												</p-calendar>
 												<label>Fecha hasta </label>
 											</span>
@@ -119,6 +109,8 @@
 												</td>
 												<td>
 													<div style="text-align: center">
+														<i class="pi pi-eye" style="font-size: 2em; cursor: pointer;"
+															(click)="showVoucher(rowData)"></i>&nbsp;
 														<i class="pi pi-trash" style="font-size: 2em; cursor: pointer;"
 															(click)="confirmDelete(rowData)"></i>
 													</div>
@@ -150,7 +142,7 @@
 				<div class="ui-g-12">
 					<div class="ui-g form-group">
 
-						
+
 
 					</div>
 				</div>
@@ -161,10 +153,162 @@
 			<div class="ui-g-12 ui-md-12" style="text-align: right">
 				<button type="button" pButton icon="pi pi-times" (click)="displayVoucherEmitidoModal=false"
 					label="Cancelar" class="ui-button-danger"></button>&nbsp;
-				<button type="button" pButton icon="pi pi-check" (click)="actualizarVoucher()"
-					label="Modificar" class="ui-button-success"></button>&nbsp;
+				<button type="button" pButton icon="pi pi-check" (click)="actualizarVoucher()" label="Modificar"
+					class="ui-button-success"></button>&nbsp;
 			</div>
 		</p-footer>
 	</form>
+</p-dialog>
+
+<!-- DETALLE VOUCHER -->
+<p-dialog [(visible)]="displayVoucherModal" [modal]="true" [responsive]="true"
+	[style]="{width: '800px', minWidth: '800px'}" [maximizable]="false" [baseZIndex]="10000" appendTo="body">
+	<p-header>
+		Detalle del voucher
+	</p-header>
+
+	<div class="ui-fluid">
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<div class="ui-g form-group">
+
+					
+
+					<!-- <label *ngIf="!(datosComprobante.docCliente==''&&datosComprobante.docTipoCliente=='')">
+						<u><b>Datos del cliente:</b></u>
+					</label>
+
+					<div class="ui-g-12 ui-md-12"
+						*ngIf="!(datosComprobante.docCliente==''&&datosComprobante.docTipoCliente=='')">
+						<label *ngIf="datosComprobante.docCliente!=''" class="ui-g-6">
+							<b>DNI: </b> {{ datosComprobante.docCliente }}
+						</label>
+						<label *ngIf="datosComprobante.docTipoCliente!=''">
+							<b>Tipo: </b> {{ datosComprobante.docTipoCliente }}
+						</label>
+					</div>
+
+					<div class="ui-g-12 ui-md-12" *ngIf="datosComprobante.razonSocial!=''">
+						<label><b>Razón social: </b> {{ datosComprobante.razonSocial }}</label>
+					</div>
+
+					<div class="ui-g-12 ui-md-12" *ngIf="datosComprobante.domicilio!=''">
+						<label><b>Domicilio: </b> {{ datosComprobante.domicilio }}</label>
+					</div>
+
+					<div class="ui-g-12 ui-md-12" *ngIf="datosComprobante.telefono!=''">
+						<label><b>Teléfono: </b> {{ datosComprobante.telefono }}</label>
+					</div>
+
+					<div class="ui-g-12 ui-md-12" *ngIf="datosComprobante.email!=''">
+						<label><b>Correo electrónico: </b> {{ datosComprobante.email }}</label>
+					</div>
+
+					<label>
+						<u><b>Datos del comprobante:</b></u>
+					</label>
+
+					<div class="ui-g-12 ui-md-12"
+						*ngIf="!(datosComprobante.nroComprobante==''&&datosComprobante.puntoVenta=='')">
+						<label *ngIf="datosComprobante.nroComprobante!=''" class="ui-g-6">
+							<b>Número: </b> {{ datosComprobante.nroComprobante }}
+						</label>
+						<label *ngIf="datosComprobante.puntoVenta!=''">
+							<label><b>Punto de venta: </b> {{ datosComprobante.puntoVenta }}</label>
+						</label>
+					</div>
+
+					<div class="ui-g-12 ui-md-12"
+						*ngIf="!(datosComprobante.cae==''&&datosComprobante.vencimientoCAE=='')">
+						<label *ngIf="datosComprobante.cae!=''" class="ui-g-6">
+							<b>CAE: </b> {{ datosComprobante.cae }}
+						</label>
+						<label *ngIf="datosComprobante.vencimientoCAE!=''">
+							<b>Vencimiento CAE: </b> {{ datosComprobante.vencimientoCAE }}
+						</label>
+					</div>
+
+					<div class="ui-g-12 ui-md-12"
+						*ngIf="!(datosComprobante.fechaEmision==''&&datosComprobante.fechaVencimientoPago=='')">
+						<label *ngIf="datosComprobante.fechaEmision!=''" class="ui-g-6">
+							<b>Emisión: </b> {{ datosComprobante.fechaEmision }}
+						</label>
+						<label *ngIf="datosComprobante.fechaVencimiento!=''">
+							<b>Vencimiento de pago: </b> {{ datosComprobante.fechaVencimientoPago }}
+						</label>
+					</div>
+
+					<div class="ui-g-12 ui-md-12" *ngIf="!(datosComprobante.desde==''&&datosComprobante.hasta=='')">
+						<label *ngIf="datosComprobante.desde!=''" class="ui-g-6">
+							<b>Servicio desde: </b> {{ datosComprobante.desde }}
+						</label>
+						<label *ngIf="datosComprobante.hasta!=''">
+							<b>Servicio hasta: </b> {{ datosComprobante.hasta }}
+						</label>
+					</div>
+
+					<div class="ui-g-12 ui-md-12" *ngIf="!(datosComprobante.tipo==''&&datosComprobante.estado=='')">
+						<label *ngIf="datosComprobante.tipo!=''" class="ui-g-6">
+							<b>Tipo: </b> {{ datosComprobante.tipo }}
+						</label>
+						<label *ngIf="datosComprobante.estado!=''">
+							<b>Estado: </b> {{ datosComprobante.estado }}
+						</label>
+					</div>
+
+					<div class="ui-g-12 ui-md-12" *ngIf="datosComprobante.concepto!=''">
+						<label class="ui-g-6">
+							<b>Concepto: </b> {{ datosComprobante.concepto }}
+						</label>
+					</div>
+
+					<label *ngIf="datosComprobante.impTotal!=''">
+						<u><b>Importe:</b></u>
+					</label>
+
+					<div class="ui-g-12 ui-md-12"
+						*ngIf="!(datosComprobante.impNetoNoGravado==''&&datosComprobante.impNetoGravado=='')">
+						<label *ngIf="datosComprobante.impNetoNoGravado!=''" class="ui-g-6">
+							<b>Importe neto no gravado: </b> {{ datosComprobante.impNetoNoGravado }}
+						</label>
+						<label *ngIf="datosComprobante.impNetoGravado!=''">
+							<b>Importe neto gravado: </b> {{ datosComprobante.impNetoGravado }}
+						</label>
+					</div>
+
+					<div class="ui-g-12 ui-md-12"
+						*ngIf="!(datosComprobante.impExcento==''&&datosComprobante.impTrib=='')">
+						<label *ngIf="datosComprobante.impExcento!=''" class="ui-g-6">
+							<b>Importe excento: </b> {{ datosComprobante.impExcento }}
+						</label>
+						<label *ngIf="datosComprobante.impTrib!=''">
+							<b>Importe tributos: </b> {{ datosComprobante.impTrib }}
+						</label>
+					</div>
+
+					<div class="ui-g-12 ui-md-12" *ngIf="datosComprobante.iva!=''">
+						<label class="ui-g-6">
+							<b>IVA: </b> {{ datosComprobante.iva }}
+						</label>
+					</div>
+
+					<div class="ui-g-12 ui-md-12" *ngIf="datosComprobante.impTotal!=''">
+						<label class="ui-g-6">
+							<b>Importe Total: </b> {{ datosComprobante.impTotal }}
+						</label>
+					</div> -->
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<p-footer>
+		<div class="ui-g-12 ui-md-12" style="text-align: right">
+			<button type="button" pButton icon="pi pi-times" (click)="displayVoucherModal=false" label="Cerrar"
+				class="ui-button-danger"></button>&nbsp;
+		</div>
+	</p-footer>
+
 </p-dialog>
 <app-footer></app-footer>
