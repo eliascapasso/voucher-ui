@@ -4,7 +4,7 @@ export const environment = {
   oauthUrl: '/oauth',
   ssoUrl: '/sso',
   apiUrl: '/api',
-  apiExcelUrl: '/apiExcel',
+  apiVoucher: '/apiVoucher',
   defautlNroFilasPorPagina: 10,
   empresa: ''
 };

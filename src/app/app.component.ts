@@ -17,7 +17,6 @@ export class AppComponent implements OnInit {
   verUsuarios: boolean = false;
   userLogin: Usuario;
   isConf: number = 0;
-  isVoucher: number = 0;
 
   empresa: string;
 

@@ -1,25 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import {
     FormGroup,
-    FormBuilder,
-    Validators
+    FormBuilder
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { Subscription } from 'rxjs';
 import { Voucher } from 'src/app/domain/voucher.model';
 import { ToastController } from '@ionic/angular';
 import { VoucherService } from 'src/app/service/voucher/voucher.service';
 
 @Component({
-    selector: 'app-voucher-emitido',
-    templateUrl: './voucher-emitido.page.html',
-    styleUrls: ['./voucher-emitido.page.scss']
+    selector: 'app-vouchers',
+    templateUrl: './vouchers.page.html',
+    styleUrls: ['./vouchers.page.scss']
 
 })
-export class VoucherEmitidoPage implements OnInit {
+export class VouchersPage implements OnInit {
     public columnas: any[];
     public vouchers: Voucher[] = [];
     public vouchersOriginal: Voucher[] = [];
@@ -28,11 +26,10 @@ export class VoucherEmitidoPage implements OnInit {
     public voucherForm: FormGroup;
     public msgs: Message[];
     public formMsgs: Message[];
-    public displayVoucherEmitidoModal: boolean = false;
+    public displayVouchersModal: boolean = false;
     public estados: any[] = [];
     public filter = { name: '', estado: '', desde: '', hasta: '' };
     public busqueda: string = '';
-    private suscriptionUser: Subscription;
     public es: any;
     public fechaDesde: Date;
     public fechaHasta: Date;
@@ -83,11 +80,7 @@ export class VoucherEmitidoPage implements OnInit {
         this.estados.push({ label: 'A FACTURAR', value: 'AF' });
         this.nuevoVoucher = {};
 
-        this.getVouchersEmitidos();
-    }
-
-    ngOnDestroy () { 
-        this.suscriptionUser.unsubscribe();
+        this.getVouchers();
     }
 
     selectFechaDesde() {
@@ -98,12 +91,12 @@ export class VoucherEmitidoPage implements OnInit {
         this.filter.hasta = this.fechaHasta.toISOString().replace("/", "-").replace("/", "-").substr(0, 10);
     }
 
-    getVouchersEmitidos() {
+    getVouchers() {
         var $this = this;
         this.nuevoVoucher = {};
         $this.vouchers = [];
 
-        $this.voucherService.getVouchersEmitidos().then(vouchers => {
+        $this.voucherService.getVouchers().then(vouchers => {
             $this.blockUI.stop();
 
             console.log(vouchers);
@@ -139,8 +132,8 @@ export class VoucherEmitidoPage implements OnInit {
                     console.log('voucher modificado');
                     this.msgs = [];
                     this.msgs.push({ severity: 'info', summary: `Voucher modificado con exito`, detail: `Voucher modificado` });
-                    this.displayVoucherEmitidoModal = false;
-                    this.getVouchersEmitidos();
+                    this.displayVouchersModal = false;
+                    this.getVouchers();
                 },
                     error => {
                         let msj = (error.message) ? error.message : '';
@@ -164,7 +157,7 @@ export class VoucherEmitidoPage implements OnInit {
                             console.log('voucher eliminado');
                             this.msgs = [];
                             this.msgs.push({severity: 'info', summary: `Voucher eliminado`, detail: `Voucher eliminado`});
-                            this.getVouchersEmitidos();
+                            this.getVouchers();
                         },
                         error => {
                             console.error(`error al eliminar el voucher ${error}`);
@@ -190,7 +183,7 @@ export class VoucherEmitidoPage implements OnInit {
         this.fechaHasta = null;
         this.filter = { name: '', estado: '', desde: '', hasta: '' };
         this.busqueda = "";
-        this.getVouchersEmitidos();
+        this.getVouchers();
     }
 
     async presentToast(msj: string) {

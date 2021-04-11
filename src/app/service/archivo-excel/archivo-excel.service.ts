@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable, throwError } from 'rxjs';
@@ -6,8 +6,9 @@ import { catchError } from 'rxjs/operators';
 import { ServiceConfig } from '../serviceconfig';
 
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
+//import { environment } from '../../../environments/environment';
 import { ArchivoExcel } from 'src/app/domain/archivo-excel.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -17,8 +18,8 @@ export class ArchivoExcelService {
     public dataAuth: string;
 
     private get serviceBaseURL(): string {
-        //return environment.apiExcelUrl;
-        return 'http://localhost:8094/apiExcel';
+        return environment.apiVoucher;
+        //return 'http://localhost:8094/apiExcel';
     }
 
     constructor(private httpClient: HttpClient, public router: Router,

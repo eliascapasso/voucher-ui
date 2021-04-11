@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { Subscription } from 'rxjs';
 import { ArchivoExcel } from 'src/app/domain/archivo-excel.model';
 import { ArchivoExcelService } from 'src/app/service/archivo-excel/archivo-excel.service';
 import { ToastController } from '@ionic/angular';
@@ -32,7 +31,6 @@ export class ArchivosExcelPage implements OnInit {
     public estados: any[] = [];
     public filter = { name: '', estado: '' };
     public busqueda: string = '';
-    private suscriptionUser: Subscription;
     public es: any;
     public fecha: Date;
     
@@ -77,10 +75,6 @@ export class ArchivosExcelPage implements OnInit {
         this.nuevoArchivoExcel = {};
 
         this.getArchivosExcel();
-    }
-
-    ngOnDestroy () { 
-        this.suscriptionUser.unsubscribe();
     }
 
     getArchivosExcel() {

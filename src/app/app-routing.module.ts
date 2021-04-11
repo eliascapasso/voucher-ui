@@ -5,7 +5,7 @@ import { LoginGuardGuard } from './service/guards/login-guard.guard';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'usuarios',
+    redirectTo: 'vouchers',
     pathMatch: 'full'
   },
   {
@@ -37,8 +37,8 @@ const routes: Routes = [
     canActivate: [LoginGuardGuard]
   },
   {
-    path: 'voucher-emitido',
-    loadChildren: './pages/voucher-emitido/voucher-emitido.module#VoucherEmitidoPageModule',
+    path: 'vouchers',
+    loadChildren: './pages/vouchers/vouchers.module#VouchersPageModule',
     canActivate: [LoginGuardGuard]
   }
 ];

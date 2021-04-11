@@ -12,33 +12,10 @@
                             <ion-label class="labelPanel">Dashboard {{empresa}}</ion-label>
                         </ion-item>
 
-                        <ion-item (click)="isVoucher === 1 ? isVoucher = 0 : isVoucher = 1" class="labelPanel" style="cursor: pointer;">
-                            <ion-icon src="../assets/icon/repo-t.svg"></ion-icon>
+                        <ion-item [routerDirection]="'root'" [routerLink]="'/vouchers'" class="labelPanel">
+                            <ion-icon src="../assets/icon/diseniador_docs-t.svg"></ion-icon>
                             <ion-label class="labelPanel"> Vouchers</ion-label>
-                            <ion-icon slot="end" [name]="isVoucher? 'arrow-dropdown' : 'arrow-dropright'" color="white"></ion-icon>
                         </ion-item>
-
-                        <ion-menu-toggle auto-hide="false">
-                            <ion-list>
-                                <ion-item menuclose [hidden]="!(isVoucher === 1)" [routerLink]="'/voucher-emitido'"
-                                    class="labelPanel" style="margin-left: 20px;">
-                                    <ion-icon src="../assets/icon/diseniador_docs-t.svg"></ion-icon>
-                                    <ion-label class="labelPanel"> Emitidos</ion-label>
-                                </ion-item>
-
-                                <ion-item menuclose [hidden]="!(isVoucher === 1)" [routerLink]="'/voucher-utilizado'"
-                                    class="labelPanel" style="margin-left: 20px;">
-                                    <ion-icon src="../assets/icon/diseniador_docs-t.svg"></ion-icon>
-                                    <ion-label class="labelPanel"> Utilizados</ion-label>
-                                </ion-item>
-
-                                <ion-item menuclose [hidden]="!(isVoucher === 1)" [routerLink]="'/voucher-eliminados'"
-                                    class="labelPanel" style="margin-left: 20px;">
-                                    <ion-icon src="../assets/icon/diseniador_docs-t.svg"></ion-icon>
-                                    <ion-label class="labelPanel"> Eliminados</ion-label>
-                                </ion-item>
-                            </ion-list>
-                        </ion-menu-toggle>
 
                         <ion-item [routerDirection]="'root'" [routerLink]="'/historial'" class="labelPanel">
                             <ion-icon src="../assets/icon/notificacion-t.svg"></ion-icon>

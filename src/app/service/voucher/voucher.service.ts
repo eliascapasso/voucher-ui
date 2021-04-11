@@ -6,8 +6,9 @@ import { catchError } from 'rxjs/operators';
 import { ServiceConfig } from '../serviceconfig';
 
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
+//import { environment } from '../../../environments/environment';
 import { Voucher } from 'src/app/domain/voucher.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -17,8 +18,7 @@ export class VoucherService {
     public dataAuth: string;
 
     private get serviceBaseURL(): string {
-        //return environment.apiExcelUrl;
-        return 'http://localhost:8094/api';
+        return environment.apiVoucher;
     }
 
     constructor(private httpClient: HttpClient, public router: Router,

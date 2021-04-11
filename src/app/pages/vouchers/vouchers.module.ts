@@ -5,14 +5,14 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { VoucherEmitidoPage } from './voucher-emitido.page';
+import { VouchersPage } from './vouchers.page';
 import { CommonsAppModule } from 'src/app/commons/commons.app.module';
 import { ComponentsModule } from '../../components/components.module';
 
 const routes: Routes = [
     {
         path: '',
-        component: VoucherEmitidoPage
+        component: VouchersPage
     }
 ];
 
@@ -25,6 +25,6 @@ const routes: Routes = [
         ComponentsModule,
         RouterModule.forChild(routes)
     ],
-    declarations: [VoucherEmitidoPage]
+    declarations: [VouchersPage]
 })
-export class VoucherEmitidoPageModule {}
+export class VouchersPageModule {}
