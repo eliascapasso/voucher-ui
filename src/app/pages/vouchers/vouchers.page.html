@@ -162,7 +162,8 @@
 
 <!-- DETALLE VOUCHER -->
 <p-dialog [(visible)]="displayVoucherModal" [modal]="true" [responsive]="true"
-	[style]="{width: '800px', minWidth: '800px'}" [maximizable]="false" [baseZIndex]="10000" appendTo="body">
+	[style]="{width: '800px', minWidth: '800px', 'height': 'auto'}" [maximizable]="false" [baseZIndex]="10000"
+	appendTo="body">
 	<p-header>
 		Detalle del voucher
 	</p-header>
@@ -172,7 +173,62 @@
 			<div class="ui-g-12">
 				<div class="ui-g form-group">
 
-					
+
+					<div class="cardWrap">
+						<div class="card cardLeft">
+							<h1>{{ datosVoucher.empresa }}</h1>
+							<div class="nombre">
+								<h2>{{ datosVoucher.dni }}&nbsp;{{ datosVoucher.nombreApellido }}</h2>
+								<span>Propietario</span>
+							</div>
+							<div class="estado">
+								<h2>{{ datosVoucher.estado }}</h2>
+								<span>Estado</span>
+							</div>
+							<div class="estado">
+								<h2>{{ datosVoucher.estadosPasados }}</h2>
+								<span>Estados pasados</span>
+							</div>
+
+							<div class="fac-asoc">
+								<h2>{{ datosVoucher.facturaAsociada }}</h2>
+								<span>Factura asociada</span>
+							</div>
+							<div class="desde">
+								<h2>{{ formatearFecha(datosVoucher.fechaDesde) }}</h2>
+								<span>Desde</span>
+							</div>
+							<div class="hasta">
+								<h2>{{ formatearFecha(datosVoucher.fechaHasta) }}</h2>
+								<span>Hasta</span>
+							</div>
+
+							<div class="obs">
+								<h2>{{ datosVoucher.observacion }}</h2>
+								<span>Observaciones</span>
+							</div>
+
+						</div>
+						<div class="card cardRight">
+							<div class="eye"></div>
+							<div class="cod">
+								<h3>{{ datosVoucher.codigoVoucher }}</h3>
+								<span>Código</span>
+							</div>
+
+							<div class="copia">
+								<h3>{{ datosVoucher.idCopia }}</h3>
+								<span>Copia</span>
+							</div>
+
+							<div class="valor">
+								<h3>${{ datosVoucher.valor }}</h3>
+								<span>Valor</span>
+							</div>
+
+						</div>
+
+					</div>
 
 					<!-- <label *ngIf="!(datosComprobante.docCliente==''&&datosComprobante.docTipoCliente=='')">
 						<u><b>Datos del cliente:</b></u>
