@@ -49,7 +49,7 @@
 										<!-- ESTADO -->
 										<div class="ui-g-2 ui-md-4" style="padding-top: 25px; width: 20%;">
 											<span>
-												<p-dropdown (onChange)="changeFilterHandler($event)" [options]="estados"
+												<p-dropdown (onChange)="getVouchers({})" [options]="estados"
 													[(ngModel)]="filter.estado" [autoWidth]="false"
 													[autoDisplayFirst]="false"></p-dropdown>
 											</span>
@@ -76,10 +76,15 @@
 									</div>
 								</ion-col>
 								<ion-col *ngIf="showTabla">
-									<p-table [columns]="columnas" [value]="vouchers" dataKey="email"
-										[style]="{'margin-bottom':'20px'}" [paginator]="true" [rows]="5"
-										[totalRecords]="vouchers.length" [rowsPerPageOptions]="[5,10,20,30]"
-										[loading]="loading">
+									<p-table [columns]="columnas" 
+										[value]="vouchers" 
+										[style]="{'margin-bottom':'20px'}" 
+										[paginator]="true" 
+										[rows]="ROWS"
+										[lazy]="true"
+										[totalRecords]="totalRecords" 
+										[rowsPerPageOptions]="[3,5,10,15]"
+										(onLazyLoad)="getVouchers($event)">
 										<ng-template pTemplate="caption">
 											Vouchers
 										</ng-template>
@@ -229,130 +234,6 @@
 						</div>
 
 					</div>
-
-					<!-- <label *ngIf="!(datosComprobante.docCliente==''&&datosComprobante.docTipoCliente=='')">
-						<u><b>Datos del cliente:</b></u>
-					</label>
-
-					<div class="ui-g-12 ui-md-12"
-						*ngIf="!(datosComprobante.docCliente==''&&datosComprobante.docTipoCliente=='')">
-						<label *ngIf="datosComprobante.docCliente!=''" class="ui-g-6">
-							<b>DNI: </b> {{ datosComprobante.docCliente }}
-						</label>
-						<label *ngIf="datosComprobante.docTipoCliente!=''">
-							<b>Tipo: </b> {{ datosComprobante.docTipoCliente }}
-						</label>
-					</div>
-
-					<div class="ui-g-12 ui-md-12" *ngIf="datosComprobante.razonSocial!=''">
-						<label><b>Razón social: </b> {{ datosComprobante.razonSocial }}</label>
-					</div>
-
-					<div class="ui-g-12 ui-md-12" *ngIf="datosComprobante.domicilio!=''">
-						<label><b>Domicilio: </b> {{ datosComprobante.domicilio }}</label>
-					</div>
-
-					<div class="ui-g-12 ui-md-12" *ngIf="datosComprobante.telefono!=''">
-						<label><b>Teléfono: </b> {{ datosComprobante.telefono }}</label>
-					</div>
-
-					<div class="ui-g-12 ui-md-12" *ngIf="datosComprobante.email!=''">
-						<label><b>Correo electrónico: </b> {{ datosComprobante.email }}</label>
-					</div>
-
-					<label>
-						<u><b>Datos del comprobante:</b></u>
-					</label>
-
-					<div class="ui-g-12 ui-md-12"
-						*ngIf="!(datosComprobante.nroComprobante==''&&datosComprobante.puntoVenta=='')">
-						<label *ngIf="datosComprobante.nroComprobante!=''" class="ui-g-6">
-							<b>Número: </b> {{ datosComprobante.nroComprobante }}
-						</label>
-						<label *ngIf="datosComprobante.puntoVenta!=''">
-							<label><b>Punto de venta: </b> {{ datosComprobante.puntoVenta }}</label>
-						</label>
-					</div>
-
-					<div class="ui-g-12 ui-md-12"
-						*ngIf="!(datosComprobante.cae==''&&datosComprobante.vencimientoCAE=='')">
-						<label *ngIf="datosComprobante.cae!=''" class="ui-g-6">
-							<b>CAE: </b> {{ datosComprobante.cae }}
-						</label>
-						<label *ngIf="datosComprobante.vencimientoCAE!=''">
-							<b>Vencimiento CAE: </b> {{ datosComprobante.vencimientoCAE }}
-						</label>
-					</div>
-
-					<div class="ui-g-12 ui-md-12"
-						*ngIf="!(datosComprobante.fechaEmision==''&&datosComprobante.fechaVencimientoPago=='')">
-						<label *ngIf="datosComprobante.fechaEmision!=''" class="ui-g-6">
-							<b>Emisión: </b> {{ datosComprobante.fechaEmision }}
-						</label>
-						<label *ngIf="datosComprobante.fechaVencimiento!=''">
-							<b>Vencimiento de pago: </b> {{ datosComprobante.fechaVencimientoPago }}
-						</label>
-					</div>
-
-					<div class="ui-g-12 ui-md-12" *ngIf="!(datosComprobante.desde==''&&datosComprobante.hasta=='')">
-						<label *ngIf="datosComprobante.desde!=''" class="ui-g-6">
-							<b>Servicio desde: </b> {{ datosComprobante.desde }}
-						</label>
-						<label *ngIf="datosComprobante.hasta!=''">
-							<b>Servicio hasta: </b> {{ datosComprobante.hasta }}
-						</label>
-					</div>
-
-					<div class="ui-g-12 ui-md-12" *ngIf="!(datosComprobante.tipo==''&&datosComprobante.estado=='')">
-						<label *ngIf="datosComprobante.tipo!=''" class="ui-g-6">
-							<b>Tipo: </b> {{ datosComprobante.tipo }}
-						</label>
-						<label *ngIf="datosComprobante.estado!=''">
-							<b>Estado: </b> {{ datosComprobante.estado }}
-						</label>
-					</div>
-
-					<div class="ui-g-12 ui-md-12" *ngIf="datosComprobante.concepto!=''">
-						<label class="ui-g-6">
-							<b>Concepto: </b> {{ datosComprobante.concepto }}
-						</label>
-					</div>
-
-					<label *ngIf="datosComprobante.impTotal!=''">
-						<u><b>Importe:</b></u>
-					</label>
-
-					<div class="ui-g-12 ui-md-12"
-						*ngIf="!(datosComprobante.impNetoNoGravado==''&&datosComprobante.impNetoGravado=='')">
-						<label *ngIf="datosComprobante.impNetoNoGravado!=''" class="ui-g-6">
-							<b>Importe neto no gravado: </b> {{ datosComprobante.impNetoNoGravado }}
-						</label>
-						<label *ngIf="datosComprobante.impNetoGravado!=''">
-							<b>Importe neto gravado: </b> {{ datosComprobante.impNetoGravado }}
-						</label>
-					</div>
-
-					<div class="ui-g-12 ui-md-12"
-						*ngIf="!(datosComprobante.impExcento==''&&datosComprobante.impTrib=='')">
-						<label *ngIf="datosComprobante.impExcento!=''" class="ui-g-6">
-							<b>Importe excento: </b> {{ datosComprobante.impExcento }}
-						</label>
-						<label *ngIf="datosComprobante.impTrib!=''">
-							<b>Importe tributos: </b> {{ datosComprobante.impTrib }}
-						</label>
-					</div>
-
-					<div class="ui-g-12 ui-md-12" *ngIf="datosComprobante.iva!=''">
-						<label class="ui-g-6">
-							<b>IVA: </b> {{ datosComprobante.iva }}
-						</label>
-					</div>
-
-					<div class="ui-g-12 ui-md-12" *ngIf="datosComprobante.impTotal!=''">
-						<label class="ui-g-6">
-							<b>Importe Total: </b> {{ datosComprobante.impTotal }}
-						</label>
-					</div> -->
 
 				</div>
 			</div>

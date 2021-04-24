@@ -74,8 +74,7 @@
 								<ion-col *ngIf="showTabla">
 									<p-table [columns]="columnas" [value]="archivosExcel" dataKey="email"
 										[style]="{'margin-bottom':'20px'}" [paginator]="true" [rows]="5"
-										[totalRecords]="archivosExcel.length" [rowsPerPageOptions]="[5,10,20,30]"
-										[loading]="loading">
+										[totalRecords]="archivosExcel.length" [rowsPerPageOptions]="[3,5,10,15]">
 										<ng-template pTemplate="caption">
 											Archivos Excel
 										</ng-template>

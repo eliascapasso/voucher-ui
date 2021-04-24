@@ -35,22 +35,15 @@ export class VoucherService {
         return this.httpClient.get<any>(url, { params }).toPromise();
     }
 
-    public getVouchersEmitidos() {
-        const url = this.serviceBaseURL + '/voucher/todos';
-        const params = this.createHttpParams({});
-
-        return this.httpClient.get<any>(url, { params }).toPromise();
-    }
-
-    public getVouchersUtilizados() {
-        const url = this.serviceBaseURL + '/voucher/todos';
-        const params = this.createHttpParams({});
-
-        return this.httpClient.get<any>(url, { params }).toPromise();
-    }
-
-    public getVouchersEliminados() {
-        const url = this.serviceBaseURL + '/voucher/todos';
+    public getVouchersFiltro(estado, size, page){
+        let url = "";
+        if(estado != ''){
+            url = this.serviceBaseURL + `/voucher/filtro?estado=${estado}&size=${size}&page=${page}`;
+        }
+        else{
+            url = this.serviceBaseURL + `/voucher/filtro?size=${size}&page=${page}`;
+        }
+        
         const params = this.createHttpParams({});
 
         return this.httpClient.get<any>(url, { params }).toPromise();
