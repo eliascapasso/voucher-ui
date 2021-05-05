@@ -16,7 +16,7 @@
         <form [formGroup]="loginForm" (ngSubmit)="login()">
           <div class="ui-g-12">
             <span class="md-inputfield">
-              <input type="email" id="email" formControlName="email" pInputText autofocus placeholder="Email" />
+              <input type="email" id="email" formControlName="email" pInputText autofocus placeholder="Email" style="color: white;" />
             </span>
             <ng-container *ngFor="let validation of validationMessages.email">
               <p-message *ngIf="form?.email.hasError(validation.type) && (form?.email.dirty || form?.email.touched)"
@@ -25,7 +25,7 @@
           </div>
           <div class="ui-g-12">
             <span class="md-inputfield">
-              <input type="password" id="password" pInputText formControlName="password" placeholder="Password" />
+              <input type="password" id="password" pInputText formControlName="password" placeholder="Password" style="color: white;" />
             </span>
             <ng-container *ngFor="let validation of validationMessages.email">
               <p-message

@@ -38,9 +38,9 @@ export class AppComponent implements OnInit {
       this.empresa = environment.empresa;
 
       this.menuCtrl.enable(true);
-      this.usuarioService.getUserMe().subscribe(user => {
-        this.userLogin = user;
-      });
+      // this.usuarioService.getUserMe().subscribe(user => {
+      //   this.userLogin = user;
+      // });
     });
   }
 

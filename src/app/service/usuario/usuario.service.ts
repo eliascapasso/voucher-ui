@@ -17,7 +17,6 @@ import { environment } from '../../../environments/environment';
 export class UsuarioService {
     public usuario: Usuario;
     public usuarioLoginNotification = new BehaviorSubject<Usuario>({ email: 'SIN IDENTIFICACION' });
-    public dataAuth: string;
 
     private get serviceBaseURL(): string {
         return environment.apiUrl;
@@ -112,21 +111,21 @@ export class UsuarioService {
     }
 
     login(usuarioLogin: UsuarioLogin) {
-        var url = "localhost:8090/api/auth/login";
-        
-        this.dataAuth = "username=" + usuarioLogin.email 
-                        + "&password=" + usuarioLogin.password;
+        var url = this.serviceBaseURL + "/auth/signin";
+
+        let body = {
+            email: usuarioLogin.email,
+            password: usuarioLogin.password
+        }
 
         const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/x-www-form-urlencoded'
-            })
-        }; 
+            headers: new HttpHeaders({'Content-Type': 'application/json'})
+        };
 
-        return this.httpClient.post<any>(url, this.dataAuth, httpOptions)
+        return this.httpClient.post<any>(url, body, httpOptions)
         .pipe(
                 map((data: any) => {
-                    console.log('login with ' + data.access_token);
+                    console.info(data);
                     localStorage.setItem('token', data.access_token);
                     localStorage.setItem('email', usuarioLogin.email);
                     this.getUserMe();

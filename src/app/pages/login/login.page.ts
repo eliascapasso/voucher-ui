@@ -68,54 +68,54 @@ export class LoginPage implements OnInit, AfterViewInit {
 
   login() {
     //TEMPORAL
-    this.menuCtrl.enable(true);
-    localStorage.setItem('email', this.formControls.email.value);
-    this.router.navigate(['/vouchers']);
+    // this.menuCtrl.enable(true);
+    // localStorage.setItem('email', this.formControls.email.value);
+    // this.router.navigate(['/vouchers']);
 
     //DESCOMENTAR
-    // this.isSubmitted = true;
-    // if (this.loginForm.invalid) {
-    //   return;
-    // }
+    this.isSubmitted = true;
+    if (this.loginForm.invalid) {
+      return;
+    }
 
-    // const usuarioLogin: UsuarioLogin = {
-    //   username: this.formControls.email.value,
-    //   password: this.formControls.password.value,
-    //   grant_type: 'password',
-    //   client_id: 'web',
-    //   client_secret: 'web'
-    // };
+    const usuarioLogin: UsuarioLogin = {
+      email: this.formControls.email.value,
+      password: this.formControls.password.value,
+      grant_type: 'password',
+      // client_id: 'web',
+      // client_secret: 'web'
+    };
 
-    // this.usuarioService.login(usuarioLogin).subscribe(
-    //   (user: any) => {
-    //     this.usuarioService.getUserMe().subscribe(
-    //       (user: any) => {
-    //         console.log(`sale user ${user}`);
-    //         this.userLogin = user;
-    //         this.menuCtrl.enable(true);
-    //         this.router.navigate(['/usuarios']);
-    //       },
-    //       error => {
-    //         {
-    //           console.log(`sale error getUserMe ${error}`);
-    //           this.userLogin = null;
-    //           this.menuCtrl.enable(false);
-    //           this.msgs = [];
-    //           this.msgs.push({severity: 'error', summary: `Error `, detail: 'Error Recuperando Usuario'});
-    //         }
-    //       }
-    //     );
-    //   },
-    //   error => {
-    //     {
-    //       console.log(`sale error login ${error}`);
-    //       this.userLogin = null;
-    //       this.menuCtrl.enable(false);
-    //       this.msgs = [];
-    //       this.msgs.push({severity: 'error', summary: `Error `, detail: 'Usuario o Contraseña Incorrecta'});
-    //     }
-    //   }
-    // );
+    this.usuarioService.login(usuarioLogin).subscribe(
+      (user: any) => {
+        this.usuarioService.getUserMe().subscribe(
+          (user: any) => {
+            console.log(`sale user ${user}`);
+            this.userLogin = user;
+            this.menuCtrl.enable(true);
+            this.router.navigate(['/vouchers']);
+          },
+          error => {
+            {
+              console.log(`sale error getUserMe ${error}`);
+              this.userLogin = null;
+              this.menuCtrl.enable(false);
+              this.msgs = [];
+              this.msgs.push({ severity: 'error', summary: `Error `, detail: 'Error Recuperando Usuario' });
+            }
+          }
+        );
+      },
+      error => {
+        {
+          console.log(`sale error login ${error}`);
+          this.userLogin = null;
+          this.menuCtrl.enable(false);
+          this.msgs = [];
+          this.msgs.push({ severity: 'error', summary: `Error `, detail: 'Usuario o Contraseña Incorrecta' });
+        }
+      }
+    );
   }
 
   logout() {

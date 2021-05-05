@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PopoverController } from '@ionic/angular';
+import { MenuController, PopoverController } from '@ionic/angular';
 import { UsuarioService } from '../../service/usuario/usuario.service';
 import {Usuario} from '../../domain/usuario.model';
 
@@ -12,7 +12,7 @@ import {Usuario} from '../../domain/usuario.model';
 export class PopoverMenuComponent {
     userLogin: Usuario;
 
-    constructor(public popoverController: PopoverController, private usuarioService: UsuarioService) {
+    constructor(public menuCtrl: MenuController, public popoverController: PopoverController, private usuarioService: UsuarioService) {
         this.usuarioService.getUserMe().subscribe(usuario => {
             this.userLogin = usuario;
         });
@@ -23,6 +23,7 @@ export class PopoverMenuComponent {
     }
 
     logout() {
+        this.menuCtrl.enable(false);
         this.usuarioService.logout();
     }
 
