@@ -57,6 +57,7 @@ export class ArchivosExcelPage implements OnInit {
         this.filter = { name: '', estado: '' };
 
         this.columnas = [
+            { field: 'responsable', header: 'Responsable' },
             { field: 'nombreExcel', header: 'Nombre' },
             { field: 'fecha', header: 'Fecha', fecha: true },
             { field: 'cantidadRegistros', header: 'Registros' },
@@ -85,6 +86,8 @@ export class ArchivosExcelPage implements OnInit {
         $this.blockUI.start("Cargando archivos excel...");
         $this.archivoExcelService.getArchivosExcel().then(archExcel => {
             $this.blockUI.stop();
+
+            console.log(archExcel);
 
             if (archExcel.length < 1) {
                 $this.showTabla = false;
@@ -208,6 +211,11 @@ export class ArchivosExcelPage implements OnInit {
             }).filter(archivoExcel => {
                 if (this.busqueda != '') {
                     return archivoExcel.nombreExcel && archivoExcel.nombreExcel.toLowerCase().includes(this.busqueda.toLowerCase());
+                }
+                return true;
+            }).filter(archivoExcel => {
+                if (this.busqueda != '') {
+                    return archivoExcel.responsable && archivoExcel.responsable.toLowerCase().includes(this.busqueda.toLowerCase());
                 }
                 return true;
             }).filter(archivoExcel => {

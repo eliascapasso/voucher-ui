@@ -5,4 +5,5 @@ export interface ArchivoExcel {
   cantidadRegistros?: number;
   estado?: string;
   archivo?: File;
+  responsable?: string;
 }

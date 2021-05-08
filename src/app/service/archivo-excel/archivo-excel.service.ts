@@ -19,7 +19,6 @@ export class ArchivoExcelService {
 
     private get serviceBaseURL(): string {
         return environment.apiVoucher;
-        //return 'http://localhost:8094/apiExcel';
     }
 
     constructor(private httpClient: HttpClient, public router: Router,
