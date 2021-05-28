@@ -104,8 +104,7 @@ export class UsuarioService {
 
     logout() {
         this.usuario = null;
-        localStorage.removeItem('token');
-        localStorage.removeItem('email');
+        localStorage.clear();
         this.usuarioLoginNotification.next({email: 'SIN IDENTIFICAR'});
         this.router.navigate(['/login']);
     }

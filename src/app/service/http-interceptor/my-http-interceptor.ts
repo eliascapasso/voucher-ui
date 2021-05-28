@@ -5,11 +5,12 @@ import { Observable, throwError } from 'rxjs';
 import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { UsuarioService } from '../service.index';
+import { ToastController } from '@ionic/angular';
 
 
 @Injectable()
 export class MyHttpInterceptor implements HttpInterceptor {
-  constructor(private router: Router, public usuarioService: UsuarioService) { }
+  constructor(public toastController: ToastController, public usuarioService: UsuarioService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const re = '/oauth/token';
@@ -24,20 +25,31 @@ export class MyHttpInterceptor implements HttpInterceptor {
             catchError((err) => {
               if (err instanceof HttpErrorResponse) {
                 if (err.status === 401) {
-                  localStorage.removeItem('token');
-                  this.usuarioService.usuario = null;
-                  this.router.navigate(['/user']);
+                  this.usuarioService.logout();
+                  this.presentToastError("Sesión finalizada");
+                } else if (err.status === 504) {
+                  this.usuarioService.logout();
+                  this.presentToastError("Hubo un fallo en el servidor");
                 } else {
-                  console.error('Communication error: ' + err.status);
+                  console.error('Communication error: ' + err.message);
                 }
                 if (err && err.error) {
                   return throwError(err.error);
                 }
-                return throwError('backend comm error');
+                return throwError(err.error);
               }
             }));
       }
     }
     return next.handle(req);
+  }
+
+  async presentToastError(msj: string) {
+    const toast = await this.toastController.create({
+      message: msj,
+      duration: 2500,
+      color: 'danger'
+    });
+    toast.present();
   }
 }
