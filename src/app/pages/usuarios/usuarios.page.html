@@ -42,8 +42,7 @@
 								<ion-col *ngIf="showTabla">
 									<p-table [columns]="columnas" [value]="usuarios" dataKey="email"
 										[style]="{'margin-bottom':'20px'}" [paginator]="true" [rows]="5"
-										[totalRecords]="usuarios.length" [rowsPerPageOptions]="[5,10,20,30]"
-										[loading]="loading">
+										[totalRecords]="usuarios.length" [rowsPerPageOptions]="[5,10,20,30]">
 										<ng-template pTemplate="caption">
 											Usuarios
 										</ng-template>
@@ -103,8 +102,6 @@
 		Editar usuario
 	</p-header>
 	<form [formGroup]="usuarioForm" (ngSubmit)="guardarUsuario()">
-		<p-growl [(value)]="formMsgs">
-		</p-growl>
 		<div class="ui-fluid">
 			<div class="ui-g">
 				<div class="ui-g-12">

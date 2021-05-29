@@ -28,7 +28,6 @@ export class UsuariosPage implements OnInit {
     public showTabla: boolean = false
     public usuarioForm: FormGroup;
     public msgs: Message[];
-    public formMsgs: Message[];
     public displayUsuarioModal: boolean = false;
     public estados: any[] = [];
     public filter = { name: '', estado: '' };
@@ -42,7 +41,6 @@ export class UsuariosPage implements OnInit {
     public empresaSeleccionada: string;
     private suscriptionUser: Subscription;
 
-    loading = false;
     @BlockUI() blockUI: NgBlockUI;
     constructor(
         private usuarioService: UsuarioService,
@@ -81,12 +79,8 @@ export class UsuariosPage implements OnInit {
         this.getUsuarioActual();
     }
 
-    ngOnDestroy () { 
+    ngOnDestroy() {
         this.suscriptionUser.unsubscribe();
-    }
-
-    setPermisos() {
-        this.permisosABM = this.usuarioActual.role.role == "ROOT" || this.usuarioActual.role.role == "ADMIN";
     }
 
     getUsuarioActual() {
@@ -99,46 +93,45 @@ export class UsuariosPage implements OnInit {
         });
     }
 
-    getEmpresas() {
-        this.usuarioService.getEmpresas().then(empresas => {
+    setPermisos() {
+        //this.permisosABM = this.usuarioActual.role.role == "ROOT" || this.usuarioActual.role.role == "ADMIN";
+    }
 
+    async getEmpresas() {
+        try {
+            let empresas = await this.usuarioService.getEmpresas();
             this.empresas = empresas;
 
             for (let i = 0; i < empresas.length; i++) {
                 this.empresasSelect.push({ label: empresas[i].empresa, value: empresas[i]._id });
             }
-        })
-            .catch(function (error) {
-                console.log(`error al obtener las empresas ${error}`);
-                this.formMsgs = [];
-                this.formMsgs.push({ severity: 'error', summary: `Error al obtener las empresas ${error}`, detail: error });
-            });
+        } catch (error) {
+            console.warn(`error al obtener las empresas: ${error.message}`);
+            this.msgs = [];
+            this.msgs.push({ severity: 'error', summary: `Error al obtener las empresas: ${error.message}` });
+        }
     }
 
-    getRoles() {
-        this.usuarioService.getRoles().then(roles => {
+    async getRoles() {
+        try {
+            let roles = await this.usuarioService.getRoles();
 
             for (let i = 0; i < roles.length; i++) {
                 this.rolesSelect.push({ label: roles[i].role, value: roles[i]._id });
             }
-
             this.roles = roles;
-
-        })
-            .catch(function (error) {
-                console.log(`error al obtener los roles de usuario ${error}`);
-                this.formMsgs = [];
-                this.formMsgs.push({ severity: 'error', summary: `Error al obtener los roles de usuario ${error}`, detail: error });
-            });
+        } catch (error) {
+            console.warn(`error al obtener los roles de usuario: ${error.message}`);
+            this.msgs = [];
+            this.msgs.push({ severity: 'error', summary: `Error al obtener los roles de usuario ${error.message}` });
+        }
     }
 
-    getUsuarios() {
-        this.blockUI.start("Cargando Usuarios...");
-        this.loading = true;
-        this.usuarioService.getUsuarios().then(usuarios => {
-            this.loading = false;
+    async getUsuarios() {
+        try {
+            this.blockUI.start("Cargando Usuarios...");
+            let usuarios = await this.usuarioService.getUsuarios()
             this.blockUI.stop();
-
             if (usuarios.length < 1) {
                 this.showTabla = false;
             } else {
@@ -146,54 +139,45 @@ export class UsuariosPage implements OnInit {
                 this.usuarios = usuarios;
                 this.showTabla = true;
             }
-        })
-            .catch(function (error) {
-                this.loading = false;
-                this.blockUI.stop();
-                console.log(`error al obtener los usuarios ${error}`);
-                this.formMsgs = [];
-                this.formMsgs.push({ severity: 'error', summary: `Error al obtener los usuarios ${error}`, detail: error });
-            });
+        } catch (error) {
+            this.blockUI.stop();
+            console.warn(`error al obtener los usuarios: ${error.message}`);
+            this.msgs = [];
+            this.msgs.push({ severity: 'error', summary: `Error al obtener los usuarios: ${error.message}` });
+        }
     }
 
     guardarUsuario() {
-
         if (!this.usuarioForm.valid) {
-            this.formMsgs = [];
-            this.formMsgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
+            this.msgs = [];
+            this.msgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
         } else {
             this.nuevoUsuario.role = this.roles.find(x => x._id == this.rolSeleccionado);
             this.nuevoUsuario.empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
-
             this.nuevoUsuario.password = '123456';
 
             this.blockUI.start('Guardando Usuario...');
             this.usuarioService.save(this.nuevoUsuario)
                 .subscribe((usuario: any) => {
                     this.blockUI.stop();
-                    console.log('usuario guardado');
                     this.msgs = [];
                     this.msgs.push({ severity: 'info', summary: `Usuario guardado con exito`, detail: `Usuario guardado` });
                     this.displayUsuarioModal = false;
-                    this.sendActivationEmail(this.nuevoUsuario);
                     this.getUsuarios();
                 },
                     error => {
-                        let msj = (error.message) ? error.message : '';
-                        let cause = (error.cause) ? error.cause : '';
                         this.blockUI.stop();
-                        console.log(`error al guardar usuario ${error}`);
-                        this.formMsgs = [];
-                        this.formMsgs.push({ severity: 'error', summary: `Error al guardar el usuario ${msj}`, detail: cause });
+                        console.warn(`error al guardar usuario: ${error.message}`);
+                        this.msgs = [];
+                        this.msgs.push({ severity: 'error', summary: `Error al guardar el usuario: ${error.message}` });
                     });
         }
     }
 
     actualizarUsuario(elimina) {
-
         if (!this.usuarioForm.valid && !elimina) {
-            this.formMsgs = [];
-            this.formMsgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
+            this.msgs = [];
+            this.msgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
         }
         else {
             if (!elimina) {
@@ -201,24 +185,20 @@ export class UsuariosPage implements OnInit {
                 this.nuevoUsuario.empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
             }
 
-            console.log(this.nuevoUsuario);
             this.blockUI.start('Guardando Usuario...');
             this.usuarioService.update(this.nuevoUsuario)
                 .subscribe((usuario: any) => {
                     this.blockUI.stop();
-                    console.log('usuario modificado');
                     this.msgs = [];
                     this.msgs.push({ severity: 'info', summary: `Usuario modificado con exito`, detail: `Usuario modificado` });
                     this.displayUsuarioModal = false;
                     this.getUsuarios();
                 },
                     error => {
-                        let msj = (error.message) ? error.message : '';
-                        let cause = (error.cause) ? error.cause : '';
                         this.blockUI.stop();
-                        console.log(`error al modificar usuario ${error}`);
-                        this.formMsgs = [];
-                        this.formMsgs.push({ severity: 'error', summary: `Error al modificar el usuario ${msj}`, detail: cause });
+                        console.log(`error al modificar usuario: ${error.message}`);
+                        this.msgs = [];
+                        this.msgs.push({ severity: 'error', summary: `Error al modificar el usuario: ${error.message}` });
                     });
         }
     }
@@ -262,25 +242,6 @@ export class UsuariosPage implements OnInit {
         this.usuarioForm.get('estado').setValue(this.nuevoUsuario.estado);
         this.usuarioForm.controls['email'].disable();
         this.displayUsuarioModal = true;
-    }
-
-    sendActivationEmail(usuario: Usuario) {
-        // const emailModel = new EmailModel();
-        // emailModel.to = usuario.email;
-        // emailModel.subject = 'Activacion de Cuenta';
-        // emailModel.template = 'setear_password.jrxml';
-        // emailModel.data = JSON.stringify({
-        //     nombre: usuario.nombre + ' ' + usuario.apellido,
-        //     email: usuario.email,
-        //     pagina: 'Gestion Voucher',
-        //     link: 'http://localhost:8100'
-        // });
-        // this.emailService.sendEmail(emailModel).subscribe((usuario: any) => {
-        //     console.log('usuario notificado');
-        // },
-        //     error => {
-        //         console.log(`error al enviar email ${error}`);
-        //     });
     }
 
     changeFilterHandler(event) {

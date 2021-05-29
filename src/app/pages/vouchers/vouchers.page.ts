@@ -67,8 +67,8 @@ export class VouchersPage implements OnInit {
             { field: 'nombreApellido', header: 'Nombre y apellido' },
             { field: 'dni', header: 'DNI' },
             { field: 'valor', header: 'Valor' },
-            { field: 'fechaDesde', header: 'Desde', fechaDesde: true },
-            { field: 'fechaHasta', header: 'Hasta', fechaHasta: true },
+            { field: 'fechaDesde', header: 'Vigente desde', fechaDesde: true },
+            { field: 'fechaHasta', header: 'Vencimiento', fechaHasta: true },
             { field: 'estado', header: 'Estado' },
             { field: 'empresa', header: 'Empresa' },
         ];
@@ -110,7 +110,7 @@ export class VouchersPage implements OnInit {
         let page = event.first != undefined ? event.first / event.rows : 0;
 
         $this.blockUI.start("Cargando vouchers...");
-        $this.voucherService.getVouchersFiltro(this.filter['estado'], size, page).then(vouchers => {
+        $this.voucherService.getVouchersFiltro(this.filter, size, page).then(vouchers => {
             $this.blockUI.stop();
 
             $this.totalRecords = vouchers.totalItems;
@@ -208,8 +208,8 @@ export class VouchersPage implements OnInit {
         toast.present();
     }
 
-    changeFilterHandler(event) {
-
+    changeFilterHandler() {
+        this.getVouchers({});
         this.vouchers = this.vouchersOriginal
             .filter(voucher => {
                 if (this.busqueda != '') {

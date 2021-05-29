@@ -29,7 +29,6 @@ export class LoginPage implements OnInit, AfterViewInit {
   public get form() { return this.loginForm.controls; }
 
   defineErrorMessageForm() {
-    // severity="info", severity="success", severity="warn", severity="error" 
     this.validationMessages = {
       'email': [
         { type: 'required', severity: 'error', message: 'Email es requerido.' },
@@ -67,12 +66,6 @@ export class LoginPage implements OnInit, AfterViewInit {
   }
 
   login() {
-    //TEMPORAL
-    // this.menuCtrl.enable(true);
-    // localStorage.setItem('email', this.formControls.email.value);
-    // this.router.navigate(['/vouchers']);
-
-    //DESCOMENTAR
     this.isSubmitted = true;
     if (this.loginForm.invalid) {
       return;
@@ -81,23 +74,20 @@ export class LoginPage implements OnInit, AfterViewInit {
     const usuarioLogin: UsuarioLogin = {
       email: this.formControls.email.value,
       password: this.formControls.password.value,
-      grant_type: 'password',
-      // client_id: 'web',
-      // client_secret: 'web'
+      grant_type: 'password'
     };
 
     this.usuarioService.login(usuarioLogin).subscribe(
       (user: any) => {
         this.usuarioService.getUserMe().subscribe(
           (user: any) => {
-            console.log(`sale user ${user}`);
             this.userLogin = user;
             this.menuCtrl.enable(true);
             this.router.navigate(['/vouchers']);
           },
           error => {
             {
-              console.log(`sale error getUserMe ${error}`);
+              console.warn(`error getUserMe: ${error.message}`);
               this.userLogin = null;
               this.menuCtrl.enable(false);
               this.msgs = [];
@@ -108,7 +98,7 @@ export class LoginPage implements OnInit, AfterViewInit {
       },
       error => {
         {
-          console.log(`sale error login ${error}`);
+          console.warn(`error login: ${error.message}`);
           this.userLogin = null;
           this.menuCtrl.enable(false);
           this.msgs = [];

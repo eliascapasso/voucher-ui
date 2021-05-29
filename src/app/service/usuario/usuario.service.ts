@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { ResetPassword } from '../../domain/reset.password';
 import { UsuarioLogin } from '../../domain/usuario.login.model';
 import { environment } from '../../../environments/environment';
+import { MenuController } from '@ionic/angular';
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +24,7 @@ export class UsuarioService {
     }
 
     constructor(private httpClient: HttpClient, public router: Router,
-        private serviceConfig: ServiceConfig) {
+        private serviceConfig: ServiceConfig, public menuCtrl: MenuController) {
 
     }
 
@@ -105,6 +106,7 @@ export class UsuarioService {
     logout() {
         this.usuario = null;
         localStorage.clear();
+        this.menuCtrl.enable(false);
         this.usuarioLoginNotification.next({email: 'SIN IDENTIFICAR'});
         this.router.navigate(['/login']);
     }
@@ -125,7 +127,7 @@ export class UsuarioService {
         .pipe(
                 map((data: any) => {
                     console.info(data);
-                    localStorage.setItem('token', data.access_token);
+                    localStorage.setItem('accessToken', data.accessToken);
                     localStorage.setItem('email', usuarioLogin.email);
                     this.getUserMe();
                 }),

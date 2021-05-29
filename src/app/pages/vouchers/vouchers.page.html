@@ -16,46 +16,52 @@
 										<!-- BUSCAR -->
 										<div class="ui-g-4 ui-md-4" style="width: 30%;">
 											<span>
-												<ion-searchbar placeholder="Buscar" [(ngModel)]="busqueda"
-													(ionChange)="changeFilterHandler($event)">
+												<ion-searchbar placeholder="Buscar" [(ngModel)]="busqueda">
 												</ion-searchbar>
 											</span>
 										</div>
 
 										<!-- FECHA DESDE -->
-										<div class="ui-g-2 ui-md-2" style="padding-top: 25px; width: 20%;">
+										<div class="ui-g-2 ui-md-2" style="padding-top: 25px; width: 15%;">
 											<span class="ui-float-label">
 												<p-calendar [locale]="es" [showIcon]="true" [(ngModel)]="fechaDesde"
 													[maxDate]="fechaHasta" (onSelect)="selectFechaDesde()"
 													[monthNavigator]="true" [yearNavigator]="true" dateFormat="dd-mm-yy"
 													[readonlyInput]="true">
 												</p-calendar>
-												<label>Fecha desde </label>
+												<label>Vencimiento desde </label>
 											</span>
 										</div>
 
 										<!-- FECHA HASTA -->
-										<div class="ui-g-2 ui-md-2" style="padding-top: 25px; width: 20%;">
+										<div class="ui-g-2 ui-md-2" style="padding-top: 25px; width: 15%;">
 											<span class="ui-float-label">
 												<p-calendar [locale]="es" [showIcon]="true" [(ngModel)]="fechaHasta"
 													[minDate]="fechaDesde" (onSelect)="selectFechaHasta()"
 													[monthNavigator]="true" [yearNavigator]="true" dateFormat="dd-mm-yy"
 													[readonlyInput]="true">
 												</p-calendar>
-												<label>Fecha hasta </label>
+												<label>Vencimiento hasta </label>
 											</span>
 										</div>
 
 										<!-- ESTADO -->
-										<div class="ui-g-2 ui-md-4" style="padding-top: 25px; width: 20%;">
+										<div class="ui-g-2 ui-md-4" style="padding-top: 25px; width: 15%;">
 											<span>
-												<p-dropdown (onChange)="getVouchers({})" [options]="estados"
+												<p-dropdown [options]="estados"
 													[(ngModel)]="filter.estado" [autoWidth]="false"
 													[autoDisplayFirst]="false"></p-dropdown>
 											</span>
 										</div>
 
-										<div class="ui-g-2 ui-md-2" style="margin-top: 10px; width: 60px;">
+										<div class="ui-g-2 ui-md-2" style="padding-top: 25px; width: 20%;">
+											<span class="ui-float-label">
+												<button pButton type="button" class="ui-button-success" label="Buscar"
+													(click)="changeFilterHandler()"></button>
+											</span>
+										</div>
+
+										<div class="ui-g-2 ui-md-2" style="margin-top: 20px; width: 60px;">
 											<span class="ui-float-label">
 												<button pButton type="button" class="ui-button-success"
 													(click)="limpiarFiltros()">

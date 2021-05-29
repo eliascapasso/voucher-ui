@@ -16,9 +16,9 @@ export class MyHttpInterceptor implements HttpInterceptor {
     const re = '/oauth/token';
     // Exclude interceptor for login request:
     if (req.url.search(re) === -1) {
-      if (localStorage.getItem('token') != null) {
+      if (localStorage.getItem('accessToken') != null) {
         const clonedreq = req.clone({
-          headers: req.headers.set('Authorization', 'Bearer ' + localStorage.getItem('token'))
+          headers: req.headers.set('Authorization', 'Bearer ' + localStorage.getItem('accessToken'))
         });
         return next.handle(clonedreq)
           .pipe(

@@ -35,14 +35,25 @@ export class VoucherService {
         return this.httpClient.get<any>(url, { params }).toPromise();
     }
 
-    public getVouchersFiltro(estado, size, page){
-        let url = "";
-        if(estado != ''){
-            url = this.serviceBaseURL + `/voucher/filtro?estado=${estado}&size=${size}&page=${page}`;
+    public getVouchersFiltro(filter, size, page){
+
+        if (filter['desde'] == '') {
+            filter.desde = '1900-01-01'
         }
-        else{
-            url = this.serviceBaseURL + `/voucher/filtro?size=${size}&page=${page}`;
+        if (filter['hasta'] == '') {
+            filter.hasta = '2200-01-01'
         }
+        let url = this.serviceBaseURL + "/voucher/filtro?";
+
+        for (let filtro in filter) {
+            if (filter[filtro] != '') {
+                if (filter[filtro] != 'TODOS' && filter[filtro] != 'TODAS' && filter[filtro] != null) {
+                    url = url + '&' + filtro + '=' + filter[filtro];
+                }
+            }
+        }
+        
+        url = url + `&size=${size}&page=${page}`; 
         
         const params = this.createHttpParams({});
 
