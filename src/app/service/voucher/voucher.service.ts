@@ -83,7 +83,7 @@ export class VoucherService {
     /* UPDATE METHODS */
 
     public update(voucher: Voucher): Observable<any> {
-        const url = this.serviceBaseURL + '';
+        const url = this.serviceBaseURL + '/voucher/extenderVigencia';
 
         const params = this.createHttpParams({});
 

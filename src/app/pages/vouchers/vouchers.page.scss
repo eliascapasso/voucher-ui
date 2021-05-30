@@ -1,5 +1,4 @@
-p-dialog
-.rectanguloDialog{
+p-dialog .rectanguloDialog {
   border-radius: 80px;
 }
 .voucherLabel {
@@ -14,39 +13,36 @@ p-dialog
   padding-top: 38px;
 }
 
-.sin-archivos{
+.sin-archivos {
   height: 350px;
 }
 
-.limpiarFiltro{
+.limpiarFiltro {
   width: 20px;
   height: 20px;
   margin-top: 5px;
 }
 
-ion-content{
-  --ion-background-color:  #cacaca;
+ion-content {
+  --ion-background-color: #cacaca;
 }
 
-
-
-
-
 $red: #e84c3d;
+$blue: #3d46c4;
 $grey: #ecedef;
 $black: #343434;
 $green: #15b800;
+$yellow: #d1c300;
 
 .cardWrap {
   width: 800px;
   height: auto;
-  //margin: 3em auto;
   color: #fff;
   font-family: sans-serif;
 }
 
 .card {
-  background: linear-gradient(to bottom, $red 0%, $red 20%, $grey 20%, $grey 100%);
+  background: linear-gradient(to bottom, $blue 0%, $blue 20%, $grey 20%, $grey 100%);
   float: left;
   position: relative;
   padding: 1em;
@@ -56,13 +52,13 @@ $green: #15b800;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
   width: 568px;
-  height: 300px;
+  height: 320px;
 }
 
 .cardRight {
   width: 160px;
-  height: 300px;
-  border-left: .18em dashed #fff;
+  height: 320px;
+  border-left: 0.18em dashed #fff;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
   &:before,
@@ -70,17 +66,17 @@ $green: #15b800;
     content: "";
     position: absolute;
     display: block;
-    width: .9em;
-    height: .9em;
+    width: 0.9em;
+    height: 0.9em;
     background: #fff;
     border-radius: 50%;
-    left: -.5em;
+    left: -0.5em;
   }
   &:before {
-    top: -.4em;
+    top: -0.4em;
   }
   &:after {
-  bottom: -.4em;
+    bottom: -0.4em;
   }
 }
 
@@ -92,16 +88,21 @@ h1 {
   }
 }
 
-.nombre, .estado, .obs, .fac-asoc, .desde, .hasta {
+.nombre,
+.estado,
+.obs,
+.fac-asoc,
+.desde,
+.hasta {
   text-transform: uppercase;
   font-weight: normal;
   h2 {
-    font-size: .9em;
+    font-size: 0.9em;
     color: #525252;
     margin: 0;
-   }
+  }
   span {
-    font-size: .7em;
+    font-size: 0.7em;
     color: #a2aeae;
   }
 }
@@ -110,11 +111,14 @@ h1 {
   margin: 2em 0 0 0;
 }
 
-.estado, .desde, .fac-asoc, .obs {
-  margin: .7em 0 0 0;
+.estado,
+.desde,
+.fac-asoc,
+.obs {
+  margin: 0.7em 0 0 0;
 }
 
-.obs{
+.obs {
   float: right;
 
   span {
@@ -122,12 +126,19 @@ h1 {
   }
 }
 
-.hasta {
-  margin: .7em 0 0 1em;
+.desde {
+  float: left;
+  h2 {
+    color: $green;
+  }
 }
 
-.desde, .hasta {
+.hasta {
+  margin: 0.7em 0 0 1em;
   float: left;
+  h2 {
+    color: $red;
+  }
 }
 
 .eye {
@@ -138,8 +149,9 @@ h1 {
   margin: 0 auto;
   border-radius: 1em/0.6em;
   z-index: 1;
-  &:before, &:after {
-    content:"";
+  &:before,
+  &:after {
+    content: "";
     display: block;
     position: absolute;
     border-radius: 50%;
@@ -147,18 +159,18 @@ h1 {
   &:before {
     width: 1em;
     height: 1em;
-    background: $red;
+    background: $blue;
     z-index: 2;
     left: 8px;
     top: 4px;
   }
   &:after {
-  width: .5em;
-  height: .5em;
-  background: #fff;
-  z-index: 3;
-  left: 12px;
-  top: 8px;
+    width: 0.5em;
+    height: 0.5em;
+    background: #fff;
+    z-index: 3;
+    left: 12px;
+    top: 8px;
   }
 }
 
@@ -166,10 +178,9 @@ h1 {
   text-align: center;
   text-transform: uppercase;
   h3 {
-    color: $red;
-    margin: .9em 0 0 0;
+    color: $blue;
+    margin: 0.9em 0 0 0;
     font-size: 2.5em;
-    
   }
   span {
     display: block;
@@ -182,9 +193,8 @@ h1 {
   text-transform: uppercase;
   h3 {
     color: $black;
-    margin: .9em 0 0 0;
-    font-size: 1.0em;
-    
+    margin: 0.9em 0 0 0;
+    font-size: 1em;
   }
   span {
     display: block;
@@ -197,12 +207,29 @@ h1 {
   text-transform: uppercase;
   h3 {
     color: $green;
-    margin: .9em 0 0 0;
+    margin: 0.9em 0 0 0;
     font-size: 1.5em;
-    
   }
   span {
     display: block;
     color: #a2aeae;
+  }
+}
+
+.estado-verde {
+  h2 {
+    color: $green;
+  }
+}
+
+.estado-amarillo {
+  h2 {
+    color: $yellow;
+  }
+}
+
+.estado-rojo {
+  h2 {
+    color: $red;
   }
 }

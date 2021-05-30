@@ -26,7 +26,7 @@
 											<span class="ui-float-label">
 												<p-calendar [locale]="es" [showIcon]="true" [(ngModel)]="fechaDesde"
 													[maxDate]="fechaHasta" (onSelect)="selectFechaDesde()"
-													[monthNavigator]="true" [yearNavigator]="true" dateFormat="dd-mm-yy"
+													[monthNavigator]="true" dateFormat="dd-mm-yy"
 													[readonlyInput]="true">
 												</p-calendar>
 												<label>Vencimiento desde </label>
@@ -38,7 +38,7 @@
 											<span class="ui-float-label">
 												<p-calendar [locale]="es" [showIcon]="true" [(ngModel)]="fechaHasta"
 													[minDate]="fechaDesde" (onSelect)="selectFechaHasta()"
-													[monthNavigator]="true" [yearNavigator]="true" dateFormat="dd-mm-yy"
+													[monthNavigator]="true" dateFormat="dd-mm-yy"
 													[readonlyInput]="true">
 												</p-calendar>
 												<label>Vencimiento hasta </label>
@@ -48,9 +48,8 @@
 										<!-- ESTADO -->
 										<div class="ui-g-2 ui-md-4" style="padding-top: 25px; width: 15%;">
 											<span>
-												<p-dropdown [options]="estados"
-													[(ngModel)]="filter.estado" [autoWidth]="false"
-													[autoDisplayFirst]="false"></p-dropdown>
+												<p-dropdown [options]="estados" [(ngModel)]="filter.estado"
+													[autoWidth]="false" [autoDisplayFirst]="false"></p-dropdown>
 											</span>
 										</div>
 
@@ -82,15 +81,9 @@
 									</div>
 								</ion-col>
 								<ion-col *ngIf="showTabla">
-									<p-table [columns]="columnas" 
-										[value]="vouchers" 
-										[style]="{'margin-bottom':'20px'}" 
-										[paginator]="true" 
-										[rows]="ROWS"
-										[lazy]="true"
-										[totalRecords]="totalRecords" 
-										[rowsPerPageOptions]="[3,5,10,15]"
-										(onLazyLoad)="getVouchers($event)">
+									<p-table [columns]="columnas" [value]="vouchers" [style]="{'margin-bottom':'20px'}"
+										[paginator]="true" [rows]="ROWS" [lazy]="true" [totalRecords]="totalRecords"
+										[rowsPerPageOptions]="[3,5,10,15]" (onLazyLoad)="getVouchers($event)">
 										<ng-template pTemplate="caption">
 											Vouchers
 										</ng-template>
@@ -114,12 +107,18 @@
 													<div *ngIf="col.fechaHasta">
 														{{formatearFecha(rowData[col.field])}}
 													</div>
-													<div *ngIf="!col.fechaHasta && !col.fechaDesde">
+													<div *ngIf="col.estado">
+														{{formatearEstado(rowData[col.field])}}
+													</div>
+													<div *ngIf="!col.fechaHasta && !col.fechaDesde && !col.estado">
 														{{ rowData[col.field] }}
 													</div>
 												</td>
 												<td>
 													<div style="text-align: center">
+														<i class="pi pi-pencil" style="font-size: 2em; cursor: pointer;"
+															(click)="showFechaVencimiento(rowData)"
+															*ngIf="formatearEstado(rowData['estado'])=='VENCIDO'"></i>&nbsp;
 														<i class="pi pi-eye" style="font-size: 2em; cursor: pointer;"
 															(click)="showVoucher(rowData)"></i>&nbsp;
 														<i class="pi pi-trash" style="font-size: 2em; cursor: pointer;"
@@ -139,37 +138,6 @@
 		</p-card>
 	</div>
 </ion-content>
-
-<p-dialog [(visible)]="displayVoucherEmitidoModal" [modal]="true" [responsive]="true"
-	[style]="{width: '600px', minWidth: '600px'}" [maximizable]="false" [baseZIndex]="10000" appendTo="body">
-	<p-header>
-		Editar voucher
-	</p-header>
-	<form [formGroup]="voucherForm" (ngSubmit)="guardarVoucher()">
-		<p-growl [(value)]="formMsgs">
-		</p-growl>
-		<div class="ui-fluid">
-			<div class="ui-g">
-				<div class="ui-g-12">
-					<div class="ui-g form-group">
-
-
-
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<p-footer>
-			<div class="ui-g-12 ui-md-12" style="text-align: right">
-				<button type="button" pButton icon="pi pi-times" (click)="displayVoucherEmitidoModal=false"
-					label="Cancelar" class="ui-button-danger"></button>&nbsp;
-				<button type="button" pButton icon="pi pi-check" (click)="actualizarVoucher()" label="Modificar"
-					class="ui-button-success"></button>&nbsp;
-			</div>
-		</p-footer>
-	</form>
-</p-dialog>
 
 <!-- DETALLE VOUCHER -->
 <p-dialog [(visible)]="displayVoucherModal" [modal]="true" [responsive]="true"
@@ -192,7 +160,9 @@
 								<h2>{{ datosVoucher.dni }}&nbsp;{{ datosVoucher.nombreApellido }}</h2>
 								<span>Propietario</span>
 							</div>
-							<div class="estado">
+							<div class="estado" [ngClass]="{'estado-verde': datosVoucher.estado=='EMITIDO'||datosVoucher.estado=='UTILIZADO',
+															'estado-rojo': datosVoucher.estado=='VENCIDO'||datosVoucher.estado=='ELIMINADO'||datosVoucher.estado=='SIN ESTADO',
+															'estado-amarillo': datosVoucher.estado=='NO DISPONIBLE'||datosVoucher.estado=='A FACTURAR'}">
 								<h2>{{ datosVoucher.estado }}</h2>
 								<span>Estado</span>
 							</div>
@@ -207,11 +177,11 @@
 							</div>
 							<div class="desde">
 								<h2>{{ formatearFecha(datosVoucher.fechaDesde) }}</h2>
-								<span>Desde</span>
+								<span>Vigente desde</span>
 							</div>
 							<div class="hasta">
 								<h2>{{ formatearFecha(datosVoucher.fechaHasta) }}</h2>
-								<span>Hasta</span>
+								<span>Vencimiento</span>
 							</div>
 
 							<div class="obs">
@@ -250,6 +220,41 @@
 		<div class="ui-g-12 ui-md-12" style="text-align: right">
 			<button type="button" pButton icon="pi pi-times" (click)="displayVoucherModal=false" label="Cerrar"
 				class="ui-button-danger"></button>&nbsp;
+		</div>
+	</p-footer>
+
+</p-dialog>
+
+<!-- FECHA DE VENCIMIENTO -->
+<p-dialog [(visible)]="displayFechaVencimiento" [modal]="true" [responsive]="true"
+	[style]="{width: 'auto', 'height': 'auto'}" [maximizable]="false" [baseZIndex]="10000" appendTo="body">
+	<p-header>
+		Modificar fecha de vencimiento
+	</p-header>
+
+	<div class="ui-fluid">
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<div class="ui-g form-group">
+					<div class="ui-g-6 ui-md-6" style="width: 100%;">
+						<span class="ui-float-label">
+							<p-calendar [locale]="es" [showIcon]="true" [minDate]="vencimientoNuevoVoucher" [(ngModel)]="nuevoVoucher.fechaHasta"
+								[inline]="true" [monthNavigator]="true" dateFormat="dd-mm-yy"
+								[readonlyInput]="true">
+							</p-calendar>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<p-footer>
+		<div class="ui-g-12 ui-md-12" style="text-align: right">
+			<button type="button" pButton icon="pi pi-times" (click)="displayFechaVencimiento=false" label="Cerrar"
+				class="ui-button-danger"></button>&nbsp;
+			<button type="button" pButton icon="pi pi-check" (click)="actualizarVoucher()" label="Aceptar"
+				class="ui-button-success"></button>&nbsp;
 		</div>
 	</p-footer>
 

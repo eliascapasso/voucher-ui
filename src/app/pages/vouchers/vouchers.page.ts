@@ -22,6 +22,7 @@ export class VouchersPage implements OnInit {
     public vouchers = [] as Voucher[];
     public vouchersOriginal: Voucher[] = [];
     public nuevoVoucher = {} as Voucher;
+    public vencimientoNuevoVoucher: Date = new Date();
     public datosVoucher = {} as Voucher;
     public showTabla: boolean = false
     public voucherForm: FormGroup;
@@ -35,6 +36,7 @@ export class VouchersPage implements OnInit {
     public fechaDesde: Date;
     public fechaHasta: Date;
     public displayVoucherModal: boolean = false;
+    public displayFechaVencimiento: boolean = false;
     public totalRecords: number = 0;
     public ROWS = 3;
 
@@ -69,7 +71,7 @@ export class VouchersPage implements OnInit {
             { field: 'valor', header: 'Valor' },
             { field: 'fechaDesde', header: 'Vigente desde', fechaDesde: true },
             { field: 'fechaHasta', header: 'Vencimiento', fechaHasta: true },
-            { field: 'estado', header: 'Estado' },
+            { field: 'estado', header: 'Estado', estado: true },
             { field: 'empresa', header: 'Empresa' },
         ];
 
@@ -78,12 +80,12 @@ export class VouchersPage implements OnInit {
         });
 
         this.estados.push({ label: 'TODOS', value: '' });
-        this.estados.push({ label: 'UTILIZADO (U)', value: 'U' });
-        this.estados.push({ label: 'NO DISPONIBLE (ND)', value: 'ND' });
-        this.estados.push({ label: 'EMITIDO (E)', value: 'E' });
-        this.estados.push({ label: 'ELIMINADO (EL)', value: 'EL' });
-        this.estados.push({ label: 'VENCIDO (V)', value: 'V' });
-        this.estados.push({ label: 'A FACTURAR (AF)', value: 'AF' });
+        this.estados.push({ label: 'UTILIZADO', value: 'U' });
+        this.estados.push({ label: 'NO DISPONIBLE', value: 'ND' });
+        this.estados.push({ label: 'EMITIDO', value: 'E' });
+        this.estados.push({ label: 'ELIMINADO', value: 'EL' });
+        this.estados.push({ label: 'VENCIDO', value: 'V' });
+        this.estados.push({ label: 'A FACTURAR', value: 'AF' });
         this.nuevoVoucher = {};
 
         this.getVouchers({});
@@ -132,32 +134,22 @@ export class VouchersPage implements OnInit {
     }
 
     actualizarVoucher() {
+        this.blockUI.start('Actualizando voucher...');
+        this.voucherService.update(this.nuevoVoucher)
+            .subscribe((voucher: any) => {
+                this.blockUI.stop();
+                this.msgs = [];
+                this.msgs.push({ severity: 'info', summary: `Voucher modificado con exito`, detail: `Voucher modificado` });
+                this.displayVouchersModal = false;
+                this.getVouchers({});
+            }, error => {
+                this.blockUI.stop();
+                console.warn(`error al modificar voucher: ${error.message}`);
+                this.formMsgs = [];
+                this.formMsgs.push({ severity: 'error', summary: `Error al modificar el voucher: ${error.message}` });
+            });
 
-        if (!this.voucherForm.valid) {
-            this.formMsgs = [];
-            this.formMsgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
-        }
-        else {
-
-            this.blockUI.start('Actualizando voucher...');
-            this.voucherService.update(this.nuevoVoucher)
-                .subscribe((voucher: any) => {
-                    this.blockUI.stop();
-                    console.log('voucher modificado');
-                    this.msgs = [];
-                    this.msgs.push({ severity: 'info', summary: `Voucher modificado con exito`, detail: `Voucher modificado` });
-                    this.displayVouchersModal = false;
-                    this.getVouchers({});
-                },
-                    error => {
-                        let msj = (error.message) ? error.message : '';
-                        let cause = (error.cause) ? error.cause : '';
-                        this.blockUI.stop();
-                        console.error(`error al modificar voucher ${error}`);
-                        this.formMsgs = [];
-                        this.formMsgs.push({ severity: 'error', summary: `Error al modificar el voucher ${msj}`, detail: cause });
-                    });
-        }
+        this.displayFechaVencimiento = false;
     }
 
     confirmDelete(voucher) {
@@ -284,7 +276,7 @@ export class VouchersPage implements OnInit {
 
         //estado
         if (voucher.estado != null) {
-            this.datosVoucher.estado = voucher.estado;
+            this.datosVoucher.estado = this.formatearEstado(voucher.estado);
         }
         else {
             this.datosVoucher.estado = "";
@@ -320,6 +312,35 @@ export class VouchersPage implements OnInit {
         }
         else {
             this.datosVoucher.observacion = "Sin observaciones";
+        }
+    }
+
+    showFechaVencimiento(voucher: Voucher) {
+        this.displayFechaVencimiento = true;
+        voucher.fechaDesde = new Date(voucher.fechaDesde);
+        voucher.fechaHasta = new Date(voucher.fechaHasta);
+        this.nuevoVoucher = voucher;
+        if (this.nuevoVoucher.fechaHasta < this.vencimientoNuevoVoucher) {
+            this.nuevoVoucher.fechaHasta = this.vencimientoNuevoVoucher;
+        }
+    }
+
+    formatearEstado(estado) {
+        switch (estado) {
+            case "E":
+                return "EMITIDO"; //Verde
+            case "U":
+                return "UTILIZADO"; //Verde
+            case "ND":
+                return "NO DISPONIBLE"; //Amarillo
+            case "AF":
+                return "A FACTURAR"; //Amarillo
+            case "V":
+                return "VENCIDO"; //Rojo
+            case "EL":
+                return "ELIMINADO"; //Rojo
+            default:
+                return "SIN ESTADO"; //Rojo
         }
     }
 }
