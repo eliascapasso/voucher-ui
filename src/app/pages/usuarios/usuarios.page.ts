@@ -57,7 +57,7 @@ export class UsuariosPage implements OnInit {
             { field: 'apellido', header: 'Apellido' },
             { field: 'email', header: 'Email' },
             { field: 'empresa', header: 'Empresa', empresa: true },
-            { field: 'role', header: 'Rol', role: true }
+            { field: 'roles', header: 'Rol', role: true }
         ];
 
         this.usuarioForm = this.formBuilder.group({
@@ -65,7 +65,7 @@ export class UsuariosPage implements OnInit {
             apellido: ['', Validators.required],
             email: ['', Validators.required],
             empresa: ['', Validators.required],
-            role: ['', Validators.required],
+            roles: ['', Validators.required],
             estado: [''],
         });
 
@@ -94,7 +94,7 @@ export class UsuariosPage implements OnInit {
     }
 
     setPermisos() {
-        //this.permisosABM = this.usuarioActual.role.role == "ROOT" || this.usuarioActual.role.role == "ADMIN";
+        //this.permisosABM = this.usuarioActual.roles.roles == "ROOT" || this.usuarioActual.roles.roles == "ADMIN";
     }
 
     async getEmpresas() {
@@ -117,7 +117,7 @@ export class UsuariosPage implements OnInit {
             let roles = await this.usuarioService.getRoles();
 
             for (let i = 0; i < roles.length; i++) {
-                this.rolesSelect.push({ label: roles[i].role, value: roles[i]._id });
+                this.rolesSelect.push({ label: roles[i].roles, value: roles[i]._id });
             }
             this.roles = roles;
         } catch (error) {
@@ -152,7 +152,7 @@ export class UsuariosPage implements OnInit {
             this.msgs = [];
             this.msgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
         } else {
-            this.nuevoUsuario.role = this.roles.find(x => x._id == this.rolSeleccionado);
+            this.nuevoUsuario.roles = this.roles.find(x => x._id == this.rolSeleccionado);
             this.nuevoUsuario.empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
             this.nuevoUsuario.password = '123456';
 
@@ -181,7 +181,7 @@ export class UsuariosPage implements OnInit {
         }
         else {
             if (!elimina) {
-                this.nuevoUsuario.role = this.roles.find(x => x._id == this.rolSeleccionado);
+                this.nuevoUsuario.roles = this.roles.find(x => x._id == this.rolSeleccionado);
                 this.nuevoUsuario.empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
             }
 
@@ -237,7 +237,7 @@ export class UsuariosPage implements OnInit {
         this.usuarioForm.get('nombre').setValue(this.nuevoUsuario.nombre);
         this.usuarioForm.get('apellido').setValue(this.nuevoUsuario.apellido);
         this.usuarioForm.get('email').setValue(this.nuevoUsuario.email);
-        this.rolSeleccionado = this.nuevoUsuario.role._id;
+        this.rolSeleccionado = this.nuevoUsuario.roles[0]._id;
         this.empresaSeleccionada = this.nuevoUsuario.empresa._id;
         this.usuarioForm.get('estado').setValue(this.nuevoUsuario.estado);
         this.usuarioForm.controls['email'].disable();

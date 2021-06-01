@@ -23,6 +23,11 @@ const routes: Routes = [
     canActivate: [LoginGuardGuard]
   },
   {
+    path: 'modificar-usuario',
+    loadChildren: './pages/modificar-usuario/modificar-usuario.module#ModificarUsuarioPageModule',
+    canActivate: [LoginGuardGuard]
+  },
+  {
     path: 'recuperar-password',
     loadChildren: './pages/recuperar-password/recuperar-password.module#RecuperarPasswordPageModule',
   },

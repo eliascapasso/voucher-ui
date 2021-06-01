@@ -6,7 +6,7 @@ export interface Usuario {
   empresa?: Empresa;
   estado?: boolean;
   password?: string;
-  role?: Role;
+  roles?: Role[];
   telefono?: string;
 }
 

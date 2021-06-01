@@ -1,0 +1,61 @@
+<ion-content padding>
+
+  <div style="height: 40px">
+    <label class="configuracionLabel">Perfil <label class="separacionEntre"> > </label> Modificar usuario </label>
+  </div>
+
+  <p-growl [(value)]="msgs"></p-growl>
+  <div class="ui-fluid">
+
+    <div class="ui-g">
+      <div class="ui-g-12">
+        <div class="card no-margin shadow-box ui-shadow-3">
+          <h1> Usuario</h1>
+
+          <form [formGroup]="usuarioForm" (ngSubmit)="actualizarUsuario()">
+            <div class="ui-g form-group">
+
+              <div class="ui-g-12 ui-md-12">
+                <div class="ui-inputgroup">
+                  <span class="ui-inputgroup-addon"><i class="fa fa-user"></i></span>
+                  <span class="md-inputfield">
+                    <input type="text" formControlName="nombre" [(ngModel)]="nuevoUsuario.nombre" pInputText />
+                    <label>Nombre</label>
+                  </span>
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-md-12">
+                <div class="ui-inputgroup">
+                  <span class="ui-inputgroup-addon"><i class="fa fa-user"></i></span>
+                  <span class="md-inputfield">
+                    <input type="text" formControlName="apellido" [(ngModel)]="nuevoUsuario.apellido" pInputText />
+                    <label>Apellido</label>
+                  </span>
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-md-12">
+                <div class="ui-inputgroup">
+                  <span class="ui-inputgroup-addon"><i class="fa fa-at"></i></span>
+                  <span class="md-inputfield">
+                    <input type="email" name="email" formControlName="email" [(ngModel)]="nuevoUsuario.email"
+                      pInputText />
+                    <label>E-mail</label>
+                  </span>
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-md-2"></div>
+              <div class="ui-g-12 ui-md-4 ion-padding-top">
+                <button class="ui-button-success" pButton type="submit" label="Guardar" icon="ui-icon-save" [disabled]="validar()"></button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</ion-content>
