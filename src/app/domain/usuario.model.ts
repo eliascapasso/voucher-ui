@@ -18,5 +18,5 @@ class Empresa {
 
 class Role {
   _id?: string;
-  role: string;
+  name: string;
 }

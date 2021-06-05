@@ -72,7 +72,7 @@ export class CambioPasswordPage implements OnInit {
       .subscribe((user: any) => {
         console.log('password Actualizada');
         this.msgs = [];
-        this.msgs.push({ severity: 'info', summary: `Password Actualizada `, detail: `Password Actualizada ${user}` });
+        this.msgs.push({ severity: 'success', summary: `Password Actualizada `, detail: `Password Actualizada ${user}` });
       },
         error => {
           console.log(`error al cambiar password ${error}`);

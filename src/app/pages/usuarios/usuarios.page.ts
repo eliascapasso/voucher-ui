@@ -19,7 +19,6 @@ import { Subscription } from 'rxjs';
 
 })
 export class UsuariosPage implements OnInit {
-    public permisosABM: boolean = false;
     public columnas: any[];
     public usuarioActual: Usuario;
     public usuarios: Usuario[] = [];
@@ -56,7 +55,6 @@ export class UsuariosPage implements OnInit {
             { field: 'nombre', header: 'Nombre' },
             { field: 'apellido', header: 'Apellido' },
             { field: 'email', header: 'Email' },
-            { field: 'empresa', header: 'Empresa', empresa: true },
             { field: 'roles', header: 'Rol', role: true }
         ];
 
@@ -86,15 +84,10 @@ export class UsuariosPage implements OnInit {
     getUsuarioActual() {
         this.suscriptionUser = this.usuarioService.getUserMe().subscribe(usuario => {
             this.usuarioActual = usuario;
-            this.setPermisos();
             this.getUsuarios();
             this.getRoles();
             this.getEmpresas();
         });
-    }
-
-    setPermisos() {
-        //this.permisosABM = this.usuarioActual.roles.roles == "ROOT" || this.usuarioActual.roles.roles == "ADMIN";
     }
 
     async getEmpresas() {
@@ -109,21 +102,22 @@ export class UsuariosPage implements OnInit {
             console.warn(`error al obtener las empresas: ${error.message}`);
             this.msgs = [];
             this.msgs.push({ severity: 'error', summary: `Error al obtener las empresas: ${error.message}` });
+            this.getUsuarios();
         }
     }
 
     async getRoles() {
         try {
             let roles = await this.usuarioService.getRoles();
-
             for (let i = 0; i < roles.length; i++) {
-                this.rolesSelect.push({ label: roles[i].roles, value: roles[i]._id });
+                this.rolesSelect.push({ label: roles[i].name, value: roles[i]._id });
             }
             this.roles = roles;
         } catch (error) {
             console.warn(`error al obtener los roles de usuario: ${error.message}`);
             this.msgs = [];
             this.msgs.push({ severity: 'error', summary: `Error al obtener los roles de usuario ${error.message}` });
+            this.getUsuarios();
         }
     }
 
@@ -152,16 +146,16 @@ export class UsuariosPage implements OnInit {
             this.msgs = [];
             this.msgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
         } else {
-            this.nuevoUsuario.roles = this.roles.find(x => x._id == this.rolSeleccionado);
+            this.nuevoUsuario.roles = [];
+            this.nuevoUsuario.roles.push(this.roles.find(x => x._id == this.rolSeleccionado));
             this.nuevoUsuario.empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
-            this.nuevoUsuario.password = '123456';
 
             this.blockUI.start('Guardando Usuario...');
             this.usuarioService.save(this.nuevoUsuario)
                 .subscribe((usuario: any) => {
                     this.blockUI.stop();
                     this.msgs = [];
-                    this.msgs.push({ severity: 'info', summary: `Usuario guardado con exito`, detail: `Usuario guardado` });
+                    this.msgs.push({ severity: 'success', summary: `Usuario guardado con exito`, detail: `Usuario guardado` });
                     this.displayUsuarioModal = false;
                     this.getUsuarios();
                 },
@@ -170,6 +164,7 @@ export class UsuariosPage implements OnInit {
                         console.warn(`error al guardar usuario: ${error.message}`);
                         this.msgs = [];
                         this.msgs.push({ severity: 'error', summary: `Error al guardar el usuario: ${error.message}` });
+                        this.getUsuarios();
                     });
         }
     }
@@ -181,8 +176,13 @@ export class UsuariosPage implements OnInit {
         }
         else {
             if (!elimina) {
-                this.nuevoUsuario.roles = this.roles.find(x => x._id == this.rolSeleccionado);
+                this.nuevoUsuario.roles = [];
+                this.nuevoUsuario.roles.push(this.roles.find(x => x._id == this.rolSeleccionado));
                 this.nuevoUsuario.empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
+            }
+
+            if (this.nuevoUsuario.empresa != null && this.nuevoUsuario.empresa._id == null) {
+                this.nuevoUsuario.empresa = null;
             }
 
             this.blockUI.start('Guardando Usuario...');
@@ -190,7 +190,18 @@ export class UsuariosPage implements OnInit {
                 .subscribe((usuario: any) => {
                     this.blockUI.stop();
                     this.msgs = [];
-                    this.msgs.push({ severity: 'info', summary: `Usuario modificado con exito`, detail: `Usuario modificado` });
+                    if (elimina) {
+                        if (this.nuevoUsuario.estado) {
+                            this.msgs.push({ severity: 'success', summary: `Usuario habilitado`, detail: `Usuario modificado` });
+                        }
+                        else {
+                            this.msgs.push({ severity: 'success', summary: `Usuario deshabilitado`, detail: `Usuario modificado` });
+                        }
+                    }
+                    else {
+                        this.msgs.push({ severity: 'success', summary: `Usuario modificado con exito`, detail: `Usuario modificado` });
+                    }
+
                     this.displayUsuarioModal = false;
                     this.getUsuarios();
                 },
@@ -199,6 +210,7 @@ export class UsuariosPage implements OnInit {
                         console.log(`error al modificar usuario: ${error.message}`);
                         this.msgs = [];
                         this.msgs.push({ severity: 'error', summary: `Error al modificar el usuario: ${error.message}` });
+                        this.getUsuarios();
                     });
         }
     }
@@ -212,7 +224,7 @@ export class UsuariosPage implements OnInit {
                 this.actualizarUsuario(true);
             },
             reject: () => {
-
+                this.getUsuarios();
             }
         });
     }
@@ -224,7 +236,7 @@ export class UsuariosPage implements OnInit {
         this.usuarioForm.get('nombre').setValue('');
         this.usuarioForm.get('apellido').setValue('');
         this.usuarioForm.get('email').setValue('');
-        this.usuarioForm.get('role').setValue('');
+        this.usuarioForm.get('roles').setValue('');
         this.usuarioForm.get('estado').setValue(true);
         this.usuarioForm.controls['email'].enable();
         this.displayUsuarioModal = true;
@@ -238,10 +250,17 @@ export class UsuariosPage implements OnInit {
         this.usuarioForm.get('apellido').setValue(this.nuevoUsuario.apellido);
         this.usuarioForm.get('email').setValue(this.nuevoUsuario.email);
         this.rolSeleccionado = this.nuevoUsuario.roles[0]._id;
-        this.empresaSeleccionada = this.nuevoUsuario.empresa._id;
+        if (this.nuevoUsuario.empresa != null && this.nuevoUsuario.empresa._id != null) {
+            this.empresaSeleccionada = this.nuevoUsuario.empresa._id;
+        }
         this.usuarioForm.get('estado').setValue(this.nuevoUsuario.estado);
         this.usuarioForm.controls['email'].disable();
         this.displayUsuarioModal = true;
+    }
+
+    cerrarModal() {
+        this.getUsuarios();
+        this.displayUsuarioModal = false;
     }
 
     changeFilterHandler(event) {
@@ -276,6 +295,17 @@ export class UsuariosPage implements OnInit {
         } else {
             this.showTabla = true;
         }
+    }
+
+    mostrarRoles(roles) {
+        let rolesString = "";
+        for (let i = 0; i < roles.length; i++) {
+            if (roles != undefined && roles != null && roles.length != 0) {
+                rolesString = rolesString + " " + roles[i].name;
+            }
+        }
+
+        return rolesString;
     }
 
     handleChange(event, usuario) {

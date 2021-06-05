@@ -52,7 +52,7 @@
 													{{col.header}}
 													<p-sortIcon [field]="col.field"></p-sortIcon>
 												</th>
-												<th style="text-align: center;" *ngIf="permisosABM">
+												<th style="text-align: center;">
 													<span>Opciones</span>
 												</th>
 											</tr>
@@ -60,17 +60,14 @@
 										<ng-template pTemplate="body" let-rowData let-columns="columns">
 											<tr [pSelectableRow]="rowData">
 												<td *ngFor="let col of columns">
-													<div *ngIf="col.empresa">
-														{{ rowData[col.field].empresa }}
-													</div>
 													<div *ngIf="col.role">
-														{{ rowData[col.field].role }}
+														{{ mostrarRoles(rowData[col.field]) }}
 													</div>
-													<div *ngIf="!col.empresa && !col.role">
+													<div *ngIf="!col.role">
 														{{ rowData[col.field] }}
 													</div>
 												</td>
-												<td *ngIf="permisosABM">
+												<td>
 													<div style="text-align: center">
 														<i class="pi pi-pencil" style="font-size: 2em; cursor: pointer;"
 															(click)="showEditarUsuarioModal(rowData)"></i>&nbsp;&nbsp;
@@ -152,7 +149,7 @@
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
 								<span class="ui-float-label" style="width: 100%;">
-									<p-dropdown [options]="rolesSelect" formControlName="role"
+									<p-dropdown [options]="rolesSelect" formControlName="roles"
 										[(ngModel)]="rolSeleccionado" [autoWidth]="false" [autoDisplayFirst]="false">
 									</p-dropdown>
 									<label>Rol</label>
@@ -176,7 +173,7 @@
 
 		<p-footer>
 			<div class="ui-g-12 ui-md-12" style="text-align: right">
-				<button type="button" pButton icon="pi pi-times" (click)="displayUsuarioModal=false" label="Cancelar"
+				<button type="button" pButton icon="pi pi-times" (click)="cerrarModal()" label="Cancelar"
 					class="ui-button-danger"></button>&nbsp;
 				<button type="button" pButton icon="pi pi-check" (click)="guardarUsuario()" label="Guardar"
 					class="ui-button-success" *ngIf="isNew"></button>&nbsp;

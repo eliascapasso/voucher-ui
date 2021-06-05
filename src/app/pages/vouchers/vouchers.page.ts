@@ -139,7 +139,7 @@ export class VouchersPage implements OnInit {
             .subscribe((voucher: any) => {
                 this.blockUI.stop();
                 this.msgs = [];
-                this.msgs.push({ severity: 'info', summary: `Voucher modificado con exito`, detail: `Voucher modificado` });
+                this.msgs.push({ severity: 'success', summary: `Voucher modificado con exito`, detail: `Voucher modificado` });
                 this.displayVouchersModal = false;
                 this.getVouchers({});
             }, error => {
@@ -162,7 +162,7 @@ export class VouchersPage implements OnInit {
                     .subscribe((voucher: any) => {
                         console.log('voucher eliminado');
                         this.msgs = [];
-                        this.msgs.push({ severity: 'info', summary: `Voucher eliminado`, detail: `Voucher eliminado` });
+                        this.msgs.push({ severity: 'success', summary: `Voucher eliminado`, detail: `Voucher eliminado` });
                         this.getVouchers({});
                     },
                         error => {

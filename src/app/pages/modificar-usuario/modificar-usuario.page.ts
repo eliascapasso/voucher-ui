@@ -54,7 +54,7 @@ export class ModificarUsuarioPage implements OnInit {
       .subscribe((usuario: any) => {
         this.blockUI.stop();
         this.msgs = [];
-        this.msgs.push({ severity: 'info', summary: `Usuario modificado con exito`, detail: `Usuario modificado` });
+        this.msgs.push({ severity: 'success', summary: `Usuario modificado con exito`, detail: `Usuario modificado` });
 
         setTimeout(() => {
           this.usuarioService.logout();

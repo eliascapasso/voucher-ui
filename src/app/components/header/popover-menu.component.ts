@@ -15,6 +15,7 @@ export class PopoverMenuComponent {
     constructor(public menuCtrl: MenuController, public popoverController: PopoverController, private usuarioService: UsuarioService) {
         this.usuarioService.getUserMe().subscribe(usuario => {
             this.userLogin = usuario;
+            console.log(usuario);
         });
     }
 

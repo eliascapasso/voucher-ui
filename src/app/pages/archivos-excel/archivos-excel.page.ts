@@ -118,7 +118,7 @@ export class ArchivosExcelPage implements OnInit {
                     this.blockUI.stop();
                     console.log('archivo excel guardado');
                     this.msgs = [];
-                    this.msgs.push({ severity: 'info', summary: `Archivo excel guardado con exito`, detail: `Archivo excel guardado` });
+                    this.msgs.push({ severity: 'success', summary: `Archivo excel guardado con exito`, detail: `Archivo excel guardado` });
                     this.displayArchivoExcelModal = false;
                     this.getArchivosExcel();
                 },
@@ -143,7 +143,7 @@ export class ArchivosExcelPage implements OnInit {
                     .subscribe( (archivoExcel: any) => {
                             console.log('archivo excel eliminado');
                             this.msgs = [];
-                            this.msgs.push({severity: 'info', summary: `Archivo excel eliminado`, detail: `Archivo excel eliminado`});
+                            this.msgs.push({severity: 'success', summary: `Archivo excel eliminado`, detail: `Archivo excel eliminado`});
                             this.getArchivosExcel();
                         },
                         error => {
