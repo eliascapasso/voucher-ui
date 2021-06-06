@@ -343,4 +343,9 @@ export class VouchersPage implements OnInit {
                 return "SIN ESTADO"; //Rojo
         }
     }
+
+    cerrarModal(){
+        this.getVouchers({});
+        this.displayFechaVencimiento=false
+    }
 }

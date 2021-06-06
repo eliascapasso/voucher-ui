@@ -57,8 +57,8 @@ export class CambioPasswordPage implements OnInit {
     ]);
 
     this.defineErrorMessageForm();
-
   }
+
   send() {
     if (!this.cambioPasswordForm.valid) {
       this.msgs = [];

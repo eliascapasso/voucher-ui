@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {
     FormGroup,
     FormBuilder,
-    Validators
+    Validators,
+    FormControl
 } from '@angular/forms';
 import { UsuarioService } from '../../service/usuario/usuario.service';
 import { Router } from '@angular/router';
@@ -58,14 +59,7 @@ export class UsuariosPage implements OnInit {
             { field: 'roles', header: 'Rol', role: true }
         ];
 
-        this.usuarioForm = this.formBuilder.group({
-            nombre: ['', Validators.required],
-            apellido: ['', Validators.required],
-            email: ['', Validators.required],
-            empresa: ['', Validators.required],
-            roles: ['', Validators.required],
-            estado: [''],
-        });
+        this.setValidators();
 
         this.estados.push({ label: 'Todos los Estados', value: '' });
         this.estados.push({ label: 'Activo', value: 'ACTIVO' });
@@ -79,6 +73,19 @@ export class UsuariosPage implements OnInit {
 
     ngOnDestroy() {
         this.suscriptionUser.unsubscribe();
+    }
+
+    noIgual(control: FormControl): { [s: string]: boolean } {
+        const forma: any = this;
+        if (
+            control !== null &&
+            forma.controls.newPassword.value !== control.value
+        ) {
+            return {
+                noiguales: true
+            };
+        }
+        return null;
     }
 
     getUsuarioActual() {
@@ -236,8 +243,11 @@ export class UsuariosPage implements OnInit {
         this.usuarioForm.get('nombre').setValue('');
         this.usuarioForm.get('apellido').setValue('');
         this.usuarioForm.get('email').setValue('');
+        this.usuarioForm.get('empresa').setValue('');
         this.usuarioForm.get('roles').setValue('');
         this.usuarioForm.get('estado').setValue(true);
+        this.usuarioForm.get('newPassword').setValue('');
+        this.usuarioForm.get('newPassword2').setValue('');
         this.usuarioForm.controls['email'].enable();
         this.displayUsuarioModal = true;
     }
@@ -249,10 +259,14 @@ export class UsuariosPage implements OnInit {
         this.usuarioForm.get('nombre').setValue(this.nuevoUsuario.nombre);
         this.usuarioForm.get('apellido').setValue(this.nuevoUsuario.apellido);
         this.usuarioForm.get('email').setValue(this.nuevoUsuario.email);
-        this.rolSeleccionado = this.nuevoUsuario.roles[0]._id;
+        this.usuarioForm.get('roles').setValue(this.nuevoUsuario.roles[0]._id);
+        this.usuarioForm.get('newPassword').setValue(this.nuevoUsuario.password);
+        this.usuarioForm.get('newPassword2').setValue(this.nuevoUsuario.password);
+
         if (this.nuevoUsuario.empresa != null && this.nuevoUsuario.empresa._id != null) {
             this.empresaSeleccionada = this.nuevoUsuario.empresa._id;
         }
+
         this.usuarioForm.get('estado').setValue(this.nuevoUsuario.estado);
         this.usuarioForm.controls['email'].disable();
         this.displayUsuarioModal = true;
@@ -295,6 +309,24 @@ export class UsuariosPage implements OnInit {
         } else {
             this.showTabla = true;
         }
+    }
+
+    setValidators() {
+        this.usuarioForm = this.formBuilder.group({
+            nombre: ['', Validators.required],
+            apellido: ['', Validators.required],
+            email: ['', Validators.required],
+            empresa: ['', Validators.required],
+            roles: ['', Validators.required],
+            estado: [''],
+            newPassword: ['', Validators.required],
+            newPassword2: ['', Validators.required]
+        });
+
+        this.usuarioForm.controls.newPassword2.setValidators([
+            Validators.required,
+            this.noIgual.bind(this.usuarioForm) // Agrega referencia a this dentro del metodo noIgual
+        ]);
     }
 
     mostrarRoles(roles) {

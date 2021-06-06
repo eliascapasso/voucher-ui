@@ -80,7 +80,7 @@ export class ArchivosExcelPage implements OnInit {
 
     getArchivosExcel() {
         var $this = this;
-        this.nuevoArchivoExcel = {};
+        $this.nuevoArchivoExcel = {};
         $this.archivosExcel = [];
 
         $this.blockUI.start("Cargando archivos excel...");
@@ -231,5 +231,10 @@ export class ArchivosExcelPage implements OnInit {
         } else {
             this.showTabla = true;
         }
+    }
+
+    cerrarModal(){
+        this.getArchivosExcel();
+        this.displayArchivoExcelModal=false
     }
 }

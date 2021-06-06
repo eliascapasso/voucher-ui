@@ -3,8 +3,7 @@
 	<div class="container">
 		<p-card>
 			<label class="configuracionLabel">Usuarios</label>
-			<p-growl [(value)]="msgs">
-			</p-growl>
+			<p-growl [(value)]="msgs"></p-growl>
 			<ion-row class="section">
 				<ion-col size="12" size-sm="12" size-md="12" size-lg="12">
 					<ion-card>
@@ -99,6 +98,7 @@
 		Editar usuario
 	</p-header>
 	<form [formGroup]="usuarioForm" (ngSubmit)="guardarUsuario()">
+		<p-growl [(value)]="msgs"></p-growl>
 		<div class="ui-fluid">
 			<div class="ui-g">
 				<div class="ui-g-12">
@@ -149,7 +149,7 @@
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
 								<span class="ui-float-label" style="width: 100%;">
-									<p-dropdown [options]="rolesSelect" formControlName="roles"
+									<p-dropdown [options]="rolesSelect" formControlName="roles" [(ngModel)]="nuevoUsuario.password"
 										[(ngModel)]="rolSeleccionado" [autoWidth]="false" [autoDisplayFirst]="false">
 									</p-dropdown>
 									<label>Rol</label>
@@ -157,6 +157,25 @@
 							</div>
 						</div>
 
+						<div class="ui-g-12 ui-md-12" *ngIf="isNew">
+							<div class="ui-inputgroup">
+								<span class="ui-inputgroup-addon"><i class="fa fa-key"></i></span>
+								<span class="md-inputfield">
+									<input type="password" formControlName="newPassword" pPassword id="newPassword" />
+									<label>Contrase&ntilde;a</label>
+								</span>
+							</div>
+						</div>
+
+						<div class="ui-g-12 ui-md-12" *ngIf="isNew">
+							<div class="ui-inputgroup">
+								<span class="ui-inputgroup-addon"><i class="fa fa-key"></i></span>
+								<span class="md-inputfield">
+									<input type="password" formControlName="newPassword2" pPassword id="newPassword2" />
+									<label>Repita contrase&ntilde;a</label>
+								</span>
+							</div>
+						</div>
 
 						<div>
 							<div class="ui-inputgroup">
@@ -176,9 +195,9 @@
 				<button type="button" pButton icon="pi pi-times" (click)="cerrarModal()" label="Cancelar"
 					class="ui-button-danger"></button>&nbsp;
 				<button type="button" pButton icon="pi pi-check" (click)="guardarUsuario()" label="Guardar"
-					class="ui-button-success" *ngIf="isNew"></button>&nbsp;
+					class="ui-button-success" *ngIf="isNew" [disabled]="!usuarioForm.valid"></button>&nbsp;
 				<button type="button" pButton icon="pi pi-check" (click)="actualizarUsuario(false)" label="Modificar"
-					class="ui-button-success" *ngIf="!isNew"></button>&nbsp;
+					class="ui-button-success" *ngIf="!isNew" [disabled]="!usuarioForm.valid"></button>&nbsp;
 			</div>
 		</p-footer>
 	</form>
