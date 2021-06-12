@@ -1,16 +1,18 @@
 import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Usuario } from '../../domain/usuario.model';
 import { ServiceConfig } from '../serviceconfig';
-
 import { Router } from '@angular/router';
-import { ResetPassword } from '../../domain/reset.password';
-import { UsuarioLogin } from '../../domain/usuario.login.model';
 import { environment } from '../../../environments/environment';
 import { MenuController } from '@ionic/angular';
+
+import { Usuario } from '../../domain/usuario.model';
+import { ResetPassword } from '../../domain/reset.password';
+import { UsuarioLogin } from '../../domain/usuario-login.model';
+import { UsuarioRequest } from '../../domain/usuario-request.model';
+import { Role } from 'src/app/domain/role.model';
+import { Empresa } from 'src/app/domain/empresa.model';
 
 @Injectable({
     providedIn: 'root'
@@ -30,15 +32,15 @@ export class UsuarioService {
 
     /* GET METHODS */
 
-    public getUsuarios(){
+    public getUsuarios() {
         const url = this.serviceBaseURL + '/usuario/todos';
         const params = this.createHttpParams({});
 
-        return this.httpClient.get<any>(url, {params}).toPromise();
+        return this.httpClient.get<any>(url, { params }).toPromise();
     }
 
     public getUserMe(): Observable<Usuario> {
-        const url = this.serviceBaseURL +  '/usuario/' + localStorage.getItem('email');
+        const url = this.serviceBaseURL + '/usuario/' + localStorage.getItem('email');
         const params = this.createHttpParams({});
 
         return this.httpClient.get<Usuario>(url, { params })
@@ -46,23 +48,23 @@ export class UsuarioService {
                 map((data: Usuario) => {
                     this.usuarioLoginNotification.next(data);
                     return this.usuario = data;
-                } ),
+                }),
                 catchError((error: HttpErrorResponse) => this.handleError(error))
             );
     }
 
-    public getRoles(){
+    public getRoles() {
         const url = this.serviceBaseURL + '/role/todos';
         const params = this.createHttpParams({});
 
-        return this.httpClient.get<any>(url, {params}).toPromise();
+        return this.httpClient.get<Role[]>(url, { params }).toPromise();
     }
 
-    public getEmpresas(){
+    public getEmpresas() {
         const url = this.serviceBaseURL + '/empresa/todas';
         const params = this.createHttpParams({});
 
-        return this.httpClient.get<any>(url, {params}).toPromise();
+        return this.httpClient.get<Empresa[]>(url, { params }).toPromise();
     }
 
     /* DELETE METHODS */
@@ -77,12 +79,10 @@ export class UsuarioService {
 
     /* SAVE METHODS */
 
-    public save(usuario: Usuario): Observable<any> {
-        const url = this.serviceBaseURL + '/usuario/alta';
+    public save(usuario: UsuarioRequest): Observable<any> {
+        const url = this.serviceBaseURL + '/auth/signup';
 
-        const params = this.createHttpParams({});
-
-        return this.httpClient.post<any>(url, usuario, { params })
+        return this.httpClient.post<any>(url, usuario)
             .pipe(
                 catchError((error: HttpErrorResponse) => this.handleError(error))
             );
@@ -90,12 +90,10 @@ export class UsuarioService {
 
     /* UPDATE METHODS */
 
-    public update(usuario: Usuario): Observable<any> {
+    public update(usuario: UsuarioRequest): Observable<any> {
         const url = this.serviceBaseURL + '/usuario/modificacion';
-        
-        const params = this.createHttpParams({});
 
-        return this.httpClient.put<any>(url, usuario, { params })
+        return this.httpClient.put<any>(url, usuario)
             .pipe(
                 catchError((error: HttpErrorResponse) => this.handleError(error))
             );
@@ -107,7 +105,7 @@ export class UsuarioService {
         this.usuario = null;
         localStorage.clear();
         this.menuCtrl.enable(false);
-        this.usuarioLoginNotification.next({email: 'SIN IDENTIFICAR'});
+        this.usuarioLoginNotification.next({ email: 'SIN IDENTIFICAR' });
         this.router.navigate(['/login']);
     }
 
@@ -120,11 +118,11 @@ export class UsuarioService {
         }
 
         const httpOptions = {
-            headers: new HttpHeaders({'Content-Type': 'application/json'})
+            headers: new HttpHeaders({ 'Content-Type': 'application/json' })
         };
 
         return this.httpClient.post<any>(url, body, httpOptions)
-        .pipe(
+            .pipe(
                 map((data: any) => {
                     console.info(data);
                     localStorage.setItem('accessToken', data.accessToken);

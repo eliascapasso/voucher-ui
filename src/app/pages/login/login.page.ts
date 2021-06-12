@@ -2,10 +2,10 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Usuario } from '../../domain/usuario.model';
 import { UsuarioService } from '../../service/service.index';
 import { MenuController } from '@ionic/angular';
-import { ConfirmationService, Message } from 'primeng/api';
+import { Message } from 'primeng/api';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UsuarioLogin } from '../../domain/usuario.login.model';
+import { UsuarioLogin } from '../../domain/usuario-login.model';
 
 @Component({
   selector: 'app-login',
@@ -73,8 +73,7 @@ export class LoginPage implements OnInit, AfterViewInit {
 
     const usuarioLogin: UsuarioLogin = {
       email: this.formControls.email.value,
-      password: this.formControls.password.value,
-      grant_type: 'password'
+      password: this.formControls.password.value
     };
 
     this.usuarioService.login(usuarioLogin).subscribe(

@@ -1,3 +1,6 @@
+import { Empresa } from "./empresa.model";
+import { Role } from "./role.model";
+
 export interface Usuario {
   _id?: string;
   email?: string;
@@ -8,15 +11,4 @@ export interface Usuario {
   password?: string;
   roles?: Role[];
   telefono?: string;
-}
-
-class Empresa {
-  _id: string;
-  empresa: string;
-  estado: boolean;
-}
-
-class Role {
-  _id?: string;
-  name: string;
 }

@@ -10,8 +10,12 @@ import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { Usuario } from '../../domain/usuario.model';
 import { Subscription } from 'rxjs';
+
+import { Role } from '../../domain/role.model';
+import { Empresa } from '../../domain/empresa.model';
+import { Usuario } from '../../domain/usuario.model';
+import { UsuarioRequest } from '../../domain/usuario-request.model';
 
 @Component({
     selector: 'app-usuarios',
@@ -33,10 +37,10 @@ export class UsuariosPage implements OnInit {
     public filter = { name: '', estado: '' };
     public busqueda: string = '';
     public isNew: boolean;
-    public roles: any[] = [];
+    public roles: Role[] = [];
     public rolesSelect: any[] = [];
     public rolSeleccionado: string;
-    public empresas: any[] = [];
+    public empresas: Empresa[] = [];
     public empresasSelect: any[] = [];
     public empresaSeleccionada: string;
     private suscriptionUser: Subscription;
@@ -153,12 +157,8 @@ export class UsuariosPage implements OnInit {
             this.msgs = [];
             this.msgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
         } else {
-            this.nuevoUsuario.roles = [];
-            this.nuevoUsuario.roles.push(this.roles.find(x => x._id == this.rolSeleccionado));
-            this.nuevoUsuario.empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
-
             this.blockUI.start('Guardando Usuario...');
-            this.usuarioService.save(this.nuevoUsuario)
+            this.usuarioService.save(this.mapearUsuarioRequest(false, false))
                 .subscribe((usuario: any) => {
                     this.blockUI.stop();
                     this.msgs = [];
@@ -182,18 +182,8 @@ export class UsuariosPage implements OnInit {
             this.msgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
         }
         else {
-            if (!elimina) {
-                this.nuevoUsuario.roles = [];
-                this.nuevoUsuario.roles.push(this.roles.find(x => x._id == this.rolSeleccionado));
-                this.nuevoUsuario.empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
-            }
-
-            if (this.nuevoUsuario.empresa != null && this.nuevoUsuario.empresa._id == null) {
-                this.nuevoUsuario.empresa = null;
-            }
-
             this.blockUI.start('Guardando Usuario...');
-            this.usuarioService.update(this.nuevoUsuario)
+            this.usuarioService.update(this.mapearUsuarioRequest(true, elimina))
                 .subscribe((usuario: any) => {
                     this.blockUI.stop();
                     this.msgs = [];
@@ -209,8 +199,8 @@ export class UsuariosPage implements OnInit {
                         this.msgs.push({ severity: 'success', summary: `Usuario modificado con exito`, detail: `Usuario modificado` });
                     }
 
-                    this.displayUsuarioModal = false;
                     this.getUsuarios();
+                    this.displayUsuarioModal = false;
                 },
                     error => {
                         this.blockUI.stop();
@@ -220,6 +210,36 @@ export class UsuariosPage implements OnInit {
                         this.getUsuarios();
                     });
         }
+    }
+
+    mapearUsuarioRequest(modifica: boolean, elimina: boolean): UsuarioRequest {
+        let roles = [];
+        let empresa: Empresa;
+        if(elimina){
+            empresa = this.nuevoUsuario.empresa;
+        }
+        else{
+            empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
+            this.nuevoUsuario.roles = [];
+            this.nuevoUsuario.roles.push(this.roles.find(x => x._id == this.rolSeleccionado));
+        }
+        console.log(this.nuevoUsuario.roles);
+        for (let rol of this.nuevoUsuario.roles) {
+            roles.push(rol.name);
+        }
+
+        let usuarioRequest: UsuarioRequest = {
+            apellido: this.nuevoUsuario.apellido,
+            nombre: this.nuevoUsuario.nombre,
+            email: this.nuevoUsuario.email,
+            empresa: empresa,
+            estado: this.nuevoUsuario.estado,
+            roles: roles
+        }
+
+        !modifica && !elimina ? usuarioRequest.password = this.usuarioForm.get('newPassword').value : null;
+
+        return usuarioRequest;
     }
 
     confirmEstado(mensaje) {
@@ -242,13 +262,13 @@ export class UsuariosPage implements OnInit {
         this.rolSeleccionado = '';
         this.usuarioForm.get('nombre').setValue('');
         this.usuarioForm.get('apellido').setValue('');
-        this.usuarioForm.get('email').setValue('');
+        this.usuarioForm.get('correo').setValue('');
         this.usuarioForm.get('empresa').setValue('');
         this.usuarioForm.get('roles').setValue('');
         this.usuarioForm.get('estado').setValue(true);
         this.usuarioForm.get('newPassword').setValue('');
         this.usuarioForm.get('newPassword2').setValue('');
-        this.usuarioForm.controls['email'].enable();
+        this.usuarioForm.controls['correo'].enable();
         this.displayUsuarioModal = true;
     }
 
@@ -258,7 +278,7 @@ export class UsuariosPage implements OnInit {
         this.nuevoUsuario = usuario;
         this.usuarioForm.get('nombre').setValue(this.nuevoUsuario.nombre);
         this.usuarioForm.get('apellido').setValue(this.nuevoUsuario.apellido);
-        this.usuarioForm.get('email').setValue(this.nuevoUsuario.email);
+        this.usuarioForm.get('correo').setValue(this.nuevoUsuario.email);
         this.usuarioForm.get('roles').setValue(this.nuevoUsuario.roles[0]._id);
         this.usuarioForm.get('newPassword').setValue(this.nuevoUsuario.password);
         this.usuarioForm.get('newPassword2').setValue(this.nuevoUsuario.password);
@@ -268,7 +288,7 @@ export class UsuariosPage implements OnInit {
         }
 
         this.usuarioForm.get('estado').setValue(this.nuevoUsuario.estado);
-        this.usuarioForm.controls['email'].disable();
+        this.usuarioForm.controls['correo'].disable();
         this.displayUsuarioModal = true;
     }
 
@@ -315,7 +335,7 @@ export class UsuariosPage implements OnInit {
         this.usuarioForm = this.formBuilder.group({
             nombre: ['', Validators.required],
             apellido: ['', Validators.required],
-            email: ['', Validators.required],
+            correo: ['', Validators.required],
             empresa: ['', Validators.required],
             roles: ['', Validators.required],
             estado: [''],

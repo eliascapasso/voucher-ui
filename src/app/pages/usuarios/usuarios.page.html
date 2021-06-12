@@ -69,7 +69,9 @@
 												<td>
 													<div style="text-align: center">
 														<i class="pi pi-pencil" style="font-size: 2em; cursor: pointer;"
-															(click)="showEditarUsuarioModal(rowData)"></i>&nbsp;&nbsp;
+															(click)="showEditarUsuarioModal(rowData)"
+															*ngIf="rowData.estado">
+														</i>&nbsp;&nbsp;
 
 														<p-inputSwitch (onChange)="handleChange($event, rowData)"
 															[ngModel]="rowData.estado"></p-inputSwitch>
@@ -127,7 +129,7 @@
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
 								<span class="md-inputfield">
-									<input type="text" name="email" formControlName="email"
+									<input type="email" name="correo" formControlName="correo"
 										[(ngModel)]="nuevoUsuario.email" pInputText />
 									<label>E-mail</label>
 								</span>
@@ -149,8 +151,9 @@
 						<div class="ui-g-12 ui-md-12">
 							<div class="ui-inputgroup">
 								<span class="ui-float-label" style="width: 100%;">
-									<p-dropdown [options]="rolesSelect" formControlName="roles" [(ngModel)]="nuevoUsuario.password"
-										[(ngModel)]="rolSeleccionado" [autoWidth]="false" [autoDisplayFirst]="false">
+									<p-dropdown [options]="rolesSelect" formControlName="roles"
+										[(ngModel)]="nuevoUsuario.password" [(ngModel)]="rolSeleccionado"
+										[autoWidth]="false" [autoDisplayFirst]="false">
 									</p-dropdown>
 									<label>Rol</label>
 								</span>
