@@ -198,7 +198,7 @@
 				<button type="button" pButton icon="pi pi-times" (click)="cerrarModal()" label="Cancelar"
 					class="ui-button-danger"></button>&nbsp;
 				<button type="button" pButton icon="pi pi-check" (click)="guardarUsuario()" label="Guardar"
-					class="ui-button-success" *ngIf="isNew" [disabled]="!usuarioForm.valid"></button>&nbsp;
+					class="ui-button-success" *ngIf="isNew" [disabled]="!emailValido() || !usuarioForm.valid"></button>&nbsp;
 				<button type="button" pButton icon="pi pi-check" (click)="actualizarUsuario(false)" label="Modificar"
 					class="ui-button-success" *ngIf="!isNew" [disabled]="!usuarioForm.valid"></button>&nbsp;
 			</div>

@@ -9,6 +9,7 @@ import { UsuarioService } from '../../service/usuario/usuario.service';
 import { Message } from 'primeng/api';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Usuario } from 'src/app/domain/usuario.model';
+import { UsuarioRequest } from 'src/app/domain/usuario-request.model';
 
 @Component({
   selector: 'app-modificar-usuario',
@@ -50,7 +51,7 @@ export class ModificarUsuarioPage implements OnInit {
 
   actualizarUsuario() {
     this.blockUI.start('Guardando Usuario...');
-    this.usuarioService.update(this.nuevoUsuario)
+    this.usuarioService.update(this.mapearUsuarioRequest())
       .subscribe((usuario: any) => {
         this.blockUI.stop();
         this.msgs = [];
@@ -81,4 +82,22 @@ export class ModificarUsuarioPage implements OnInit {
   emailValido(){
     return /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(this.nuevoUsuario.email);
   }
+
+  mapearUsuarioRequest(): UsuarioRequest {
+    let roles = [];
+    for (let rol of this.nuevoUsuario.roles) {
+        roles.push(rol.name);
+    }
+
+    let usuarioRequest: UsuarioRequest = {
+        apellido: this.nuevoUsuario.apellido,
+        nombre: this.nuevoUsuario.nombre,
+        email: this.nuevoUsuario.email,
+        empresa: this.nuevoUsuario.empresa,
+        estado: this.nuevoUsuario.estado,
+        roles: roles
+    }
+
+    return usuarioRequest;
+}
 }

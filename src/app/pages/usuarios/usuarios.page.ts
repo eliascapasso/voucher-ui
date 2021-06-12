@@ -215,15 +215,15 @@ export class UsuariosPage implements OnInit {
     mapearUsuarioRequest(modifica: boolean, elimina: boolean): UsuarioRequest {
         let roles = [];
         let empresa: Empresa;
-        if(elimina){
+        if (elimina) {
             empresa = this.nuevoUsuario.empresa;
         }
-        else{
+        else {
             empresa = this.empresas.find(x => x._id == this.empresaSeleccionada);
             this.nuevoUsuario.roles = [];
             this.nuevoUsuario.roles.push(this.roles.find(x => x._id == this.rolSeleccionado));
         }
-        console.log(this.nuevoUsuario.roles);
+        
         for (let rol of this.nuevoUsuario.roles) {
             roles.push(rol.name);
         }
@@ -358,6 +358,10 @@ export class UsuariosPage implements OnInit {
         }
 
         return rolesString;
+    }
+
+    emailValido() {
+        return /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(this.nuevoUsuario.email);
     }
 
     handleChange(event, usuario) {
