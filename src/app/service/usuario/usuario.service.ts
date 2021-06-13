@@ -134,14 +134,12 @@ export class UsuarioService {
     }
 
     public changePassword(resetPassword: ResetPassword): Observable<Usuario> {
-        const url = this.serviceBaseURL + '/user/updatePassword';
+        const url = this.serviceBaseURL + '/usuario/modificarpassword';
 
-        resetPassword.username = this.usuario.email;
-
-        const params = this.createHttpParams({});
-
-        return this.httpClient.post<any>(url, resetPassword, { params })
-            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+        return this.httpClient.put<any>(url, resetPassword)
+            .pipe(
+                catchError((error: HttpErrorResponse) => this.handleError(error))
+            );
     }
 
     public recuperarPassword(email: string): Observable<Usuario> {

@@ -3,13 +3,14 @@ import {
   FormGroup,
   FormBuilder,
   Validators,
-  FormControl,
-  NgForm
+  FormControl
 } from '@angular/forms';
-import { UsuarioService } from '../../service/usuario/usuario.service';
+
 import { Router } from '@angular/router';
+import { Message } from 'primeng/api';
+import { UsuarioService } from '../../service/usuario/usuario.service';
+import { Usuario } from '../../domain/usuario.model';
 import { ResetPassword } from '../../domain/reset.password';
-import { SelectItem, ConfirmationService, Message } from 'primeng/api';
 
 @Component({
   selector: 'app-cambio-password',
@@ -19,6 +20,7 @@ import { SelectItem, ConfirmationService, Message } from 'primeng/api';
 export class CambioPasswordPage implements OnInit {
   public cambioPasswordForm: FormGroup;
   public validationMessages: any;
+  private usuarioActual: Usuario;
 
   public msgs: Message[];
   constructor(
@@ -30,16 +32,15 @@ export class CambioPasswordPage implements OnInit {
   get form() { return this.cambioPasswordForm.controls; }
 
   defineErrorMessageForm() {
-    // severity="info", severity="success", severity="warn", severity="error" 
     this.validationMessages = {
       'oldPassword': [
-        { type: 'required', severity: 'error', message: 'Password Actual es requerido.' }
+        { type: 'required', severity: 'error', message: 'Contraseña Actual es requerida.' }
       ],
       'newPassword': [
-        { type: 'required', severity: 'error', message: 'Password es requerido.' }
+        { type: 'required', severity: 'error', message: 'Contraseña es requerida.' }
       ],
       'newPassword2': [
-        { type: 'required', severity: 'warn', message: 'Repita Password.' }
+        { type: 'required', severity: 'warn', message: 'Repita Contraseña.' }
       ]
     };
   }
@@ -56,6 +57,9 @@ export class CambioPasswordPage implements OnInit {
       this.noIgual.bind(this.cambioPasswordForm) // Agrega referencia a this dentro del metodo noIgual
     ]);
 
+    this.usuarioService.getUserMe().subscribe(usuario => {
+      this.usuarioActual = usuario;
+    });
     this.defineErrorMessageForm();
   }
 
@@ -64,21 +68,27 @@ export class CambioPasswordPage implements OnInit {
       this.msgs = [];
       this.msgs.push({ severity: 'error', summary: `Error `, detail: 'Debe completar todos los campos' });
     }
-    console.log(this.cambioPasswordForm.value);
-    console.log(this.cambioPasswordForm);
-    const resetPassword: ResetPassword = this.cambioPasswordForm.value;
-
-    this.usuarioService.changePassword(resetPassword)
-      .subscribe((user: any) => {
-        console.log('password Actualizada');
-        this.msgs = [];
-        this.msgs.push({ severity: 'success', summary: `Password Actualizada `, detail: `Password Actualizada ${user}` });
-      },
-        error => {
-          console.log(`error al cambiar password ${error}`);
+    else if (!this.validarPassAntigua()) {
+      this.msgs = [];
+      this.msgs.push({ severity: 'error', summary: `Error `, detail: 'Contraseña actual incorrecta' });
+    }
+    else {
+      let resetPassword: ResetPassword = {
+        email: this.usuarioActual.email,
+        password: this.cambioPasswordForm.controls.newPassword.value
+      };
+console.log(resetPassword);
+      this.usuarioService.changePassword(resetPassword)
+        .subscribe((user: any) => {
+          console.log('password Actualizada');
           this.msgs = [];
-          this.msgs.push({ severity: 'error', summary: `error al guardar nueva clave  ${error}`, detail: error });
+          this.msgs.push({ severity: 'success', summary: `Contraseña Actualizada ` });
+        }, error => {
+          console.warn(`error al cambiar contraseña: ${error.message}`);
+          this.msgs = [];
+          this.msgs.push({ severity: 'error', summary: `error al guardar nueva contraseña:  ${error.message}`, detail: error });
         });
+    }
   }
 
   noIgual(control: FormControl): { [s: string]: boolean } {
@@ -92,5 +102,10 @@ export class CambioPasswordPage implements OnInit {
       };
     }
     return null;
+  }
+
+  validarPassAntigua() {
+    //return this.cambioPasswordForm.controls.oldPassword.value === this.usuarioActual.password;
+    return true;
   }
 }
