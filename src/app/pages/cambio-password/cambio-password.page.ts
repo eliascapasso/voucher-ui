@@ -77,12 +77,16 @@ export class CambioPasswordPage implements OnInit {
         email: this.usuarioActual.email,
         password: this.cambioPasswordForm.controls.newPassword.value
       };
-console.log(resetPassword);
+
       this.usuarioService.changePassword(resetPassword)
         .subscribe((user: any) => {
           console.log('password Actualizada');
           this.msgs = [];
           this.msgs.push({ severity: 'success', summary: `Contraseña Actualizada ` });
+
+          setTimeout(() => {
+            this.usuarioService.logout();
+          }, 1500);
         }, error => {
           console.warn(`error al cambiar contraseña: ${error.message}`);
           this.msgs = [];

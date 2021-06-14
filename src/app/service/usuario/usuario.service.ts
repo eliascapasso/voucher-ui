@@ -134,9 +134,10 @@ export class UsuarioService {
     }
 
     public changePassword(resetPassword: ResetPassword): Observable<Usuario> {
-        const url = this.serviceBaseURL + '/usuario/modificarpassword';
+        const url = this.serviceBaseURL + '/usuario/modificarPassword';
 
-        return this.httpClient.put<any>(url, resetPassword)
+        console.log(resetPassword);
+        return this.httpClient.post<any>(url, resetPassword)
             .pipe(
                 catchError((error: HttpErrorResponse) => this.handleError(error))
             );
