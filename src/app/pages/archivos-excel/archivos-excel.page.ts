@@ -33,7 +33,7 @@ export class ArchivosExcelPage implements OnInit {
     public busqueda: string = '';
     public es: any;
     public fecha: Date;
-    
+
     @BlockUI() blockUI: NgBlockUI;
     constructor(
         private archivoExcelService: ArchivoExcelService,
@@ -125,15 +125,12 @@ export class ArchivosExcelPage implements OnInit {
                     this.msgs.push({ severity: 'success', summary: `Archivo excel guardado con exito`, detail: `Archivo excel guardado` });
                     this.displayArchivoExcelModal = false;
                     this.getArchivosExcel();
-                },
-                    error => {
-                        let msj = (error.message) ? error.message : '';
-                        let cause = (error.cause) ? error.cause : '';
-                        this.blockUI.stop();
-                        console.error(`error al guardar archivo excel ${error}`);
-                        this.formMsgs = [];
-                        this.formMsgs.push({ severity: 'error', summary: `Error al guardar el archivo excel ${msj}`, detail: cause });
-                    });
+                }, error => {
+                    this.blockUI.stop();
+                    console.error(`error al guardar archivo excel: ${error.message}`);
+                    this.formMsgs = [];
+                    this.formMsgs.push({ severity: 'error', summary: `Error al guardar el archivo excel: revise el archivo`});
+                });
         }
     }
 
@@ -144,16 +141,16 @@ export class ArchivosExcelPage implements OnInit {
             rejectLabel: 'Cancelar',
             accept: () => {
                 this.archivoExcelService.delete(archivo)
-                    .subscribe( (archivoExcel: any) => {
-                            console.log('archivo excel eliminado');
-                            this.msgs = [];
-                            this.msgs.push({severity: 'success', summary: `Archivo excel eliminado`, detail: `Archivo excel eliminado`});
-                            this.getArchivosExcel();
-                        },
+                    .subscribe((archivoExcel: any) => {
+                        console.log('archivo excel eliminado');
+                        this.msgs = [];
+                        this.msgs.push({ severity: 'success', summary: `Archivo excel eliminado`, detail: `Archivo excel eliminado` });
+                        this.getArchivosExcel();
+                    },
                         error => {
                             console.error(`error al eliminar el archivo excel ${error}`);
                             this.msgs = [];
-                            this.msgs.push({severity: 'error', summary: `error al eliminar el archivo excel ${error}`, detail: error});
+                            this.msgs.push({ severity: 'error', summary: `error al eliminar el archivo excel ${error}`, detail: error });
                         });
             }
         });
@@ -164,11 +161,11 @@ export class ArchivosExcelPage implements OnInit {
         this.displayArchivoExcelModal = true;
     }
 
-    public validar(archivo){
+    public validar(archivo) {
         this.nuevoArchivoExcel.archivo = archivo.srcElement.files[0];
         let ext = this.nuevoArchivoExcel.archivo.name.toString().split('.').pop();
-        
-        if(ext != "xlsx" && ext != "xls"){
+
+        if (ext != "xlsx" && ext != "xls") {
             console.error("Archivo invalido");
             this.nuevoArchivoExcel.archivo = null;
             this.presentToast("Archivo inválido");
@@ -177,7 +174,7 @@ export class ArchivosExcelPage implements OnInit {
 
     public formatearFecha(d): string {
         let date = new Date(d);
-        
+
         let year = date.getFullYear();
         let month = date.getMonth() + 1;
         let day = date.getDate();
@@ -185,7 +182,7 @@ export class ArchivosExcelPage implements OnInit {
         return day + "-" + month + "-" + year;
     }
 
-    public limpiarFiltros(){
+    public limpiarFiltros() {
         this.fecha = null;
         this.filter.estado = "";
         this.busqueda = "";
@@ -194,14 +191,14 @@ export class ArchivosExcelPage implements OnInit {
 
     async presentToast(msj: string) {
         const toast = await this.toastController.create({
-          message: msj,
-          duration: 2000
+            message: msj,
+            duration: 2000
         });
         toast.present();
-      }
+    }
 
     changeFilterHandler(event) {
-        
+
         this.archivosExcel = this.archivosExcelOriginal
             .filter(archivoExcel => {
                 if (this.filter['estado'] != '' && this.filter['estado'].toUpperCase() != 'TODOS') {
@@ -223,7 +220,7 @@ export class ArchivosExcelPage implements OnInit {
                 }
                 return true;
             }).filter(archivoExcel => {
-                if(this.fecha){
+                if (this.fecha) {
                     return archivoExcel.fecha && this.formatearFecha(archivoExcel.fecha).toLowerCase().includes(this.formatearFecha(this.fecha).toLowerCase());
                 }
 
@@ -237,8 +234,8 @@ export class ArchivosExcelPage implements OnInit {
         }
     }
 
-    cerrarModal(){
+    cerrarModal() {
         this.getArchivosExcel();
-        this.displayArchivoExcelModal=false
+        this.displayArchivoExcelModal = false
     }
 }

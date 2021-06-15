@@ -23,6 +23,10 @@ const routes: Routes = [
     canActivate: [LoginGuardGuard]
   },
   {
+    path: 'pass-reset',
+    loadChildren: './pages/cambio-password-recuperada/cambio-password-recuperada.module#CambioPasswordRecuperadaPageModule'
+  },
+  {
     path: 'modificar-usuario',
     loadChildren: './pages/modificar-usuario/modificar-usuario.module#ModificarUsuarioPageModule',
     canActivate: [LoginGuardGuard]
