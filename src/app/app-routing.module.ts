@@ -5,7 +5,7 @@ import { LoginGuardGuard } from './service/guards/login-guard.guard';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'vouchers',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {

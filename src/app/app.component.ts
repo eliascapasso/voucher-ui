@@ -43,6 +43,13 @@ export class AppComponent implements OnInit {
     return !(localStorage.getItem('rol') == "OPERATIVO_EMPRESA");
   }
 
+  get permisoExcel(): boolean {
+    return localStorage.getItem('rol') == "ADMIN"
+        || localStorage.getItem('rol') == "ROOT"
+        || localStorage.getItem('rol') == "OPERATIVO_EMPRESA"
+        || localStorage.getItem('rol') == "VISTA";
+}
+
   ngOnInit() { }
 
   isLogedIn() {

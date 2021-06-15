@@ -78,6 +78,12 @@ export class ArchivosExcelPage implements OnInit {
         this.getArchivosExcel();
     }
 
+    get permisoAltaBaja(): boolean {
+        return localStorage.getItem('rol') == "ADMIN"
+            || localStorage.getItem('rol') == "ROOT"
+            || localStorage.getItem('rol') == "OPERATIVO_EMPRESA";
+    }
+
     getArchivosExcel() {
         var $this = this;
         $this.nuevoArchivoExcel = {};
@@ -86,8 +92,6 @@ export class ArchivosExcelPage implements OnInit {
         $this.blockUI.start("Cargando archivos excel...");
         $this.archivoExcelService.getArchivosExcel().then(archExcel => {
             $this.blockUI.stop();
-
-            console.log(archExcel);
 
             if (archExcel.length < 1) {
                 $this.showTabla = false;

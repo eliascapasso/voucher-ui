@@ -91,6 +91,14 @@ export class VouchersPage implements OnInit {
         this.getVouchers({});
     }
 
+    get permisoDetalle(): boolean {
+        return localStorage.getItem('rol') == "ADMIN"
+            || localStorage.getItem('rol') == "ROOT"
+            || localStorage.getItem('rol') == "ADMIN_PARTNER"
+            || localStorage.getItem('rol') == "VENTA"
+            || localStorage.getItem('rol') == "VISTA";
+    }
+
     ngAfterContentChecked() {
         this.cdref.detectChanges();
     }

@@ -120,7 +120,7 @@
 															(click)="showFechaVencimiento(rowData)"
 															*ngIf="formatearEstado(rowData['estado'])=='VENCIDO'"></i>&nbsp;
 														<i class="pi pi-eye" style="font-size: 2em; cursor: pointer;"
-															(click)="showVoucher(rowData)"></i>&nbsp;
+															(click)="showVoucher(rowData)" *ngIf="permisoDetalle"></i>&nbsp;
 														<i class="pi pi-trash" style="font-size: 2em; cursor: pointer;"
 															(click)="confirmDelete(rowData)"></i>
 													</div>

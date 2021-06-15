@@ -13,7 +13,7 @@
 								<ion-col>
 									<div class="ui-fluid">
 
-										<div class="ui-g-4 ui-md-4" style="width: 100%;">
+										<div class="ui-g-4 ui-md-4" style="width: 100%;" *ngIf="permisoAltaBaja">
 											<span>
 												<button pButton type="button" class="ui-button-success"
 													icon="pi pi-upload" label="Cargar archivo excel"
@@ -100,7 +100,8 @@
 													</div>
 												</td>
 												<td>
-													<div style="text-align: center" *ngIf="rowData['estado']=='IMPORTANDO'">
+													<div style="text-align: center"
+														*ngIf="rowData['estado']=='IMPORTANDO' && permisoAltaBaja">
 														<i class="pi pi-trash" style="font-size: 2em; cursor: pointer;"
 															(click)="confirmDelete(rowData)"></i>
 													</div>
@@ -148,8 +149,8 @@
 
 		<p-footer>
 			<div class="ui-g-12 ui-md-12" style="text-align: right">
-				<button type="button" pButton icon="pi pi-times" (click)="cerrarModal()"
-					label="Cancelar" class="ui-button-danger"></button>&nbsp;
+				<button type="button" pButton icon="pi pi-times" (click)="cerrarModal()" label="Cancelar"
+					class="ui-button-danger"></button>&nbsp;
 				<button type="button" pButton icon="pi pi-check" (click)="guardarArchivoExcel()" label="Guardar"
 					class="ui-button-success"></button>&nbsp;
 			</div>
