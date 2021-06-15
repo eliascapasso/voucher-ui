@@ -82,7 +82,7 @@
 								</ion-col>
 								<ion-col *ngIf="showTabla">
 									<p-table [columns]="columnas" [value]="vouchers" [style]="{'margin-bottom':'20px'}"
-										[paginator]="true" [rows]="ROWS" [lazy]="true" [totalRecords]="totalRecords"
+										[paginator]="true" [rows]="ROWS" [totalRecords]="totalRecords"
 										[rowsPerPageOptions]="[3,5,10,15]" (onLazyLoad)="getVouchers($event)">
 										<ng-template pTemplate="caption">
 											Vouchers

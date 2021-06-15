@@ -39,6 +39,10 @@ export class AppComponent implements OnInit {
     });
   }
 
+  get permisoVoucher(): boolean {
+    return !(localStorage.getItem('rol') == "OPERATIVO_EMPRESA");
+  }
+
   ngOnInit() { }
 
   isLogedIn() {

@@ -135,6 +135,15 @@ export class UsuarioService {
                                 localStorage.setItem("rol", user.roles[i].name);
                             }
                         }
+                        if(user.empresa != null){
+                            localStorage.setItem("empresa", user.empresa.empresa);
+                        }
+                        if(!(user.empresa.empresa == "OPERATIVO_EMPRESA")){
+                            this.router.navigate(['/vouchers']);
+                        }
+                        else{
+                            this.router.navigate(['/archivos-excel']);
+                        }
                     });
                 }),
                 catchError((error: HttpErrorResponse) => this.handleError(error))

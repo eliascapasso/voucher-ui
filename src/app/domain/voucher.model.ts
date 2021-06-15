@@ -20,4 +20,5 @@ export interface Voucher {
   fecha?: any;
   estado?: string;
   empresa?: string;
+  empresaEmision?: string;
 }

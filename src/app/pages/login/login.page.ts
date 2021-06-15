@@ -82,7 +82,6 @@ export class LoginPage implements OnInit, AfterViewInit {
           (user: any) => {
             this.userLogin = user;
             this.menuCtrl.enable(true);
-            this.router.navigate(['/vouchers']);
           },
           error => {
             {

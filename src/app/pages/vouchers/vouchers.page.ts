@@ -72,7 +72,7 @@ export class VouchersPage implements OnInit {
             { field: 'fechaDesde', header: 'Vigente desde', fechaDesde: true },
             { field: 'fechaHasta', header: 'Vencimiento', fechaHasta: true },
             { field: 'estado', header: 'Estado', estado: true },
-            { field: 'empresa', header: 'Empresa' },
+            { field: 'empresaEmision', header: 'Empresa' }
         ];
 
         this.voucherForm = this.formBuilder.group({
@@ -108,20 +108,20 @@ export class VouchersPage implements OnInit {
         this.nuevoVoucher = {};
         $this.vouchers = [];
 
-        let size = event.rows != undefined ? event.rows : this.ROWS;
-        let page = event.first != undefined ? event.first / event.rows : 0;
+        // let size = event.rows != undefined ? event.rows : this.ROWS;
+        // let page = event.first != undefined ? event.first / event.rows : 0;
 
         $this.blockUI.start("Cargando vouchers...");
-        $this.voucherService.getVouchersFiltro(this.filter, size, page).then(vouchers => {
+        $this.voucherService.getVouchers().then(vouchers => {
             $this.blockUI.stop();
-
-            $this.totalRecords = vouchers.totalItems;
+            
+            $this.vouchersOriginal = $this.filtrarPorRol(vouchers);
+            $this.vouchers = $this.filtrarPorRol(vouchers);
+            $this.totalRecords = $this.vouchers.length;
 
             if ($this.totalRecords < 1) {
                 $this.showTabla = false;
             } else {
-                $this.vouchersOriginal = vouchers.estados;
-                $this.vouchers = vouchers.estados;
                 $this.showTabla = true;
             }
         })
@@ -131,6 +131,30 @@ export class VouchersPage implements OnInit {
                 $this.formMsgs = [];
                 $this.formMsgs.push({ severity: 'error', summary: `Error al obtener los vouchers ${error}`, detail: error });
             });
+    }
+
+    filtrarPorRol(vouchers: Voucher[]): Voucher[] {
+        let result: Voucher[] = [];
+        for (let voucher of vouchers) {
+            switch (localStorage.getItem("rol")) {
+                case "ADMIN_PARTNER":
+                    if (voucher.empresaEmision.toUpperCase() == "EMSA") {
+                        result.push(voucher);
+                    }
+                    break;
+                case "ADMIN":
+                    if (voucher.empresaEmision.toUpperCase() == "CARSA") {
+                        result.push(voucher);
+                    }
+                    break;
+                case "OPERATIVO_EMPRESA":
+                    break;
+                default:
+                    result.push(voucher);
+            }
+        }
+
+        return result;
     }
 
     actualizarVoucher() {
@@ -344,8 +368,8 @@ export class VouchersPage implements OnInit {
         }
     }
 
-    cerrarModal(){
+    cerrarModal() {
         this.getVouchers({});
-        this.displayFechaVencimiento=false
+        this.displayFechaVencimiento = false
     }
 }
