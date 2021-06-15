@@ -18,7 +18,7 @@ import { Empresa } from 'src/app/domain/empresa.model';
     providedIn: 'root'
 })
 export class UsuarioService {
-    public usuario: Usuario;
+    public usuarioActual: Usuario = {};
     public usuarioLoginNotification = new BehaviorSubject<Usuario>({ email: 'SIN IDENTIFICACION' });
 
     private get serviceBaseURL(): string {
@@ -45,9 +45,10 @@ export class UsuarioService {
 
         return this.httpClient.get<Usuario>(url, { params })
             .pipe(
-                map((data: Usuario) => {
-                    this.usuarioLoginNotification.next(data);
-                    return this.usuario = data;
+                map((usuario: Usuario) => {
+                    this.usuarioLoginNotification.next(usuario);
+                    this.usuarioActual = usuario;
+                    return usuario;
                 }),
                 catchError((error: HttpErrorResponse) => this.handleError(error))
             );
@@ -102,7 +103,7 @@ export class UsuarioService {
     /* OTHERS */
 
     logout() {
-        this.usuario = null;
+        this.usuarioActual = null;
         localStorage.clear();
         this.menuCtrl.enable(false);
         this.usuarioLoginNotification.next({ email: 'SIN IDENTIFICAR' });
@@ -127,7 +128,14 @@ export class UsuarioService {
                     console.info(data);
                     localStorage.setItem('accessToken', data.accessToken);
                     localStorage.setItem('email', usuarioLogin.email);
-                    this.getUserMe();
+
+                    this.getUserMe().subscribe(user => {
+                        if (user.roles != null) {
+                            for (let i = 0; i < user.roles.length; i++) {
+                                localStorage.setItem("rol", user.roles[i].name);
+                            }
+                        }
+                    });
                 }),
                 catchError((error: HttpErrorResponse) => this.handleError(error))
             );

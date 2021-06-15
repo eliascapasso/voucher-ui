@@ -23,6 +23,7 @@ export class PopoverMenuComponent {
     }
 
     logout() {
+        location.reload();
         this.menuCtrl.enable(false);
         this.usuarioService.logout();
     }

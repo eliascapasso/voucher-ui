@@ -1,9 +1,8 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 
-import { Platform, MenuController, IonItem } from "@ionic/angular";
+import { Platform, MenuController } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
-import { MenuItem } from "primeng/api";
 import { Usuario } from "./domain/usuario.model";
 import { UsuarioService } from "./service/usuario/usuario.service";
 import { environment } from 'src/environments/environment';
@@ -15,9 +14,8 @@ import { environment } from 'src/environments/environment';
 })
 export class AppComponent implements OnInit {
   verUsuarios: boolean = false;
-  userLogin: Usuario;
+  usuarioActual: Usuario;
   isConf: number = 0;
-
   empresa: string;
 
   constructor(
@@ -38,9 +36,6 @@ export class AppComponent implements OnInit {
       this.empresa = environment.empresa;
 
       this.menuCtrl.enable(true);
-      // this.usuarioService.getUserMe().subscribe(user => {
-      //   this.userLogin = user;
-      // });
     });
   }
 

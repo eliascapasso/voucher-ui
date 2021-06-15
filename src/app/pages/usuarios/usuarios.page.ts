@@ -60,6 +60,7 @@ export class UsuariosPage implements OnInit {
             { field: 'nombre', header: 'Nombre' },
             { field: 'apellido', header: 'Apellido' },
             { field: 'email', header: 'Email' },
+            { field: 'empresa', header: 'Empresa', empresa: true },
             { field: 'roles', header: 'Rol', role: true }
         ];
 
@@ -77,6 +78,24 @@ export class UsuariosPage implements OnInit {
 
     ngOnDestroy() {
         this.suscriptionUser.unsubscribe();
+    }
+
+    get isRoot(): boolean {
+        return localStorage.getItem('rol') == "ROOT";
+    }
+
+    get permisoAlta(): boolean {
+        return localStorage.getItem('rol') == "ADMIN"
+            || localStorage.getItem('rol') == "ROOT"
+            || localStorage.getItem('rol') == "ADMIN_PARTNER";
+    }
+
+    get permisoModificar(): boolean {
+        return localStorage.getItem('rol') == "ADMIN"
+            || localStorage.getItem('rol') == "ROOT"
+            || localStorage.getItem('rol') == "ADMIN_PARTNER"
+            || localStorage.getItem('rol') == "OPERATIVO_EMPRESA"
+            || localStorage.getItem('rol') == "VENTA";
     }
 
     noIgual(control: FormControl): { [s: string]: boolean } {
@@ -103,6 +122,8 @@ export class UsuariosPage implements OnInit {
 
     async getEmpresas() {
         try {
+            this.empresas = [];
+            this.empresasSelect = [];
             let empresas = await this.usuarioService.getEmpresas();
             this.empresas = empresas;
 
@@ -119,17 +140,39 @@ export class UsuariosPage implements OnInit {
 
     async getRoles() {
         try {
+            this.roles = [];
+            this.rolesSelect = [];
             let roles = await this.usuarioService.getRoles();
-            for (let i = 0; i < roles.length; i++) {
-                this.rolesSelect.push({ label: roles[i].name, value: roles[i]._id });
+            this.roles = this.filtrarRolesPorRol(roles);
+
+            for (let i = 0; i < this.roles.length; i++) {
+                this.rolesSelect.push({ label: this.roles[i].name, value: this.roles[i]._id });
             }
-            this.roles = roles;
         } catch (error) {
             console.warn(`error al obtener los roles de usuario: ${error.message}`);
             this.msgs = [];
             this.msgs.push({ severity: 'error', summary: `Error al obtener los roles de usuario ${error.message}` });
             this.getUsuarios();
         }
+    }
+
+    filtrarRolesPorRol(roles: Role[]) {
+        let result: Role[] = [];
+        for (let roleUsuario of this.usuarioActual.roles) {
+            for (let rol of roles) {
+                switch (roleUsuario.name) {
+                    case "ADMIN_PARTNER":
+                        if (rol.name == "VISTA" || rol.name == "VENTA" || rol.name == "ADMIN_PARTNER") {
+                            result.push(rol);
+                        }
+                        break;
+                    default:
+                        result.push(rol);
+                }
+            }
+        }
+
+        return result;
     }
 
     async getUsuarios() {
@@ -140,8 +183,8 @@ export class UsuariosPage implements OnInit {
             if (usuarios.length < 1) {
                 this.showTabla = false;
             } else {
-                this.usuariosOriginal = usuarios;;
-                this.usuarios = usuarios;
+                this.usuariosOriginal = this.filtrarUsuariosPorRol(usuarios);
+                this.usuarios = this.filtrarUsuariosPorRol(usuarios);
                 this.showTabla = true;
             }
         } catch (error) {
@@ -150,6 +193,28 @@ export class UsuariosPage implements OnInit {
             this.msgs = [];
             this.msgs.push({ severity: 'error', summary: `Error al obtener los usuarios: ${error.message}` });
         }
+    }
+
+    filtrarUsuariosPorRol(usuarios: Usuario[]) {
+        let result: Usuario[] = [];
+        let rolesActual = this.usuarioActual.roles;
+        for(let usuario of usuarios){
+            for (let roleUsuarioActual of rolesActual) {
+                for (let rol of usuario.roles) {
+                    switch (roleUsuarioActual.name) {
+                        case "ADMIN_PARTNER":
+                            if (rol.name == "VISTA" || rol.name == "VENTA" || rol.name == "ADMIN_PARTNER") {
+                                result.push(usuario);
+                            }
+                            break;
+                        default:
+                            result.push(usuario);
+                    }
+                }
+            }
+        }
+        
+        return result;
     }
 
     guardarUsuario() {
@@ -223,7 +288,7 @@ export class UsuariosPage implements OnInit {
             this.nuevoUsuario.roles = [];
             this.nuevoUsuario.roles.push(this.roles.find(x => x._id == this.rolSeleccionado));
         }
-        
+
         for (let rol of this.nuevoUsuario.roles) {
             roles.push(rol.name);
         }
@@ -263,12 +328,13 @@ export class UsuariosPage implements OnInit {
         this.usuarioForm.get('nombre').setValue('');
         this.usuarioForm.get('apellido').setValue('');
         this.usuarioForm.get('correo').setValue('');
-        this.usuarioForm.get('empresa').setValue('');
         this.usuarioForm.get('roles').setValue('');
         this.usuarioForm.get('estado').setValue(true);
         this.usuarioForm.get('newPassword').setValue('');
         this.usuarioForm.get('newPassword2').setValue('');
         this.usuarioForm.controls['correo'].enable();
+
+        this.setearEmpresaPorRol();
         this.displayUsuarioModal = true;
     }
 
@@ -290,6 +356,20 @@ export class UsuariosPage implements OnInit {
         this.usuarioForm.get('estado').setValue(this.nuevoUsuario.estado);
         this.usuarioForm.controls['correo'].disable();
         this.displayUsuarioModal = true;
+    }
+
+    setearEmpresaPorRol() {
+        for (let roleUsuario of this.usuarioActual.roles) {
+            switch (roleUsuario.name) {
+                case "ADMIN_PARTNER":
+                    this.empresaSeleccionada = this.usuarioActual.empresa._id;
+                    this.usuarioForm.get('empresa').disable();
+                    break;
+                default:
+                    this.usuarioForm.get('empresa').enable();
+                    this.usuarioForm.get('empresa').setValue('');
+            }
+        }
     }
 
     cerrarModal() {
