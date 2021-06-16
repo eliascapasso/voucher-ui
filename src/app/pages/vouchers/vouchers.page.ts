@@ -27,16 +27,19 @@ export class VouchersPage implements OnInit {
     public showTabla: boolean = false
     public voucherForm: FormGroup;
     public msgs: Message[];
+    public motivomsg: Message[];
     public formMsgs: Message[];
     public displayVouchersModal: boolean = false;
     public estados: any[] = [];
     public filter = { name: '', estado: '', desde: '', hasta: '' };
+    public observacionBaja: string = "";
     public busqueda: string = '';
     public es: any;
     public fechaDesde: Date;
     public fechaHasta: Date;
     public displayVoucherModal: boolean = false;
     public displayFechaVencimiento: boolean = false;
+    public displayObservacionBaja: boolean = false;
     public totalRecords: number = 0;
     public ROWS = 3;
 
@@ -122,7 +125,7 @@ export class VouchersPage implements OnInit {
         $this.blockUI.start("Cargando vouchers...");
         $this.voucherService.getVouchers().then(vouchers => {
             $this.blockUI.stop();
-            
+
             $this.vouchersOriginal = $this.filtrarPorRol(vouchers);
             $this.vouchers = $this.filtrarPorRol(vouchers);
             $this.totalRecords = $this.vouchers.length;
@@ -184,7 +187,7 @@ export class VouchersPage implements OnInit {
         this.displayFechaVencimiento = false;
     }
 
-    confirmDelete(voucher) {
+    confirmDelete(voucher: Voucher) {
         this.confirmationService.confirm({
             message: '¿Esta seguro que desea eliminar el voucher?',
             acceptLabel: 'Confirmar',
@@ -196,24 +199,73 @@ export class VouchersPage implements OnInit {
                         this.msgs = [];
                         this.msgs.push({ severity: 'success', summary: `Voucher eliminado`, detail: `Voucher eliminado` });
                         this.getVouchers({});
-                    },
-                        error => {
-                            console.error(`error al eliminar el voucher ${error}`);
-                            this.msgs = [];
-                            this.msgs.push({ severity: 'error', summary: `error al eliminar el voucher ${error}`, detail: error });
-                        });
+                    }, error => {
+                        console.error(`error al reemplazar el voucher: ${error.message}`);
+                        this.msgs = [];
+                        this.msgs.push({ severity: 'error', summary: `error al reemplazar el voucher: ${error.message}` });
+                    });
             }
         });
     }
 
+    eliminarUtilizado() {
+        if (this.nuevoVoucher.observacion != null && this.nuevoVoucher.observacion != undefined && this.nuevoVoucher.observacion != "") {
+            this.voucherService.noDisponible(this.nuevoVoucher)
+                .subscribe((voucher: any) => {
+                    console.log('voucher pasado a no-disponible');
+                    this.msgs = [];
+                    this.msgs.push({ severity: 'success', summary: `Voucher actualizado`, detail: `Voucher pasado a estado NO-DISPONIBLE` });
+                    this.getVouchers({});
+                    this.cerrarModal();
+                }, error => {
+                    console.error(`error al actualizar el voucher: ${error.message}`);
+                    this.msgs = [];
+                    this.msgs.push({ severity: 'error', summary: `Error al actualizar el voucher: ${error.message}` });
+                });
+        }
+        else {
+            this.motivomsg = [];
+            this.motivomsg.push({ severity: 'error', summary: `Debe ingresar el motivo` });
+        }
+    }
+
+    reemplazarVoucher(voucher: Voucher) {
+        this.confirmationService.confirm({
+            message: '¿Desea realizar reemplazo del Voucher N° '+voucher.codigoVoucher+'?',
+            acceptLabel: 'Confirmar',
+            rejectLabel: 'Cancelar',
+            accept: () => {
+                this.voucherService.duplicar(voucher)
+                    .subscribe((voucher: any) => {
+                        console.log('voucher reemplazado');
+                        this.msgs = [];
+                        this.msgs.push({ severity: 'success', summary: `Voucher reemplazado`, detail: `Voucher reemplazado` });
+                        this.getVouchers({});
+                    }, error => {
+                        console.error(`error al reemplazar el voucher: ${error.message}`);
+                        this.msgs = [];
+                        this.msgs.push({ severity: 'error', summary: `error al reemplazar el voucher: ${error.message}` });
+                    });
+            }
+        });
+    }
+
+    public existeDuplicado(voucher: Voucher){
+        return voucher.estadosPasados.toUpperCase().includes("DUPLICADO");
+    }
+
     public formatearFecha(d): string {
-        let date = new Date(d);
+        if (d != undefined) {
+            let date = new Date(d);
 
-        let year = date.getFullYear();
-        let month = date.getMonth() + 1;
-        let day = date.getDate();
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
 
-        return day + "-" + month + "-" + year;
+            return day + "-" + month + "-" + year;
+        }
+
+        return "-";
     }
 
     public limpiarFiltros() {
@@ -357,6 +409,13 @@ export class VouchersPage implements OnInit {
         }
     }
 
+    showMotivoBaja(voucher: Voucher) {
+        this.displayObservacionBaja = true;
+        voucher.fechaDesde = new Date(voucher.fechaDesde);
+        voucher.fechaHasta = new Date(voucher.fechaHasta);
+        this.nuevoVoucher = voucher;
+    }
+
     formatearEstado(estado) {
         switch (estado) {
             case "E":
@@ -378,6 +437,8 @@ export class VouchersPage implements OnInit {
 
     cerrarModal() {
         this.getVouchers({});
-        this.displayFechaVencimiento = false
+        this.displayFechaVencimiento = false;
+        this.displayObservacionBaja = false;
+        this.displayVouchersModal = false;
     }
 }

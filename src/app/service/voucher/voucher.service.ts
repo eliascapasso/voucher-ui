@@ -63,7 +63,7 @@ export class VoucherService {
     /* DELETE METHODS */
 
     public delete(voucher: Voucher): Observable<void> {
-        const url = this.serviceBaseURL + '';
+        const url = this.serviceBaseURL + '/voucher/eliminar';
 
         return this.httpClient.put<void>(url, voucher)
             .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
@@ -91,6 +91,20 @@ export class VoucherService {
             .pipe(
                 catchError((error: HttpErrorResponse) => this.handleError(error))
             );
+    }
+
+    public noDisponible(voucher: Voucher): Observable<void> {
+        const url = this.serviceBaseURL + '/voucher/no-disponible';
+
+        return this.httpClient.put<void>(url, voucher)
+            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+    }
+
+    public duplicar(voucher: Voucher): Observable<void> {
+        const url = this.serviceBaseURL + '/voucher/duplicado';
+
+        return this.httpClient.put<void>(url, voucher)
+            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
     /* HELPERS */

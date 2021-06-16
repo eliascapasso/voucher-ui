@@ -16,7 +16,7 @@ export interface Voucher {
   fechaDesde?: Date;
   facturaAsociada?: any;
   excel?:ArchivoExcel;
-  estadosPasados?:any;
+  estadosPasados?: string;
   fecha?: any;
   estado?: string;
   empresa?: string;

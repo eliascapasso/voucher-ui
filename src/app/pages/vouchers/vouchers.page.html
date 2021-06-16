@@ -116,13 +116,21 @@
 												</td>
 												<td>
 													<div style="text-align: center">
+														<i class="pi pi-copy" style="font-size: 2em; cursor: pointer;"
+															(click)="reemplazarVoucher(rowData)"
+															*ngIf="formatearEstado(rowData['estado'])=='NO DISPONIBLE' && !existeDuplicado(rowData)"></i>&nbsp;
 														<i class="pi pi-pencil" style="font-size: 2em; cursor: pointer;"
 															(click)="showFechaVencimiento(rowData)"
 															*ngIf="formatearEstado(rowData['estado'])=='VENCIDO'"></i>&nbsp;
 														<i class="pi pi-eye" style="font-size: 2em; cursor: pointer;"
-															(click)="showVoucher(rowData)" *ngIf="permisoDetalle"></i>&nbsp;
+															(click)="showVoucher(rowData)"
+															*ngIf="permisoDetalle"></i>&nbsp;
 														<i class="pi pi-trash" style="font-size: 2em; cursor: pointer;"
-															(click)="confirmDelete(rowData)"></i>
+															(click)="confirmDelete(rowData)"
+															*ngIf="formatearEstado(rowData['estado'])=='EMITIDO'"></i>
+														<i class="pi pi-trash" style="font-size: 2em; cursor: pointer;"
+															(click)="showMotivoBaja(rowData)"
+															*ngIf="formatearEstado(rowData['estado'])=='UTILIZADO'"></i>
 													</div>
 												</td>
 											</tr>
@@ -238,9 +246,9 @@
 				<div class="ui-g form-group">
 					<div class="ui-g-6 ui-md-6" style="width: 100%;">
 						<span class="ui-float-label">
-							<p-calendar [locale]="es" [showIcon]="true" [minDate]="vencimientoNuevoVoucher" [(ngModel)]="nuevoVoucher.fechaHasta"
-								[inline]="true" [monthNavigator]="true" dateFormat="dd-mm-yy"
-								[readonlyInput]="true">
+							<p-calendar [locale]="es" [showIcon]="true" [minDate]="vencimientoNuevoVoucher"
+								[(ngModel)]="nuevoVoucher.fechaHasta" [inline]="true" [monthNavigator]="true"
+								dateFormat="dd-mm-yy" [readonlyInput]="true">
 							</p-calendar>
 						</span>
 					</div>
@@ -257,6 +265,39 @@
 				class="ui-button-success"></button>&nbsp;
 		</div>
 	</p-footer>
+</p-dialog>
 
+<!-- OBSERVACION BAJA -->
+<p-dialog [(visible)]="displayObservacionBaja" [modal]="true" [responsive]="true"
+	[style]="{width: 'auto', 'height': 'auto'}" [maximizable]="false" [baseZIndex]="10000" appendTo="body">
+	<p-growl [(value)]="motivomsg">
+	</p-growl>
+	<p-header>
+		Motivo baja de voucher
+	</p-header>
+
+	<div class="ui-fluid">
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<div class="ui-g form-group">
+					<div class="ui-g-6 ui-md-6" style="width: 100%;">
+						<span class="md-inputfield">
+							<input type="text" pInputText [(ngModel)]="nuevoVoucher.observacion"
+								placeholder="Observación" />
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<p-footer>
+		<div class="ui-g-12 ui-md-12" style="text-align: right">
+			<button type="button" pButton icon="pi pi-times" (click)="cerrarModal()" label="Cerrar"
+				class="ui-button-danger"></button>&nbsp;
+			<button type="button" pButton icon="pi pi-check" (click)="eliminarUtilizado()" label="Aceptar"
+				class="ui-button-success"></button>&nbsp;
+		</div>
+	</p-footer>
 </p-dialog>
 <app-footer></app-footer>
