@@ -39,10 +39,10 @@ export class CambioPasswordRecuperadaPage implements OnInit {
     // severity="info", severity="success", severity="warn", severity="error" 
     this.validationMessages = {
       'newPassword': [
-        { type: 'required', severity: 'error', message: 'Password es requerido.' }
+        { type: 'required', severity: 'error', message: 'Contraseña es requerida.' }
       ],
       'newPassword2': [
-        { type: 'required', severity: 'warn', message: 'Repita Password.' }
+        { type: 'required', severity: 'warn', message: 'Repita contraseña.' }
       ]
     };
   }
@@ -83,14 +83,14 @@ export class CambioPasswordRecuperadaPage implements OnInit {
 
     // this.usuarioService.resetPassword(resetPassword)
     //   .subscribe((user: any) => {
-    //     console.info('password Actualizada');
+    //     console.info('contraseña Actualizada');
     //     this.msgs = [];
-    //     this.msgs.push({ severity: 'success', summary: `Password Actualizada `, detail: `Password Actualizada` });
+    //     this.msgs.push({ severity: 'success', summary: `Contraseña Actualizada `, detail: `Contraseña Actualizada` });
 
     //     this.router.navigateByUrl('/login');
     //   },
     //     error => {
-    //       console.error(`error al cambiar password ${error}`);
+    //       console.error(`error al cambiar contraseña ${error.message}`);
     //       this.msgs = [];
     //       this.msgs.push({ severity: 'error', summary: 'Error: ' + error.message });
     //     });
