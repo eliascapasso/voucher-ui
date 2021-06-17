@@ -41,7 +41,7 @@ export class VouchersPage implements OnInit {
     public displayFechaVencimiento: boolean = false;
     public displayObservacionBaja: boolean = false;
     public totalRecords: number = 0;
-    public ROWS = 3;
+    public ROWS = 5;
 
     @BlockUI() blockUI: NgBlockUI;
     constructor(
@@ -119,17 +119,17 @@ export class VouchersPage implements OnInit {
         this.nuevoVoucher = {};
         $this.vouchers = [];
 
-        // let size = event.rows != undefined ? event.rows : this.ROWS;
-        // let page = event.first != undefined ? event.first / event.rows : 0;
+        let size = event.rows != undefined ? event.rows : this.ROWS;
+        let page = event.first != undefined ? event.first / event.rows : 0;
 
         $this.blockUI.start("Cargando vouchers...");
-        $this.voucherService.getVouchers().then(vouchers => {
+        $this.voucherService.getVouchersFiltro(this.filter, size, page).then(vouchers => {
             $this.blockUI.stop();
-
-            $this.vouchersOriginal = $this.filtrarPorRol(vouchers);
-            $this.vouchers = $this.filtrarPorRol(vouchers);
-            $this.totalRecords = $this.vouchers.length;
-
+            
+            $this.vouchersOriginal = $this.filtrarPorRol(vouchers.estados);
+            $this.vouchers = $this.filtrarPorRol(vouchers.estados);
+            $this.totalRecords = vouchers.totalItems;
+            
             if ($this.totalRecords < 1) {
                 $this.showTabla = false;
             } else {
