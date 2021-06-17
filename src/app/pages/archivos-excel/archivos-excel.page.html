@@ -101,7 +101,9 @@
 												</td>
 												<td>
 													<div style="text-align: center"
-														*ngIf="rowData['estado']=='IMPORTANDO' && permisoAltaBaja">
+														*ngIf="(rowData['estado']=='IMPORTANDO' || rowData['estado']=='IMPORTADO') && permisoAltaBaja">
+														<i class="pi pi-check" style="font-size: 2em; cursor: pointer;"
+															(click)="confirmDisponibilizar(rowData)"></i>&nbsp;
 														<i class="pi pi-trash" style="font-size: 2em; cursor: pointer;"
 															(click)="confirmDelete(rowData)"></i>
 													</div>

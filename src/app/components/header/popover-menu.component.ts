@@ -10,9 +10,10 @@ import {Usuario} from '../../domain/usuario.model';
     styleUrls: ['./popover-menu.component.scss'],
 })
 export class PopoverMenuComponent {
-    userLogin: Usuario;
+    userLogin: Usuario = {};
 
     constructor(public menuCtrl: MenuController, public popoverController: PopoverController, private usuarioService: UsuarioService) {
+        this.userLogin.apellido = "Usuario";
         this.usuarioService.getUserMe().subscribe(usuario => {
             this.userLogin = usuario;
         });

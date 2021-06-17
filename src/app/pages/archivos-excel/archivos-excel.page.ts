@@ -129,28 +129,50 @@ export class ArchivosExcelPage implements OnInit {
                     this.blockUI.stop();
                     console.error(`error al guardar archivo excel: ${error.message}`);
                     this.formMsgs = [];
-                    this.formMsgs.push({ severity: 'error', summary: `Error al guardar el archivo excel: revise el archivo`});
+                    this.formMsgs.push({ severity: 'error', summary: `Error al guardar archivo excel: ${error.message}` });
                 });
         }
     }
 
     confirmDelete(archivo) {
         this.confirmationService.confirm({
-            message: '¿Esta seguro que desea eliminar el archivo?',
+            message: '¿Esta seguro que desea cancelar el archivo excel?',
             acceptLabel: 'Confirmar',
             rejectLabel: 'Cancelar',
             accept: () => {
-                this.archivoExcelService.delete(archivo)
+                this.archivoExcelService.cancelar(archivo)
                     .subscribe((archivoExcel: any) => {
-                        console.log('archivo excel eliminado');
+                        console.log('archivo excel cancelado');
                         this.msgs = [];
-                        this.msgs.push({ severity: 'success', summary: `Archivo excel eliminado`, detail: `Archivo excel eliminado` });
+                        this.msgs.push({ severity: 'success', summary: `Archivo excel cancelado`, detail: `Archivo excel cancelado` });
                         this.getArchivosExcel();
                     },
                         error => {
-                            console.error(`error al eliminar el archivo excel ${error}`);
+                            console.error(`error al cancelar el archivo excel: ${error.message}`);
                             this.msgs = [];
-                            this.msgs.push({ severity: 'error', summary: `error al eliminar el archivo excel ${error}`, detail: error });
+                            this.msgs.push({ severity: 'error', summary: `Error al cancelar el archivo excel: ${error.message}` });
+                        });
+            }
+        });
+    }
+
+    confirmDisponibilizar(archivo) {
+        this.confirmationService.confirm({
+            message: '¿Esta seguro que desea disponibilizar el archivo?',
+            acceptLabel: 'Confirmar',
+            rejectLabel: 'Cancelar',
+            accept: () => {
+                this.archivoExcelService.disponibilizar(archivo)
+                    .subscribe((archivoExcel: any) => {
+                        console.log('archivo excel disponible');
+                        this.msgs = [];
+                        this.msgs.push({ severity: 'success', summary: `Archivo excel disponible`, detail: `Archivo excel disponible` });
+                        this.getArchivosExcel();
+                    },
+                        error => {
+                            console.error(`error al disponibilizar el archivo excel: ${error.message}`);
+                            this.msgs = [];
+                            this.msgs.push({ severity: 'error', summary: `error al disponibilizar el archivo excel: ${error.message}` });
                         });
             }
         });

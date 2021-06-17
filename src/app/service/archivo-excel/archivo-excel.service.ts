@@ -37,7 +37,7 @@ export class ArchivoExcelService {
 
     /* DELETE METHODS */
 
-    public delete(excel: ArchivoExcel): Observable<void> {
+    public cancelar(excel: ArchivoExcel): Observable<void> {
         const url = this.serviceBaseURL + '/excel/cancelar';
 
         return this.httpClient.put<void>(url, excel)
@@ -63,6 +63,17 @@ export class ArchivoExcelService {
 
     public update(archivoExcel: ArchivoExcel): Observable<any> {
         const url = this.serviceBaseURL + '/excel/modificacion';
+
+        const params = this.createHttpParams({});
+
+        return this.httpClient.put<any>(url, archivoExcel, { params })
+            .pipe(
+                catchError((error: HttpErrorResponse) => this.handleError(error))
+            );
+    }
+
+    public disponibilizar(archivoExcel: ArchivoExcel): Observable<any> {
+        const url = this.serviceBaseURL + '/excel/disponible';
 
         const params = this.createHttpParams({});
 
